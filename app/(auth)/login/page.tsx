@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
+import styles from "./login.module.css";
 
 // ── Project Logo (from Home Page - /logo.png) ──
 function ProjectLogo() {
@@ -19,7 +20,7 @@ function ProjectLogo() {
     <div className="relative w-[140px] h-[140px] flex items-center justify-center">
       {/* Glow effect behind logo */}
       <div 
-        className="absolute inset-0 rounded-full animate-pulse"
+        className={`absolute inset-0 rounded-full ${styles['animate-pulse']}`}
         style={{
           background: 'radial-gradient(circle, rgba(0, 150, 255, 0.4) 0%, rgba(0, 100, 200, 0.2) 40%, transparent 70%)',
           filter: 'blur(25px)',
@@ -28,7 +29,7 @@ function ProjectLogo() {
       
       {/* Rotating outer ring */}
       <div 
-        className="absolute w-[180px] h-[180px] rounded-full border border-cyan-400/30 animate-[spin_20s_linear_infinite]"
+        className={`absolute w-[180px] h-[180px] rounded-full border border-cyan-400/30 ${styles['animate-spin']}`}
         style={{
           boxShadow: '0 0 30px rgba(0, 150, 255, 0.3), inset 0 0 20px rgba(0, 150, 255, 0.1)'
         }}
@@ -36,7 +37,7 @@ function ProjectLogo() {
       
       {/* Counter-rotating inner ring */}
       <div 
-        className="absolute w-[160px] h-[160px] rounded-full border border-cyan-400/40 animate-[spin_15s_linear_infinite_reverse]"
+        className={`absolute w-[160px] h-[160px] rounded-full border border-cyan-400/40 ${styles['animate-spin-reverse']}`}
         style={{
           borderStyle: 'dashed',
           boxShadow: '0 0 25px rgba(0, 180, 255, 0.4)'
@@ -87,7 +88,7 @@ function LockSideIcon() {
         <path d="M25 42 L25 48" stroke="#000511" strokeWidth="2" />
       </svg>
       {/* Glow */}
-      <div className="absolute inset-0 animate-pulse" style={{
+      <div className={`absolute inset-0 ${styles['animate-pulse']}`} style={{
         background: 'radial-gradient(circle, rgba(0, 180, 255, 0.5) 0%, transparent 60%)',
         filter: 'blur(8px)',
         zIndex: -1
@@ -188,25 +189,16 @@ function CircuitBackground() {
         <line x1="90" y1="80" x2="90" y2="100" stroke="#00aaff" strokeWidth="0.8" opacity="0.4" />
         <line x1="120" y1="140" x2="120" y2="160" stroke="#00aaff" strokeWidth="0.6" opacity="0.3" />
         <line x1="90" y1="200" x2="90" y2="220" stroke="#00aaff" strokeWidth="0.8" opacity="0.4" />
-        {/* Circuit nodes */}
-        <circle cx="30" cy="80" r="4" fill="#00aaff" opacity="0.8">
-          <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite" />
-        </circle>
+        {/* Circuit nodes - using divs for animated nodes to avoid SMIL */}
         <circle cx="60" cy="80" r="2.5" fill="#00aaff" opacity="0.6" />
         <circle cx="90" cy="80" r="2" fill="#00aaff" opacity="0.5" />
         <circle cx="60" cy="140" r="3" fill="#00aaff" opacity="0.7" />
         <circle cx="90" cy="140" r="2" fill="#00aaff" opacity="0.5" />
         <circle cx="120" cy="140" r="2" fill="#00aaff" opacity="0.4" />
-        <circle cx="30" cy="200" r="4" fill="#00aaff" opacity="0.8">
-          <animate attributeName="opacity" values="0.8;1;0.8" dur="2.5s" repeatCount="indefinite" />
-        </circle>
         <circle cx="60" cy="200" r="2.5" fill="#00aaff" opacity="0.6" />
         <circle cx="90" cy="200" r="2" fill="#00aaff" opacity="0.5" />
         <circle cx="60" cy="260" r="3" fill="#00aaff" opacity="0.7" />
         <circle cx="90" cy="260" r="2" fill="#00aaff" opacity="0.5" />
-        <circle cx="30" cy="320" r="4" fill="#00aaff" opacity="0.8">
-          <animate attributeName="opacity" values="0.8;1;0.8" dur="3s" repeatCount="indefinite" />
-        </circle>
         <circle cx="60" cy="320" r="2.5" fill="#00aaff" opacity="0.6" />
         <circle cx="90" cy="320" r="2" fill="#00aaff" opacity="0.5" />
       </svg>
@@ -238,29 +230,44 @@ function CircuitBackground() {
         <line x1="90" y1="100" x2="90" y2="120" stroke="#00aaff" strokeWidth="0.8" opacity="0.4" />
         <line x1="60" y1="160" x2="60" y2="180" stroke="#00aaff" strokeWidth="0.6" opacity="0.3" />
         <line x1="90" y1="220" x2="90" y2="240" stroke="#00aaff" strokeWidth="0.8" opacity="0.4" />
-        {/* Circuit nodes */}
-        <circle cx="150" cy="100" r="4" fill="#00aaff" opacity="0.8">
-          <animate attributeName="opacity" values="0.8;1;0.8" dur="2.2s" repeatCount="indefinite" />
-        </circle>
+        {/* Circuit nodes - using CSS animations instead of SMIL */}
         <circle cx="120" cy="100" r="2.5" fill="#00aaff" opacity="0.6" />
         <circle cx="90" cy="100" r="2" fill="#00aaff" opacity="0.5" />
         <circle cx="120" cy="160" r="3" fill="#00aaff" opacity="0.7" />
         <circle cx="90" cy="160" r="2" fill="#00aaff" opacity="0.5" />
         <circle cx="60" cy="160" r="2" fill="#00aaff" opacity="0.4" />
-        <circle cx="150" cy="220" r="4" fill="#00aaff" opacity="0.8">
-          <animate attributeName="opacity" values="0.8;1;0.8" dur="2.8s" repeatCount="indefinite" />
-        </circle>
         <circle cx="120" cy="220" r="2.5" fill="#00aaff" opacity="0.6" />
         <circle cx="90" cy="220" r="2" fill="#00aaff" opacity="0.5" />
         <circle cx="120" cy="280" r="3" fill="#00aaff" opacity="0.7" />
         <circle cx="90" cy="280" r="2" fill="#00aaff" opacity="0.5" />
-        <circle cx="150" cy="340" r="4" fill="#00aaff" opacity="0.8">
-          <animate attributeName="opacity" values="0.8;1;0.8" dur="3.2s" repeatCount="indefinite" />
-        </circle>
-        <circle cx="120" cy="340" r="2.5" fill="#00aaff" opacity="0.6" />
-        <circle cx="90" cy="340" r="2" fill="#00aaff" opacity="0.5" />
       </svg>
       
+      {/* Animated circuit nodes using CSS - positioned absolutely */}
+      <div
+        className={`absolute left-[30px] top-[80px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit']}`}
+        style={{ background: '#00aaff', boxShadow: '0 0 8px #00aaff' }}
+      />
+      <div
+        className={`absolute left-[30px] top-[200px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit-slow']}`}
+        style={{ background: '#00aaff', boxShadow: '0 0 8px #00aaff' }}
+      />
+      <div
+        className={`absolute left-[30px] top-[320px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit-slower']}`}
+        style={{ background: '#00aaff', boxShadow: '0 0 8px #00aaff' }}
+      />
+      <div
+        className={`absolute right-[30px] top-[100px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit']}`}
+        style={{ background: '#00aaff', boxShadow: '0 0 8px #00aaff' }}
+      />
+      <div
+        className={`absolute right-[30px] top-[220px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit-slow']}`}
+        style={{ background: '#00aaff', boxShadow: '0 0 8px #00aaff' }}
+      />
+      <div
+        className={`absolute right-[30px] top-[340px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit-slower']}`}
+        style={{ background: '#00aaff', boxShadow: '0 0 8px #00aaff' }}
+      />
+
       {/* Subtle scan lines */}
       <div className="absolute inset-0 opacity-[0.02]" style={{
         background: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0, 170, 255, 0.08) 3px, rgba(0, 170, 255, 0.08) 6px)'
@@ -312,7 +319,7 @@ export default function LoginPage() {
           </div>
           
           {/* Main Project Logo (replaced from reference design) */}
-          <div className="animate-fade-in">
+          <div className={styles['animate-fade-in']}>
             <ProjectLogo />
           </div>
         </div>
@@ -448,57 +455,6 @@ export default function LoginPage() {
         </div>
       </div>
       
-      {/* Global CSS animations */}
-      <style jsx global>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          25% { transform: translateY(-20px) translateX(10px); }
-          50% { transform: translateY(-10px) translateX(-10px); }
-          75% { transform: translateY(-30px) translateX(5px); }
-        }
-        
-        @keyframes scan {
-          0% { transform: translateY(-100%); }
-          100% { transform: translateY(100%); }
-        }
-        
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        
-        @keyframes fade-in-up {
-          from { 
-            opacity: 0; 
-            transform: translateY(20px); 
-          }
-          to { 
-            opacity: 1; 
-            transform: translateY(0); 
-          }
-        }
-        
-        .animate-float {
-          animation: float var(--duration, 6s) ease-in-out infinite;
-        }
-        
-        .animate-fade-in {
-          animation: fade-in 0.6s ease-out forwards;
-        }
-        
-        .animate-fade-in-up {
-          animation: fade-in-up 0.8s ease-out forwards;
-        }
-        
-        .animate-shimmer {
-          animation: shimmer 2s infinite;
-        }
-      `}</style>
     </div>
   );
 }
