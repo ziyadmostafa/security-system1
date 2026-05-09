@@ -153,7 +153,7 @@ export default function SignupPage() {
           confirmed: data.user?.email_confirmed_at ? '✓' : 'pending'
         });
         
-        // If email is already confirmed, redirect to dashboard immediately
+        // Handle signup completion - check if email confirmation is needed
         if (data.user?.email_confirmed_at) {
           console.log('[SIGNUP] Email already confirmed, redirecting to dashboard...');
           // Wait a moment for session to be established
@@ -161,6 +161,7 @@ export default function SignupPage() {
           router.push("/dashboard");
         } else {
           // Show confirmation screen for email verification
+          console.log('[SIGNUP] Email confirmation required, showing verification screen');
           setSuccess(true);
         }
       }
