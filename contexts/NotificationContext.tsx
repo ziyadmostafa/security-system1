@@ -55,15 +55,18 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     }
   }, [user]);
 
+  // Gate number normalization helper
+  const normalizeGate = (gate: string | null | undefined): string => {
+    if (!gate) return '';
+    return gate.toString().toLowerCase().replace(/^gate\s*/i, '').trim();
+  };
+
   // Helper function to check if event belongs to user's gate
-  // Open access model: All authenticated users can access all gates
-  // Only check if user has a gate assigned, not email membership
   const isEventForUserGate = (eventNodeId: string): boolean => {
-    if (!user?.gate_number) return false; // If user has no gate assigned, don't show any events
-    
-    // Open access: Simply check gate number match
-    const userGate = user.gate_number.trim();
-    const eventGate = eventNodeId.trim();
+    const userGate = normalizeGate(user?.gate_number);
+    const eventGate = normalizeGate(eventNodeId);
+    console.log('[NOTIFY GATE] User:', user?.gate_number, '→', userGate, '| Event:', eventNodeId, '→', eventGate, '| Match:', userGate === eventGate);
+    if (!userGate) return false;
     return userGate === eventGate;
   };
 

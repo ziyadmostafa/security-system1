@@ -30,12 +30,16 @@ export default function DashboardPage() {
     emitCriminalRejected
   } = useRealTimeData();
 
-  // Log data changes for debugging
-  console.log('Dashboard - Connection status:', { connected, connectionType });
-  console.log('Dashboard - Matches data:', matches);
-  console.log('Dashboard - Matches count:', matches.length);
-  console.log('Dashboard - Loading:', loading);
-  console.log('Dashboard - Error:', error);
+  // Log data changes for debugging (only log real errors)
+  console.log('[DASHBOARD] Connection:', { connected, connectionType });
+  console.log('[DASHBOARD] User gate:', user?.gate_number || 'none');
+  console.log('[DASHBOARD] Matches count:', matches.length);
+  if (error) {
+    console.error('[DASHBOARD] Error:', error);
+  }
+  if (matches.length > 0) {
+    console.log('[DASHBOARD] Latest match node_id:', matches[0].node_id);
+  }
   
   const [menuOpen, setMenuOpen] = useState(false);
 

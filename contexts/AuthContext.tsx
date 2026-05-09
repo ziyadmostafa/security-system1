@@ -68,44 +68,70 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const refreshUser = async () => {
-    const { data: { user: currentUser } } = await supabase.auth.getUser();
-    if (currentUser) {
-      setSupabaseUser(currentUser);
-      await fetchUserData(currentUser);
-    } else {
+    try {
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      if (currentUser) {
+        setSupabaseUser(currentUser);
+        await fetchUserData(currentUser);
+      } else {
+        setSupabaseUser(null);
+        setUser(null);
+      }
+    } catch (err) {
+      console.error('[Auth] refreshUser failed:', err);
       setSupabaseUser(null);
       setUser(null);
     }
   };
 
   useEffect(() => {
-    // Get initial session
+    let subscription: any = null;
+
     const getInitialSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        setSupabaseUser(session.user);
-        await fetchUserData(session.user);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          setSupabaseUser(session.user);
+          await fetchUserData(session.user);
+        }
+      } catch (err) {
+        console.error('[Auth] getInitialSession failed:', err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     getInitialSession();
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (session?.user) {
-          setSupabaseUser(session.user);
-          await fetchUserData(session.user);
-        } else {
-          setSupabaseUser(null);
-          setUser(null);
+    try {
+      const { data } = supabase.auth.onAuthStateChange(
+        async (event, session) => {
+          try {
+            if (session?.user) {
+              setSupabaseUser(session.user);
+              await fetchUserData(session.user);
+            } else {
+              setSupabaseUser(null);
+              setUser(null);
+            }
+          } catch (err) {
+            console.error('[Auth] onAuthStateChange handler error:', err);
+          } finally {
+            setLoading(false);
+          }
         }
-        setLoading(false);
-      }
-    );
+      );
+      subscription = data.subscription;
+    } catch (err) {
+      console.error('[Auth] onAuthStateChange setup failed:', err);
+      setLoading(false);
+    }
 
-    return () => subscription.unsubscribe();
+    return () => {
+      if (subscription) {
+        try { subscription.unsubscribe(); } catch (e) { /* ignore */ }
+      }
+    };
   }, []);
 
   return (
