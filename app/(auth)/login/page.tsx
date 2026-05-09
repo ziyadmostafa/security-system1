@@ -241,23 +241,11 @@ function FloatingPadlock() {
 function RadarRings() {
   return (
     <div className="absolute top-[22%] left-1/2 -translate-x-1/2 pointer-events-none">
-      {/* Ring 1 */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full border border-cyan-400/10" style={{ animation: 'ring-expand 8s ease-out infinite' }} />
-      {/* Ring 2 */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full border border-cyan-400/12" style={{ animation: 'ring-expand 8s ease-out infinite 1.5s' }} />
-      {/* Ring 3 */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] rounded-full border border-cyan-400/15" style={{ animation: 'ring-expand 8s ease-out infinite 3s' }} />
-      {/* Ring 4 */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] h-[260px] rounded-full border border-cyan-400/20" style={{ animation: 'ring-expand 8s ease-out infinite 4.5s' }} />
-      {/* Ring 5 */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[180px] h-[180px] rounded-full border border-cyan-400/25" style={{ animation: 'ring-expand 8s ease-out infinite 6s' }} />
       {/* Static crosshairs */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px]">
         <div className="absolute top-0 left-1/2 w-[1px] h-full -translate-x-1/2" style={{ background: 'linear-gradient(180deg, transparent, rgba(0,170,255,0.15), transparent)' }} />
         <div className="absolute top-1/2 left-0 w-full h-[1px] -translate-y-1/2" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,170,255,0.15), transparent)' }} />
       </div>
-      {/* Rotating arc */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full border-t-2 border-r-2 border-cyan-400/20" style={{ animation: 'spin 12s linear infinite' }} />
     </div>
   );
 }
@@ -297,11 +285,7 @@ function CyberBackground() {
       {/* === FLOATING PADLOCK (left side) === */}
       <FloatingPadlock />
 
-      {/* === CONCENTRIC RINGS behind form area === */}
-      <div className="absolute top-[65%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[380px] rounded-full border border-cyan-500/6" style={{ animation: 'ring-expand 7s ease-out infinite' }} />
-      <div className="absolute top-[65%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full border border-cyan-500/8" style={{ animation: 'ring-expand 7s ease-out infinite 2.3s' }} />
-      <div className="absolute top-[65%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] h-[220px] rounded-full border border-cyan-500/10" style={{ animation: 'ring-expand 7s ease-out infinite 4.6s' }} />
-
+      
       {/* === SIDE CIRCUIT PATTERNS (foreground, sharper) === */}
       {/* LEFT */}
       <svg className="absolute left-0 top-0 h-full w-[220px]" preserveAspectRatio="none">
