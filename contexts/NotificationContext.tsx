@@ -68,11 +68,13 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   };
 
   const loadProcessedResults = async () => {
+    if (!user?.id) return;
+    
     try {
       const { data, error } = await supabase
         .from('processed_results')
         .select('*')
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .order('processed_at', { ascending: false });
 
       if (error) {
@@ -118,7 +120,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     try {
       const { error } = await supabase
         .from('processed_results')
-        .insert({
+        .insert([{
           match_id: notification.id,
           person_name: notification.person_name,
           person_id: notification.person_id,
@@ -130,7 +132,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
           server_timestamp: notification.server_timestamp,
           status: status,
           user_id: user?.id
-        });
+        }] as any);
 
       if (error) {
         console.error('Error saving to Supabase:', error);

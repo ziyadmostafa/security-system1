@@ -88,11 +88,11 @@ export default function ProfilePage() {
         // Gate doesn't exist, create it
         const { error: insertError } = await supabase
           .from('gates')
-          .insert({
+          .insert([{
             gate_number: sanitizedGateNumber,
             mall_name: mallName,
             status: 'active'
-          });
+          }] as any);
         
         if (insertError) {
           console.error('Error creating gate:', insertError);
