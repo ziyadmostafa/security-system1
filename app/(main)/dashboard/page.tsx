@@ -34,7 +34,12 @@ export default function DashboardPage() {
       router.replace("/login");
     }, 5000);
     
-    return () => clearTimeout(timeoutId);
+    // Return loading indicator instead of cleanup function
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
   }
   
   const { 

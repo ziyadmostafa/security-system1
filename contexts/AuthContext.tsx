@@ -90,6 +90,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const getInitialSession = async () => {
       try {
+        // Prevent running during SSR/build
+        if (typeof window === "undefined") {
+          console.log('[Auth] Skipping during SSR/build');
+          if (isMounted) setLoading(false);
+          return;
+        }
+
         console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
         // Check if supabase client is available
         if (!supabase) {
@@ -121,9 +128,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     getInitialSession();
 
     try {
+      // Prevent running during SSR/build
+      if (typeof window === "undefined") {
+        console.log('[Auth] Skipping auth listener during SSR/build');
+        if (isMounted) setLoading(false);
+        return;
+      }
+
       // Check if supabase client is available
       if (!supabase) {
         console.error("Supabase client failed to initialize");
+        if (isMounted) setLoading(false);
         return;
       }
       
