@@ -66,16 +66,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
       
+      // Call getUser once only
       const { data: { user: currentUser } } = await supabase.auth.getUser();
       if (currentUser) {
+        console.log('[Auth] User authenticated:', currentUser.email);
         setSupabaseUser(currentUser);
         await fetchUserData(currentUser);
       } else {
+        console.log('[Auth] No user found');
         setSupabaseUser(null);
         setUser(null);
       }
-    } catch (err) {
-      console.error('[Auth] refreshUser failed:', err);
+    } catch (error) {
+      console.error('[Auth] Error refreshing user:', error);
       setSupabaseUser(null);
       setUser(null);
     }
@@ -83,6 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let subscription: any = null;
+    let isMounted = true;
 
     const getInitialSession = async () => {
       try {
@@ -90,6 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Check if supabase client is available
         if (!supabase) {
           console.error("Supabase client failed to initialize");
+          if (isMounted) setLoading(false);
           return;
         }
         
@@ -98,18 +103,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.log("AUTH RESPONSE:", session);
         console.log("AUTH ERROR:", null);
         
-        if (session?.user) {
+        if (session?.user && isMounted) {
           console.log('[Auth] Session found for user:', session.user.email);
           setSupabaseUser(session.user);
           await fetchUserData(session.user);
-        } else {
+        } else if (isMounted) {
           console.log('[Auth] No active session found');
         }
       } catch (err) {
         console.error("Supabase Auth Error:", err);
         console.error('[Auth] getInitialSession failed:', err);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
@@ -130,20 +135,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             console.log("AUTH RESPONSE:", session);
             console.log("AUTH ERROR:", null);
             
-            if (session?.user) {
-              console.log('[Auth] User authenticated:', session.user.email);
-              setSupabaseUser(session.user);
-              await fetchUserData(session.user);
-            } else {
-              console.log('[Auth] User signed out');
-              setSupabaseUser(null);
-              setUser(null);
+            if (isMounted) {
+              if (session?.user) {
+                console.log('[Auth] User authenticated:', session.user.email);
+                setSupabaseUser(session.user);
+                await fetchUserData(session.user);
+              } else {
+                console.log('[Auth] User signed out');
+                setSupabaseUser(null);
+                setUser(null);
+              }
+              setLoading(false);
             }
           } catch (err) {
             console.error("Supabase Auth Error:", err);
             console.error('[Auth] onAuthStateChange handler error:', err);
-          } finally {
-            setLoading(false);
+            if (isMounted) setLoading(false);
           }
         }
       );
@@ -152,12 +159,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       console.error("Supabase Auth Error:", err);
       console.error('[Auth] onAuthStateChange setup failed:', err);
-      setLoading(false);
+      if (isMounted) setLoading(false);
     }
 
     return () => {
+      isMounted = false;
       if (subscription) {
-        try { subscription.unsubscribe(); } catch (e) { /* ignore */ }
+        subscription.unsubscribe();
       }
     };
   }, []);

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRealTimeData } from "@/hooks/useRealTimeData";
 import RealTimeDataTable from "@/components/RealTimeDataTable";
@@ -15,12 +16,31 @@ import {
 } from "lucide-react";
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  // Authentication guard - require real user
+  if (!user && !loading) {
+    console.log('[DASHBOARD] No user found, redirecting to login');
+    router.replace("/login");
+    return null;
+  }
+
+  // Fallback state for infinite loading
+  if (loading) {
+    // Add timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      console.log('[DASHBOARD] Loading timeout - forcing redirect to login');
+      router.replace("/login");
+    }, 5000);
+    
+    return () => clearTimeout(timeoutId);
+  }
   
   const { 
     connected, 
     data: matches, 
-    loading, 
+    loading: dataLoading, 
     error, 
     lastUpdate, 
     connectionType, 

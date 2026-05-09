@@ -37,6 +37,24 @@ export default function ProfilePage() {
   const [gateNumber, setGateNumber] = useState('');
   const [savingLocation, setSavingLocation] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Authentication guard - require real user
+  if (!user && !loading) {
+    console.log('[PROFILE] No user found, redirecting to login');
+    router.replace("/login");
+    return null;
+  }
+
+  // Fallback state for infinite loading
+  if (loading) {
+    // Add timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      console.log('[PROFILE] Loading timeout - forcing redirect to login');
+      router.replace("/login");
+    }, 5000);
+    
+    return () => clearTimeout(timeoutId);
+  }
   
   // Load user data on mount
   useEffect(() => {

@@ -66,21 +66,14 @@ export default function SignupPage() {
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
-    console.log('[SIGNUP] Simple signup attempt');
+    console.log('[SIGNUP] Real authentication attempt');
     
-    // Fallback timeout - redirect anyway after 3 seconds
-    setTimeout(() => {
-      console.log('[SIGNUP] Timeout reached - redirecting anyway');
-      window.location.href = "/dashboard";
-    }, 3000);
-
     try {
       console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
       console.log('[SIGNUP] Attempting signup with email:', email);
       
       if (!supabase) {
         console.error("Supabase client failed to initialize");
-        window.location.href = "/dashboard";
         return;
       }
 
@@ -101,13 +94,31 @@ export default function SignupPage() {
       console.log("AUTH RESPONSE:", data);
       console.log("AUTH ERROR:", error);
 
-      // Always redirect regardless of result for simplicity
-      console.log('[SIGNUP] Redirecting to dashboard immediately...');
+      if (error) {
+        console.error("Supabase Auth Error:", error);
+        // Don't redirect on error - require real authentication
+        return;
+      }
+      
+      // Require real Supabase session
+      if (!data.session?.user) {
+        console.error('[SIGNUP] No valid session returned - email confirmation may be required');
+        return;
+      }
+
+      console.log('[SIGNUP] ✓ Signup successful');
+      console.log('[SIGNUP] User data:', { 
+        id: data.user?.id, 
+        email: data.user?.email,
+        confirmed: data.user?.email_confirmed_at ? '✓' : 'pending'
+      });
+      
+      // Only redirect with real session
+      console.log('[SIGNUP] Redirecting to dashboard with valid session...');
       window.location.href = "/dashboard";
     } catch (err) {
       console.error('[SIGNUP] ❌ Unexpected error during signup:', err);
-      // Still redirect even on error for simplicity
-      window.location.href = "/dashboard";
+      // Don't redirect on error - require real authentication
     }
   }
 

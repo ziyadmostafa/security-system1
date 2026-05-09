@@ -498,21 +498,14 @@ export default function LoginPage() {
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    console.log('[LOGIN] Simple login attempt');
+    console.log('[LOGIN] Real authentication attempt');
     
-    // Fallback timeout - redirect anyway after 3 seconds
-    setTimeout(() => {
-      console.log('[LOGIN] Timeout reached - redirecting anyway');
-      window.location.href = "/dashboard";
-    }, 3000);
-
     try {
       console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
       console.log('[LOGIN] Attempting login with email:', email);
       
       if (!supabase) {
         console.error("Supabase client failed to initialize");
-        window.location.href = "/dashboard";
         return;
       }
 
@@ -524,24 +517,29 @@ export default function LoginPage() {
 
       if (error) {
         console.error("Supabase Auth Error:", error);
-        // Still redirect even on error for simplicity
-        window.location.href = "/dashboard";
-      } else {
-        console.log('[LOGIN] ✓ Login successful');
-        console.log('[LOGIN] User data:', { 
-          id: data.user?.id, 
-          email: data.user?.email,
-          session: data.session ? '✓' : 'null'
-        });
-        
-        // IMMEDIATE redirect - no waiting
-        console.log('[LOGIN] Redirecting to dashboard immediately...');
-        window.location.href = "/dashboard";
+        // Don't redirect on error - require real authentication
+        return;
       }
+      
+      // Require real Supabase session
+      if (!data.session?.user) {
+        console.error('[LOGIN] No valid session returned');
+        return;
+      }
+
+      console.log('[LOGIN] ✓ Login successful');
+      console.log('[LOGIN] User data:', { 
+        id: data.user?.id, 
+        email: data.user?.email,
+        session: data.session ? '✓' : 'null'
+      });
+      
+      // Only redirect with real session
+      console.log('[LOGIN] Redirecting to dashboard with valid session...');
+      window.location.href = "/dashboard";
     } catch (err) {
       console.error('[LOGIN] ❌ Unexpected error during login:', err);
-      // Still redirect even on error for simplicity
-      window.location.href = "/dashboard";
+      // Don't redirect on error - require real authentication
     }
   }
 
