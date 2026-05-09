@@ -84,6 +84,14 @@ export default function SignupPage() {
         return;
       }
 
+      // Check if supabase client is available
+      if (!supabase) {
+        console.error('[SIGNUP] Supabase client not available during build/prerender');
+        setError('Authentication system is not available. Please try again later.');
+        setLoading(false);
+        return;
+      }
+
       console.log('[SIGNUP] Attempting signup with email:', email);
       console.log('[SIGNUP] Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
       console.log('[SIGNUP] Request payload:', { 
@@ -98,7 +106,7 @@ export default function SignupPage() {
         email,
         password,
         options: {
-          // Store the user's display name in their profile metadata
+          // Store user's display name in their profile metadata
           data: { full_name: fullName },
         },
       });

@@ -50,6 +50,10 @@ export default function SettingsPage() {
   ];
 
   const handleSignOut = async () => {
+    if (!supabase) {
+      console.error('[SETTINGS] Supabase client not available');
+      return;
+    }
     await supabase.auth.signOut();
     router.push("/login");
   };
@@ -77,6 +81,13 @@ export default function SettingsPage() {
     setIsChangingPassword(true);
 
     try {
+      if (!supabase) {
+        console.error('[SETTINGS] Supabase client not available');
+        setPasswordError('Authentication system not available');
+        setIsChangingPassword(false);
+        return;
+      }
+      
       const { error } = await supabase.auth.updateUser({
         password: passwordForm.newPassword
       });

@@ -512,6 +512,14 @@ export default function LoginPage() {
         return;
       }
 
+      // Check if supabase client is available
+      if (!supabase) {
+        console.error('[LOGIN] Supabase client not available during build/prerender');
+        setError('Authentication system is not available. Please try again later.');
+        setLoading(false);
+        return;
+      }
+
       console.log('[LOGIN] Attempting login with email:', email);
       console.log('[LOGIN] Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
       console.log('[LOGIN] Request payload:', { email, password: '***' });

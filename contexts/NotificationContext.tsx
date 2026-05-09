@@ -74,6 +74,12 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     if (!user?.id) return;
     
     try {
+      // Check if supabase client is available
+      if (!supabase) {
+        console.warn('[NOTIFICATIONS] Supabase client not available during build/prerender');
+        return;
+      }
+      
       const { data, error } = await supabase
         .from('processed_results')
         .select('*')
@@ -121,6 +127,12 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
   const saveToSupabase = async (notification: NotificationItem, status: "confirmed" | "rejected") => {
     try {
+      // Check if supabase client is available
+      if (!supabase) {
+        console.warn('[NOTIFICATIONS] Supabase client not available during build/prerender');
+        return;
+      }
+      
       const { error } = await supabase
         .from('processed_results')
         .insert([{

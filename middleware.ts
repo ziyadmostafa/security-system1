@@ -3,11 +3,28 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function middleware(req: NextRequest) {
+  // Check if environment variables are available
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  if (!supabaseUrl || !supabaseAnonKey) {
+    // If environment variables are missing, allow access to public routes only
+    console.warn('[MIDDLEWARE] Supabase environment variables not configured');
+    const { pathname } = req.nextUrl;
+    const protectedRoutes = ['/dashboard', '/history', '/profile', '/settings'];
+    const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+    
+    if (isProtectedRoute) {
+      const redirectUrl = new URL('/login', req.url);
+      return NextResponse.redirect(redirectUrl);
+    }
+    
+    return NextResponse.next();
+  }
+  
   // Create Supabase client for middleware using environment variables
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const cleanUrl = supabaseUrl.replace(/\/rest\/v1\/?$/, '');
+  const supabase = createClient(cleanUrl, supabaseAnonKey)
   
   // Get session from cookie
   const token = req.cookies.get('sb-access-token')?.value

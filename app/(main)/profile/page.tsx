@@ -55,6 +55,13 @@ export default function ProfilePage() {
   // Save location data
   const handleSaveLocation = async () => {
     try {
+      // Check if supabase client is available
+      if (!supabase) {
+        console.error('[PROFILE] Supabase client not available');
+        setSavingLocation(false);
+        return;
+      }
+      
       setSavingLocation(true);
       // Sanitize gate_number to remove "Gate" prefix if present
       const sanitizedGateNumber = gateNumber.replace(/gate\s*/i, '').trim();
@@ -111,6 +118,10 @@ export default function ProfilePage() {
   };
 
   async function handleSignOut() {
+    if (!supabase) {
+      console.error('[PROFILE] Supabase client not available');
+      return;
+    }
     await supabase.auth.signOut();
     router.push("/login");
   }
@@ -118,7 +129,7 @@ export default function ProfilePage() {
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const file = event.target.files?.[0];
-      if (!file || !user) return;
+      if (!file || !user || !supabase) return;
 
       // Validate file type
       if (!file.type.startsWith('image/')) {
@@ -185,6 +196,11 @@ export default function ProfilePage() {
 
   const handleRemoveImage = async () => {
     try {
+      if (!supabase) {
+        console.error('[PROFILE] Supabase client not available');
+        return;
+      }
+      
       setUploading(true);
 
       // Remove from user metadata

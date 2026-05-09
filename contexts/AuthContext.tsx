@@ -69,6 +69,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshUser = async () => {
     try {
+      // Check if supabase client is available
+      if (!supabase) {
+        console.warn('[Auth] Supabase client not available during build/prerender');
+        return;
+      }
+      
       const { data: { user: currentUser } } = await supabase.auth.getUser();
       if (currentUser) {
         setSupabaseUser(currentUser);
@@ -89,6 +95,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const getInitialSession = async () => {
       try {
+        // Check if supabase client is available
+        if (!supabase) {
+          console.warn('[Auth] Supabase client not available during build/prerender');
+          setLoading(false);
+          return;
+        }
+        
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
           setSupabaseUser(session.user);
@@ -104,6 +117,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     getInitialSession();
 
     try {
+      // Check if supabase client is available
+      if (!supabase) {
+        console.warn('[Auth] Supabase client not available during build/prerender');
+        setLoading(false);
+        return;
+      }
+      
       const { data } = supabase.auth.onAuthStateChange(
         async (event: AuthChangeEvent, session: Session | null) => {
           try {
