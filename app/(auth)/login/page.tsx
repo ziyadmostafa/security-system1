@@ -493,12 +493,12 @@ export default function LoginPage() {
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
   const [focusedField, setFocusedField] = useState<string | null>(null);
-
-  // REMOVED: All loading state logic for simplicity
+  const [error, setError]       = useState<string | null>(null);
 
   async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
-    console.log('[LOGIN] Real authentication attempt');
+    e?.preventDefault();
+    console.log("LOGIN CLICKED");
+    setError(null);
     
     try {
       console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
@@ -506,24 +506,26 @@ export default function LoginPage() {
       
       if (!supabase) {
         console.error("Supabase client failed to initialize");
+        setError("Authentication system not available");
         return;
       }
 
       console.log('[LOGIN] Request payload:', { email, password: '***' });
       
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      console.log("AUTH RESPONSE:", data);
-      console.log("AUTH ERROR:", error);
+      console.log("LOGIN RESPONSE:", data);
+      console.log("LOGIN ERROR:", error);
 
       if (error) {
         console.error("Supabase Auth Error:", error);
-        // Don't redirect on error - require real authentication
+        setError(error?.message || "Login failed");
         return;
       }
       
       // Require real Supabase session
       if (!data.session?.user) {
         console.error('[LOGIN] No valid session returned');
+        setError("No valid session created");
         return;
       }
 
@@ -536,10 +538,10 @@ export default function LoginPage() {
       
       // Only redirect with real session
       console.log('[LOGIN] Redirecting to dashboard with valid session...');
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
     } catch (err) {
       console.error('[LOGIN] ❌ Unexpected error during login:', err);
-      // Don't redirect on error - require real authentication
+      setError("An unexpected error occurred");
     }
   }
 
@@ -625,6 +627,19 @@ export default function LoginPage() {
                 </span>
               </div>
             </div>
+
+            {/* Error message */}
+            {error && (
+              <div className="mb-5 p-3 rounded-xl text-center text-red-300 text-sm"
+                style={{
+                  background: 'rgba(200, 0, 50, 0.2)',
+                  border: '1px solid rgba(255, 50, 100, 0.4)',
+                  boxShadow: '0 0 15px rgba(255, 0, 50, 0.2)',
+                }}
+              >
+                {error}
+              </div>
+            )}
 
             {/* Forget Password - right aligned */}
             <div className="flex justify-end mb-8">
