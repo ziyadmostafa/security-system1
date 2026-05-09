@@ -9,7 +9,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { supabase } from "@/lib/supabase";
-import { User as SupabaseUser } from "@supabase/supabase-js";
+import { User as SupabaseUser, Session, AuthChangeEvent } from "@supabase/supabase-js";
 
 interface AuthUser {
   id: string;
@@ -105,7 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     try {
       const { data } = supabase.auth.onAuthStateChange(
-        async (event, session) => {
+        async (event: AuthChangeEvent, session: Session | null) => {
           try {
             if (session?.user) {
               setSupabaseUser(session.user);
