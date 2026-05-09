@@ -11,7 +11,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import Image from "next/image";
 
 // ── Person icon (right side of full-name input) ──
@@ -74,9 +74,24 @@ export default function SignupPage() {
     setError(null);
 
     try {
+      // Validate authentication configuration first
+      if (!isSupabaseConfigured()) {
+        console.error('[SIGNUP] Supabase not configured - missing environment variables');
+        setError('Authentication system is not properly configured. Please contact support.');
+        setLoading(false);
+        return;
+      }
+
       console.log('[SIGNUP] Attempting signup with email:', email);
       console.log('[SIGNUP] Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+      console.log('[SIGNUP] Request payload:', { 
+        email, 
+        password: '***', 
+        full_name: fullName 
+      });
       
+      // Test network connectivity before attempting auth
+      const startTime = Date.now();
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -85,16 +100,24 @@ export default function SignupPage() {
           data: { full_name: fullName },
         },
       });
+      const endTime = Date.now();
+      
+      console.log('[SIGNUP] Request completed in:', endTime - startTime, 'ms');
+      console.log('[SIGNUP] Response received:', { 
+        data: data ? '✓' : 'null', 
+        error: error ? error.message : 'none' 
+      });
 
       if (error) {
         console.error('[SIGNUP] Supabase auth error:', error);
-        console.error('[SIGNUP] Error details:', {
+        console.error('[SIGNUP] Full error details:', {
           message: error.message,
           status: error.status,
-          code: error.code
+          code: error.code,
+          stack: error.stack
         });
         
-        // Provide user-friendly error messages
+        // Provide specific user-friendly error messages
         let userMessage = error.message;
         if (error.message?.toLowerCase().includes('user already registered')) {
           userMessage = 'An account with this email already exists. Please try logging in instead.';
@@ -102,21 +125,40 @@ export default function SignupPage() {
           userMessage = 'Password is too weak. Please use a stronger password.';
         } else if (error.message?.toLowerCase().includes('invalid email')) {
           userMessage = 'Please enter a valid email address.';
-        } else if (error.message?.toLowerCase().includes('network')) {
+        } else if (error.message?.toLowerCase().includes('network') || error.message?.toLowerCase().includes('fetch')) {
           userMessage = 'Network error. Please check your internet connection and try again.';
         } else if (error.message?.toLowerCase().includes('rate limit')) {
           userMessage = 'Too many signup attempts. Please wait a moment and try again.';
+        } else if (error.message?.toLowerCase().includes('supabase not configured')) {
+          userMessage = 'Authentication system is not properly configured. Please contact support.';
         }
         
         setError(userMessage);
         setLoading(false);
       } else {
-        console.log('[SIGNUP] Signup successful, showing confirmation screen');
+        console.log('[SIGNUP] ✓ Signup successful');
+        console.log('[SIGNUP] User data:', { 
+          id: data.user?.id, 
+          email: data.user?.email,
+          confirmed: data.user?.email_confirmed ? '✓' : 'pending'
+        });
         setSuccess(true);
       }
     } catch (err) {
-      console.error('[SIGNUP] Unexpected error during signup:', err);
-      setError('An unexpected error occurred. Please try again.');
+      console.error('[SIGNUP] ❌ Unexpected error during signup:', err);
+      console.error('[SIGNUP] Error stack:', err instanceof Error ? err.stack : 'No stack available');
+      
+      // Handle different types of errors
+      let errorMessage = 'An unexpected error occurred. Please try again.';
+      if (err instanceof Error) {
+        if (err.message?.toLowerCase().includes('network') || err.message?.toLowerCase().includes('fetch')) {
+          errorMessage = 'Network connection failed. Please check your internet and try again.';
+        } else if (err.message?.toLowerCase().includes('timeout')) {
+          errorMessage = 'Request timed out. Please check your connection and try again.';
+        }
+      }
+      
+      setError(errorMessage);
       setLoading(false);
     }
   }

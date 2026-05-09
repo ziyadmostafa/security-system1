@@ -10,7 +10,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import Image from "next/image";
 import styles from "./login.module.css";
 
@@ -504,20 +504,36 @@ export default function LoginPage() {
     setError(null);
 
     try {
+      // Validate authentication configuration first
+      if (!isSupabaseConfigured()) {
+        console.error('[LOGIN] Supabase not configured - missing environment variables');
+        setError('Authentication system is not properly configured. Please contact support.');
+        setLoading(false);
+        return;
+      }
+
       console.log('[LOGIN] Attempting login with email:', email);
       console.log('[LOGIN] Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+      console.log('[LOGIN] Request payload:', { email, password: '***' });
       
+      // Test network connectivity before attempting auth
+      const startTime = Date.now();
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      const endTime = Date.now();
+      
+      console.log('[LOGIN] Request completed in:', endTime - startTime, 'ms');
+      console.log('[LOGIN] Response received:', { data: data ? '✓' : 'null', error: error ? error.message : 'none' });
 
       if (error) {
         console.error('[LOGIN] Supabase auth error:', error);
-        console.error('[LOGIN] Error details:', {
+        console.error('[LOGIN] Full error details:', {
           message: error.message,
           status: error.status,
-          code: error.code
+          code: error.code,
+          stack: error.stack
         });
         
-        // Provide user-friendly error messages
+        // Provide specific user-friendly error messages
         let userMessage = error.message;
         if (error.message?.toLowerCase().includes('invalid login credentials')) {
           userMessage = 'Invalid email or password. Please check your credentials and try again.';
@@ -525,19 +541,38 @@ export default function LoginPage() {
           userMessage = 'Please check your email and confirm your account before logging in.';
         } else if (error.message?.toLowerCase().includes('too many requests')) {
           userMessage = 'Too many login attempts. Please wait a moment and try again.';
-        } else if (error.message?.toLowerCase().includes('network')) {
+        } else if (error.message?.toLowerCase().includes('network') || error.message?.toLowerCase().includes('fetch')) {
           userMessage = 'Network error. Please check your internet connection and try again.';
+        } else if (error.message?.toLowerCase().includes('supabase not configured')) {
+          userMessage = 'Authentication system is not properly configured. Please contact support.';
         }
         
         setError(userMessage);
         setLoading(false);
       } else {
-        console.log('[LOGIN] Login successful, redirecting to dashboard');
+        console.log('[LOGIN] ✓ Login successful');
+        console.log('[LOGIN] User data:', { 
+          id: data.user?.id, 
+          email: data.user?.email,
+          session: data.session ? '✓' : 'null'
+        });
         router.push("/dashboard");
       }
     } catch (err) {
-      console.error('[LOGIN] Unexpected error during login:', err);
-      setError('An unexpected error occurred. Please try again.');
+      console.error('[LOGIN] ❌ Unexpected error during login:', err);
+      console.error('[LOGIN] Error stack:', err instanceof Error ? err.stack : 'No stack available');
+      
+      // Handle different types of errors
+      let errorMessage = 'An unexpected error occurred. Please try again.';
+      if (err instanceof Error) {
+        if (err.message?.toLowerCase().includes('network') || err.message?.toLowerCase().includes('fetch')) {
+          errorMessage = 'Network connection failed. Please check your internet and try again.';
+        } else if (err.message?.toLowerCase().includes('timeout')) {
+          errorMessage = 'Request timed out. Please check your connection and try again.';
+        }
+      }
+      
+      setError(errorMessage);
       setLoading(false);
     }
   }
