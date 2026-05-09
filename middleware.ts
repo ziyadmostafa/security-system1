@@ -34,14 +34,20 @@ export async function middleware(req: NextRequest) {
   
   if (token && refreshToken) {
     try {
+      console.log('[MIDDLEWARE] Validating session from cookies...');
       const { data: { session: userSession } } = await supabase.auth.setSession({
         access_token: token,
         refresh_token: refreshToken
       })
       session = userSession
+      console.log("AUTH RESPONSE:", userSession);
+      console.log("AUTH ERROR:", null);
     } catch (error) {
+      console.error("Supabase Auth Error:", error);
       console.error('[MIDDLEWARE] Error validating session:', error)
     }
+  } else {
+    console.log('[MIDDLEWARE] No auth tokens found in cookies');
   }
 
   // Define protected routes

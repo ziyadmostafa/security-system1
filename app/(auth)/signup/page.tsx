@@ -76,24 +76,17 @@ export default function SignupPage() {
     setError(null);
 
     try {
-      // Validate authentication configuration first
-      if (!isSupabaseConfigured()) {
-        console.error('[SIGNUP] Supabase not configured - missing environment variables');
-        setError('Authentication system is not properly configured. Please contact support.');
-        setLoading(false);
-        return;
-      }
-
+      console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+      console.log('[SIGNUP] Attempting signup with email:', email);
+      
       // Check if supabase client is available
       if (!supabase) {
         console.error('[SIGNUP] Supabase client not available during build/prerender');
-        setError('Authentication system is not available. Please try again later.');
+        setError('Supabase client not available. Please check environment configuration.');
         setLoading(false);
         return;
       }
 
-      console.log('[SIGNUP] Attempting signup with email:', email);
-      console.log('[SIGNUP] Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
       console.log('[SIGNUP] Request payload:', { 
         email, 
         password: '***', 
@@ -112,38 +105,13 @@ export default function SignupPage() {
       });
       const endTime = Date.now();
       
+      console.log("AUTH RESPONSE:", data);
+      console.log("AUTH ERROR:", error);
       console.log('[SIGNUP] Request completed in:', endTime - startTime, 'ms');
-      console.log('[SIGNUP] Response received:', { 
-        data: data ? '✓' : 'null', 
-        error: error ? error.message : 'none' 
-      });
 
       if (error) {
-        console.error('[SIGNUP] Supabase auth error:', error);
-        console.error('[SIGNUP] Full error details:', {
-          message: error.message,
-          status: error.status,
-          code: error.code,
-          stack: error.stack
-        });
-        
-        // Provide specific user-friendly error messages
-        let userMessage = error.message;
-        if (error.message?.toLowerCase().includes('user already registered')) {
-          userMessage = 'An account with this email already exists. Please try logging in instead.';
-        } else if (error.message?.toLowerCase().includes('password should be')) {
-          userMessage = 'Password is too weak. Please use a stronger password.';
-        } else if (error.message?.toLowerCase().includes('invalid email')) {
-          userMessage = 'Please enter a valid email address.';
-        } else if (error.message?.toLowerCase().includes('network') || error.message?.toLowerCase().includes('fetch')) {
-          userMessage = 'Network error. Please check your internet connection and try again.';
-        } else if (error.message?.toLowerCase().includes('rate limit')) {
-          userMessage = 'Too many signup attempts. Please wait a moment and try again.';
-        } else if (error.message?.toLowerCase().includes('supabase not configured')) {
-          userMessage = 'Authentication system is not properly configured. Please contact support.';
-        }
-        
-        setError(userMessage);
+        console.error("Supabase Auth Error:", error);
+        setError(error?.message || JSON.stringify(error));
         setLoading(false);
       } else {
         console.log('[SIGNUP] ✓ Signup successful');

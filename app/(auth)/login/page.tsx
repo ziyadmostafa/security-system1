@@ -504,24 +504,17 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      // Validate authentication configuration first
-      if (!isSupabaseConfigured()) {
-        console.error('[LOGIN] Supabase not configured - missing environment variables');
-        setError('Authentication system is not properly configured. Please contact support.');
-        setLoading(false);
-        return;
-      }
-
+      console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+      console.log('[LOGIN] Attempting login with email:', email);
+      
       // Check if supabase client is available
       if (!supabase) {
         console.error('[LOGIN] Supabase client not available during build/prerender');
-        setError('Authentication system is not available. Please try again later.');
+        setError('Supabase client not available. Please check environment configuration.');
         setLoading(false);
         return;
       }
 
-      console.log('[LOGIN] Attempting login with email:', email);
-      console.log('[LOGIN] Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
       console.log('[LOGIN] Request payload:', { email, password: '***' });
       
       // Test network connectivity before attempting auth
@@ -529,33 +522,13 @@ export default function LoginPage() {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       const endTime = Date.now();
       
+      console.log("AUTH RESPONSE:", data);
+      console.log("AUTH ERROR:", error);
       console.log('[LOGIN] Request completed in:', endTime - startTime, 'ms');
-      console.log('[LOGIN] Response received:', { data: data ? '✓' : 'null', error: error ? error.message : 'none' });
 
       if (error) {
-        console.error('[LOGIN] Supabase auth error:', error);
-        console.error('[LOGIN] Full error details:', {
-          message: error.message,
-          status: error.status,
-          code: error.code,
-          stack: error.stack
-        });
-        
-        // Provide specific user-friendly error messages
-        let userMessage = error.message;
-        if (error.message?.toLowerCase().includes('invalid login credentials')) {
-          userMessage = 'Invalid email or password. Please check your credentials and try again.';
-        } else if (error.message?.toLowerCase().includes('email not confirmed')) {
-          userMessage = 'Please check your email and confirm your account before logging in.';
-        } else if (error.message?.toLowerCase().includes('too many requests')) {
-          userMessage = 'Too many login attempts. Please wait a moment and try again.';
-        } else if (error.message?.toLowerCase().includes('network') || error.message?.toLowerCase().includes('fetch')) {
-          userMessage = 'Network error. Please check your internet connection and try again.';
-        } else if (error.message?.toLowerCase().includes('supabase not configured')) {
-          userMessage = 'Authentication system is not properly configured. Please contact support.';
-        }
-        
-        setError(userMessage);
+        console.error("Supabase Auth Error:", error);
+        setError(error?.message || JSON.stringify(error));
         setLoading(false);
       } else {
         console.log('[LOGIN] ✓ Login successful');

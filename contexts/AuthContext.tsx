@@ -95,6 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const getInitialSession = async () => {
       try {
+        console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
         // Check if supabase client is available
         if (!supabase) {
           console.warn('[Auth] Supabase client not available during build/prerender');
@@ -102,12 +103,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
         
+        console.log('[Auth] Getting initial session...');
         const { data: { session } } = await supabase.auth.getSession();
+        console.log("AUTH RESPONSE:", session);
+        console.log("AUTH ERROR:", null);
+        
         if (session?.user) {
+          console.log('[Auth] Session found for user:', session.user.email);
           setSupabaseUser(session.user);
           await fetchUserData(session.user);
+        } else {
+          console.log('[Auth] No active session found');
         }
       } catch (err) {
+        console.error("Supabase Auth Error:", err);
         console.error('[Auth] getInitialSession failed:', err);
       } finally {
         setLoading(false);
@@ -124,17 +133,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
       
+      console.log('[Auth] Setting up auth state change listener...');
       const { data } = supabase.auth.onAuthStateChange(
         async (event: AuthChangeEvent, session: Session | null) => {
           try {
+            console.log('[Auth] Auth state changed:', { event, session: session ? '✓' : 'null' });
+            console.log("AUTH RESPONSE:", session);
+            console.log("AUTH ERROR:", null);
+            
             if (session?.user) {
+              console.log('[Auth] User authenticated:', session.user.email);
               setSupabaseUser(session.user);
               await fetchUserData(session.user);
             } else {
+              console.log('[Auth] User signed out');
               setSupabaseUser(null);
               setUser(null);
             }
           } catch (err) {
+            console.error("Supabase Auth Error:", err);
             console.error('[Auth] onAuthStateChange handler error:', err);
           } finally {
             setLoading(false);
@@ -142,7 +159,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       );
       subscription = data.subscription;
+      console.log('[Auth] Auth state change listener set up successfully');
     } catch (err) {
+      console.error("Supabase Auth Error:", err);
       console.error('[Auth] onAuthStateChange setup failed:', err);
       setLoading(false);
     }

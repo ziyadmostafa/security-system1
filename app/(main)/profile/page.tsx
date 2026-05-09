@@ -36,6 +36,7 @@ export default function ProfilePage() {
   const [mallName, setMallName] = useState('');
   const [gateNumber, setGateNumber] = useState('');
   const [savingLocation, setSavingLocation] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   // Load user data on mount
   useEffect(() => {
@@ -66,6 +67,8 @@ export default function ProfilePage() {
       // Sanitize gate_number to remove "Gate" prefix if present
       const sanitizedGateNumber = gateNumber.replace(/gate\s*/i, '').trim();
       
+      console.log('[PROFILE] Updating user metadata:', { mall_name: mallName, gate_number: sanitizedGateNumber });
+      
       // Update user metadata for backward compatibility
       const { error: updateError } = await supabase.auth.updateUser({
         data: { 
@@ -74,8 +77,12 @@ export default function ProfilePage() {
         }
       });
       
+      console.log("AUTH RESPONSE:", updateError ? null : 'success');
+      console.log("AUTH ERROR:", updateError);
+      
       if (updateError) {
-        console.error('Error saving location to user metadata:', updateError);
+        console.error("Supabase Auth Error:", updateError);
+        setError(updateError?.message || JSON.stringify(updateError));
       }
       
       // Open access model: Create or join gate without ownership restrictions
