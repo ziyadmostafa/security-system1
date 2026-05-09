@@ -444,31 +444,6 @@ function CyberBackground() {
       <FloatingParticle delay={0.3} duration={4} size={3} top="95%" left="78%" color="#00ddff" />
 
       {/* === GLOW ORBS (ambient depth) === */}
-      <div className="absolute rounded-full" style={{
-        top: '12%', left: '15%', width: '140px', height: '140px',
-        background: 'radial-gradient(circle, rgba(0,160,255,0.1) 0%, transparent 70%)',
-        animation: 'particle-drift 16s ease-in-out infinite',
-      }} />
-      <div className="absolute rounded-full" style={{
-        top: '55%', left: '80%', width: '180px', height: '180px',
-        background: 'radial-gradient(circle, rgba(0,100,200,0.08) 0%, transparent 70%)',
-        animation: 'particle-drift 20s ease-in-out infinite reverse',
-      }} />
-      <div className="absolute rounded-full" style={{
-        top: '35%', left: '85%', width: '120px', height: '120px',
-        background: 'radial-gradient(circle, rgba(0,190,255,0.09) 0%, transparent 70%)',
-        animation: 'particle-float-slow 14s ease-in-out infinite',
-      }} />
-      <div className="absolute rounded-full" style={{
-        top: '70%', left: '10%', width: '200px', height: '200px',
-        background: 'radial-gradient(circle, rgba(0,130,220,0.06) 0%, transparent 70%)',
-        animation: 'particle-drift 22s ease-in-out infinite',
-      }} />
-      <div className="absolute rounded-full" style={{
-        top: '45%', left: '45%', width: '100px', height: '100px',
-        background: 'radial-gradient(circle, rgba(0,180,255,0.08) 0%, transparent 70%)',
-        animation: 'particle-drift 18s ease-in-out infinite 3s',
-      }} />
 
       {/* === PULSE NODES (circuit glow points) === */}
       <div className={`absolute left-[20px] top-[50px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit']}`} style={{ background: '#00ccff', boxShadow: '0 0 12px #00ccff, 0 0 24px rgba(0,204,255,0.5)' }} />
