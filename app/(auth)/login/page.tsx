@@ -342,9 +342,8 @@ export default function LoginPage() {
                   onBlur={() => setFocusedField(null)}
                   required
                   placeholder="example@email.com"
-                  className="w-full h-[52px] text-white text-[15px] rounded-[26px] pl-5 pr-12 
-                    focus:outline-none transition-all duration-300"
-                  style={{ 
+                  className="w-full h-[52px] text-white text-[15px] rounded-[26px] pl-5 pr-12 focus:outline-none transition-all duration-300"
+                  style={{
                     background: 'rgba(0, 8, 30, 0.7)',
                     border: '2px solid #00aaff',
                     boxShadow: focusedField === 'email'
@@ -372,9 +371,8 @@ export default function LoginPage() {
                   onBlur={() => setFocusedField(null)}
                   required
                   placeholder="••••••••"
-                  className="w-full h-[52px] text-white text-[15px] rounded-[26px] pl-5 pr-12 
-                    focus:outline-none transition-all duration-300"
-                  style={{ 
+                  className="w-full h-[52px] text-white text-[15px] rounded-[26px] pl-5 pr-12 focus:outline-none transition-all duration-300"
+                  style={{
                     background: 'rgba(0, 8, 30, 0.7)',
                     border: '2px solid #00aaff',
                     boxShadow: focusedField === 'password'
