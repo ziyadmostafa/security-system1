@@ -60,9 +60,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshUser = async () => {
     try {
+      console.log("SUPABASE CLIENT CHECK:", supabase);
       // Check if supabase client is available
       if (!supabase) {
-        console.warn('[Auth] Supabase client not available during build/prerender');
+        console.error('[Auth] Supabase client is null/undefined');
         return;
       }
       
@@ -98,9 +99,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+        console.log("SUPABASE CLIENT CHECK:", supabase);
         // Check if supabase client is available
         if (!supabase) {
-          console.error("Supabase client failed to initialize");
+          console.error("Supabase client is null/undefined");
           if (isMounted) setLoading(false);
           return;
         }
@@ -135,9 +137,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
+      console.log("SUPABASE CLIENT CHECK:", supabase);
       // Check if supabase client is available
       if (!supabase) {
-        console.error("Supabase client failed to initialize");
+        console.error("Supabase client is null/undefined");
         if (isMounted) setLoading(false);
         return;
       }

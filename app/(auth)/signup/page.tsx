@@ -72,11 +72,11 @@ export default function SignupPage() {
       console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
       console.log('[SIGNUP] Attempting signup with email:', email);
       
+      console.log("SUPABASE CLIENT CHECK:", supabase);
       if (!supabase) {
-        console.error("Supabase client failed to initialize");
+        console.error("Supabase client is null/undefined");
         return;
       }
-
       console.log('[SIGNUP] Request payload:', { 
         email, 
         password: '***', 

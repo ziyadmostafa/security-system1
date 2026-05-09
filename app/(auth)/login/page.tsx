@@ -504,9 +504,10 @@ export default function LoginPage() {
       console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
       console.log('[LOGIN] Attempting login with email:', email);
       
+      console.log("SUPABASE CLIENT CHECK:", supabase);
       if (!supabase) {
-        console.error("Supabase client failed to initialize");
-        setError("Authentication system not available");
+        console.error("Supabase client is null/undefined");
+        setError("Supabase client not initialized");
         return;
       }
 
