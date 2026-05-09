@@ -20,8 +20,8 @@ function ProjectLogo() {
     <Image
       src="/logo.png"
       alt="Security System Logo"
-      width={140}
-      height={140}
+      width={170}
+      height={170}
       className="object-contain"
       priority
     />
