@@ -33,6 +33,13 @@ interface RealTimeDataState {
 const SERVER_URL = 'https://spireless-elmira-unmurmurously.ngrok-free.dev';
 const WS_URL = 'https://spireless-elmira-unmurmurously.ngrok-free.dev';
 
+// ── Gate number normalization helper ──
+// Converts "Gate 1", "gate 2", "3" → "1", "2", "3"
+function normalizeGate(gate: string | null | undefined): string {
+  if (!gate) return '';
+  return gate.toString().toLowerCase().replace(/^gate\s*/i, '').trim();
+}
+
 export function useRealTimeData() {
   const [state, setState] = useState<RealTimeDataState>({
     connected: false,
@@ -47,20 +54,25 @@ export function useRealTimeData() {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const fallbackIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const dataRef = useRef<SecurityData[]>([]);
+  const userGateRef = useRef<string>('');
   const { addNotification } = useNotifications();
   const { user } = useAuth();
-  
-  // Helper function to check if event belongs to user's gate
-  // Open access model: All authenticated users can access all gates
-  // Only check if user has a gate assigned, not email membership
-  const isEventForUserGate = useCallback((eventNodeId: string): boolean => {
-    if (!user?.gate_number) return false; // If user has no gate assigned, don't show any events
-    
-    // Open access: Simply check gate number match
-    const userGate = user.gate_number.trim();
-    const eventGate = eventNodeId.trim();
-    return userGate === eventGate;
+
+  // Keep userGateRef always in sync with latest auth state
+  useEffect(() => {
+    const normalized = normalizeGate(user?.gate_number);
+    userGateRef.current = user?.gate_number || '';
+    console.log('[AUTH] User gate updated:', user?.gate_number, '→ normalized:', normalized);
   }, [user?.gate_number]);
+
+  // Helper function to check if event belongs to user's gate
+  const isEventForUserGate = useCallback((eventNodeId: string): boolean => {
+    const userGate = normalizeGate(userGateRef.current);
+    const eventGate = normalizeGate(eventNodeId);
+    console.log('[GATE MATCH] User gate:', userGateRef.current, '→', userGate, '| Event gate:', eventNodeId, '→', eventGate, '| Match:', userGate === eventGate);
+    if (!userGate) return false;
+    return userGate === eventGate;
+  }, []);
 
   // Fallback: Fetch data from JSON file via REST API
   const fetchFallbackData = useCallback(async () => {
@@ -72,9 +84,16 @@ export function useRealTimeData() {
           const allData = result.data || [];
           
           // Gate-based filtering: Only show events for user's gate
-          const filteredData = user?.gate_number 
-            ? allData.filter((item: SecurityData) => isEventForUserGate(item.node_id))
-            : []; // If user has no gate assigned, show no events
+          const currentUserGate = normalizeGate(user?.gate_number || '');
+          console.log('[FALLBACK] Normalized user gate for filtering:', currentUserGate);
+          const filteredData = currentUserGate
+            ? allData.filter((item: SecurityData) => {
+                const itemGate = normalizeGate(item.node_id);
+                const match = itemGate === currentUserGate;
+                if (!match) console.log('[FALLBACK] Filtering out item gate:', item.node_id, '→', itemGate, '≠ user gate:', currentUserGate);
+                return match;
+              })
+            : [];
           
           dataRef.current = filteredData;
           
@@ -154,12 +173,21 @@ export function useRealTimeData() {
           console.log('Data structure:', JSON.stringify(newData, null, 2));
           
           // Gate-based filtering: Check if event belongs to user's gate
-          if (!isEventForUserGate(newData.node_id)) {
-            console.log(`🚫 Event filtered out - User gate: ${user?.gate_number}, Event gate: ${newData.node_id}`);
-            return; // Skip this event - it belongs to a different gate
+          // Use ref directly to avoid stale closure from useCallback capture
+          const normalizedUserGate = normalizeGate(userGateRef.current);
+          const normalizedEventGate = normalizeGate(newData.node_id);
+          const isMatch = normalizedUserGate && normalizedEventGate && normalizedUserGate === normalizedEventGate;
+
+          console.log('[SOCKET new_match] Raw user gate:', userGateRef.current, '| Normalized:', normalizedUserGate);
+          console.log('[SOCKET new_match] Raw event gate:', newData.node_id, '| Normalized:', normalizedEventGate);
+          console.log('[SOCKET new_match] Match result:', isMatch);
+
+          if (!isMatch) {
+            console.log('🚫 Event filtered out - user gate', normalizedUserGate, '≠ event gate', normalizedEventGate);
+            return;
           }
-          
-          console.log(`✅ Event accepted for user's gate: ${user?.gate_number}`);
+
+          console.log('✅ Event accepted for user\'s gate:', normalizedUserGate);
           
           // Update data with new match at the beginning
           const updatedData = [newData, ...dataRef.current];
