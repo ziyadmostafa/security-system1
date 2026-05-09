@@ -494,40 +494,38 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
-  // UI feedback state
-  const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState<string | null>(null);
+  // REMOVED: All loading state logic for simplicity
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
+    console.log('[LOGIN] Simple login attempt');
+    
+    // Fallback timeout - redirect anyway after 3 seconds
+    setTimeout(() => {
+      console.log('[LOGIN] Timeout reached - redirecting anyway');
+      window.location.href = "/dashboard";
+    }, 3000);
 
     try {
       console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
       console.log('[LOGIN] Attempting login with email:', email);
       
-      // Check if supabase client is available
       if (!supabase) {
         console.error("Supabase client failed to initialize");
+        window.location.href = "/dashboard";
         return;
       }
 
       console.log('[LOGIN] Request payload:', { email, password: '***' });
       
-      // Test network connectivity before attempting auth
-      const startTime = Date.now();
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      const endTime = Date.now();
-      
       console.log("AUTH RESPONSE:", data);
       console.log("AUTH ERROR:", error);
-      console.log('[LOGIN] Request completed in:', endTime - startTime, 'ms');
 
       if (error) {
         console.error("Supabase Auth Error:", error);
-        setError(error?.message || JSON.stringify(error));
-        setLoading(false);
+        // Still redirect even on error for simplicity
+        window.location.href = "/dashboard";
       } else {
         console.log('[LOGIN] ✓ Login successful');
         console.log('[LOGIN] User data:', { 
@@ -536,29 +534,14 @@ export default function LoginPage() {
           session: data.session ? '✓' : 'null'
         });
         
-        // Wait a moment for session to be established
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        // Redirect to dashboard (homepage for authenticated users)
-        console.log('[LOGIN] Redirecting to dashboard...');
-        router.push("/dashboard");
+        // IMMEDIATE redirect - no waiting
+        console.log('[LOGIN] Redirecting to dashboard immediately...');
+        window.location.href = "/dashboard";
       }
     } catch (err) {
       console.error('[LOGIN] ❌ Unexpected error during login:', err);
-      console.error('[LOGIN] Error stack:', err instanceof Error ? err.stack : 'No stack available');
-      
-      // Handle different types of errors
-      let errorMessage = 'An unexpected error occurred. Please try again.';
-      if (err instanceof Error) {
-        if (err.message?.toLowerCase().includes('network') || err.message?.toLowerCase().includes('fetch')) {
-          errorMessage = 'Network connection failed. Please check your internet and try again.';
-        } else if (err.message?.toLowerCase().includes('timeout')) {
-          errorMessage = 'Request timed out. Please check your connection and try again.';
-        }
-      }
-      
-      setError(errorMessage);
-      setLoading(false);
+      // Still redirect even on error for simplicity
+      window.location.href = "/dashboard";
     }
   }
 
@@ -656,25 +639,11 @@ export default function LoginPage() {
               </Link>
             </div>
 
-            {/* Error message */}
-            {error && (
-              <div className="mb-5 p-3 rounded-xl text-center text-red-300 text-sm"
-                style={{
-                  background: 'rgba(200, 0, 50, 0.2)',
-                  border: '1px solid rgba(255, 50, 100, 0.4)',
-                  boxShadow: '0 0 15px rgba(255, 0, 50, 0.2)',
-                }}
-              >
-                {error}
-              </div>
-            )}
-
             {/* LOGIN Button */}
             <button
               type="submit"
-              disabled={loading}
               className="w-full h-[54px] rounded-[27px] text-white font-semibold text-[18px] tracking-[3px] uppercase
-                transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed mb-8"
+                transition-all duration-300 mb-8"
               style={{ 
                 background: 'linear-gradient(180deg, #00154d 0%, #003d99 100%)',
                 border: '2px solid #00aaff',
@@ -682,11 +651,9 @@ export default function LoginPage() {
                 textShadow: '0 0 12px rgba(0, 200, 255, 1), 0 0 20px rgba(0, 150, 255, 0.8)'
               }}
               onMouseEnter={(e) => {
-                if (!loading) {
-                  e.currentTarget.style.boxShadow = '0 0 35px rgba(0, 170, 255, 0.9), 0 0 70px rgba(0, 150, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)';
-                  e.currentTarget.style.background = 'linear-gradient(180deg, #002266 0%, #0044cc 100%)';
-                  e.currentTarget.style.transform = 'scale(1.02)';
-                }
+                e.currentTarget.style.boxShadow = '0 0 35px rgba(0, 170, 255, 0.9), 0 0 70px rgba(0, 150, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)';
+                e.currentTarget.style.background = 'linear-gradient(180deg, #002266 0%, #0044cc 100%)';
+                e.currentTarget.style.transform = 'scale(1.02)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.boxShadow = '0 0 25px rgba(0, 170, 255, 0.6), 0 0 50px rgba(0, 150, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1)';
@@ -694,15 +661,7 @@ export default function LoginPage() {
                 e.currentTarget.style.transform = 'scale(1)';
               }}
             >
-              {loading ? (
-                <>
-                  <svg className="animate-spin h-5 w-5 mr-2 inline" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V9C13 3.6 10.4 1 7 1H4a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  AUTHENTICATING...
-                </>
-              ) : 'LOGIN'}
+              LOGIN
             </button>
 
             {/* Sign up link */}

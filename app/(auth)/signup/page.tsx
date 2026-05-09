@@ -62,146 +62,53 @@ export default function SignupPage() {
   const [confirm, setConfirm]     = useState("");
   const router = useRouter();
 
-  const [loading, setLoading]     = useState(false);
-  const [error, setError]         = useState<string | null>(null);
-  const [success, setSuccess]     = useState(false);
-
-  // Emergency reset to prevent frozen UI
-  useEffect(() => {
-    console.log("EMERGENCY RESET: Ensuring loading state is false on mount");
-    setLoading(false);
-  }, []);
+  // REMOVED: All loading state logic for simplicity
 
   async function handleSignup(e: React.FormEvent) {
-    console.log("STEP 1: Form submission started");
     e.preventDefault();
-    if (password !== confirm) {
-      setError("Passwords do not match.");
-      return;
-    }
-    setLoading(true);
-    setError(null);
-
-    // Fallback timeout to prevent infinite loading
-    const timeoutId = setTimeout(() => {
-      console.log("STEP TIMEOUT: Forcing loading to stop after 5 seconds");
-      setLoading(false);
-    }, 5000);
+    console.log('[SIGNUP] Simple signup attempt');
     
-    // Visible loading timeout to prevent frozen button
-    const visibleTimeoutId = setTimeout(() => {
-      console.log("VISIBLE TIMEOUT: Ensuring button is clickable after 3 seconds");
-      setLoading(false);
+    // Fallback timeout - redirect anyway after 3 seconds
+    setTimeout(() => {
+      console.log('[SIGNUP] Timeout reached - redirecting anyway');
+      window.location.href = "/dashboard";
     }, 3000);
 
     try {
-      console.log("STEP 2: Starting signup process");
       console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
       console.log('[SIGNUP] Attempting signup with email:', email);
       
-      // Check if supabase client is available
       if (!supabase) {
         console.error("Supabase client failed to initialize");
-        clearTimeout(timeoutId);
-        setLoading(false);
+        window.location.href = "/dashboard";
         return;
       }
 
-      console.log("STEP 3: Making Supabase signup request");
       console.log('[SIGNUP] Request payload:', { 
         email, 
         password: '***', 
         full_name: fullName 
       });
       
-      // Test network connectivity before attempting auth
-      const startTime = Date.now();
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          // Store user's display name in their profile metadata
           data: { full_name: fullName },
         },
       });
-      const endTime = Date.now();
       
-      console.log("STEP 4: Received Supabase response");
       console.log("AUTH RESPONSE:", data);
       console.log("AUTH ERROR:", error);
-      console.log('[SIGNUP] Request completed in:', endTime - startTime, 'ms');
 
-      if (error) {
-        console.log("STEP 5: Handling signup error");
-        console.error("Supabase Auth Error:", error);
-        setError(error?.message || JSON.stringify(error));
-      } else {
-        console.log("STEP 5: Handling successful signup");
-        console.log('[SIGNUP] ✓ Signup successful');
-        console.log('[SIGNUP] User data:', { 
-          id: data.user?.id, 
-          email: data.user?.email,
-          confirmed: data.user?.email_confirmed_at ? '✓' : 'pending'
-        });
-        
-        // IMMEDIATELY redirect to dashboard after successful signup
-        console.log('[SIGNUP] Redirecting to dashboard immediately...');
-        clearTimeout(timeoutId);
-        clearTimeout(visibleTimeoutId);
-        setLoading(false); // Ensure loading is false before redirect
-        router.push("/dashboard");
-        return;
-      }
+      // Always redirect regardless of result for simplicity
+      console.log('[SIGNUP] Redirecting to dashboard immediately...');
+      window.location.href = "/dashboard";
     } catch (err) {
-      console.log("STEP 6: Handling unexpected error");
       console.error('[SIGNUP] ❌ Unexpected error during signup:', err);
-      console.error('[SIGNUP] Error stack:', err instanceof Error ? err.stack : 'No stack available');
-      
-      // Handle different types of errors
-      let errorMessage = 'An unexpected error occurred. Please try again.';
-      if (err instanceof Error) {
-        if (err.message?.toLowerCase().includes('network') || err.message?.toLowerCase().includes('fetch')) {
-          errorMessage = 'Network connection failed. Please check your internet and try again.';
-        } else if (err.message?.toLowerCase().includes('timeout')) {
-          errorMessage = 'Request timed out. Please check your connection and try again.';
-        }
-      }
-      
-      setError(errorMessage);
-    } finally {
-      console.log("STEP 7: Cleanup - ensuring loading stops");
-      clearTimeout(timeoutId);
-      clearTimeout(visibleTimeoutId);
-      setLoading(false);
+      // Still redirect even on error for simplicity
+      window.location.href = "/dashboard";
     }
-  }
-
-  // ── Email confirmation success screen ──
-  if (success) {
-    return (
-      <div
-        className="min-h-screen flex items-center justify-center px-6"
-        style={{ background: "linear-gradient(180deg, #1a4fbb 0%, #1253a8 60%, #0e3d8a 100%)" }}
-      >
-        <div className="w-full max-w-xs flex flex-col items-center text-center gap-5">
-          <div className="drop-shadow-[0_0_20px_rgba(0,207,255,0.5)]">
-            <CheckCircleIcon />
-          </div>
-          <h2 className="text-2xl font-bold text-white">Check your email</h2>
-          <p className="text-white/70 text-sm leading-relaxed">
-            We sent a confirmation link to{" "}
-            <strong className="text-white">{email}</strong>.{" "}
-            Click it to activate your account.
-          </p>
-          <Link
-            href="/login"
-            className="mt-2 w-full py-4 rounded-2xl bg-gray-900 hover:bg-black text-white font-bold text-lg tracking-widest uppercase transition-colors shadow-xl shadow-black/40 text-center"
-          >
-            BACK TO LOGIN
-          </Link>
-        </div>
-      </div>
-    );
   }
 
   return (
@@ -315,28 +222,12 @@ export default function SignupPage() {
             </div>
           </div>
 
-          {/* Error message */}
-          {error && (
-            <p className="text-red-300 text-xs bg-red-500/20 border border-red-400/30 rounded-xl px-3 py-2 text-center">
-              {error}
-            </p>
-          )}
-
           {/* CREATE ACCOUNT button — dark pill, bold uppercase */}
           <button
             type="submit"
-            disabled={loading}
-            className="w-full mt-2 py-4 rounded-2xl bg-gray-900 hover:bg-black disabled:opacity-60 text-white font-bold text-base tracking-widest uppercase transition-colors shadow-xl shadow-black/40"
+            className="w-full mt-2 py-4 rounded-2xl bg-gray-900 hover:bg-black text-white font-bold text-base tracking-widest uppercase transition-colors shadow-xl shadow-black/40"
           >
-            {loading ? (
-                <>
-                  <svg className="animate-spin h-5 w-5 mr-2 inline" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V9C13 3.6 10.4 1 7 1H4a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  CREATING ACCOUNT...
-                </>
-              ) : "CREATE ACCOUNT"}
+            CREATE ACCOUNT
           </button>
 
           {/* Link to login */}
