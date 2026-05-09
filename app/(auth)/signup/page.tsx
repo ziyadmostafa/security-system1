@@ -9,7 +9,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -66,6 +66,12 @@ export default function SignupPage() {
   const [error, setError]         = useState<string | null>(null);
   const [success, setSuccess]     = useState(false);
 
+  // Emergency reset to prevent frozen UI
+  useEffect(() => {
+    console.log("EMERGENCY RESET: Ensuring loading state is false on mount");
+    setLoading(false);
+  }, []);
+
   async function handleSignup(e: React.FormEvent) {
     console.log("STEP 1: Form submission started");
     e.preventDefault();
@@ -81,6 +87,12 @@ export default function SignupPage() {
       console.log("STEP TIMEOUT: Forcing loading to stop after 5 seconds");
       setLoading(false);
     }, 5000);
+    
+    // Visible loading timeout to prevent frozen button
+    const visibleTimeoutId = setTimeout(() => {
+      console.log("VISIBLE TIMEOUT: Ensuring button is clickable after 3 seconds");
+      setLoading(false);
+    }, 3000);
 
     try {
       console.log("STEP 2: Starting signup process");
@@ -135,6 +147,8 @@ export default function SignupPage() {
         // IMMEDIATELY redirect to dashboard after successful signup
         console.log('[SIGNUP] Redirecting to dashboard immediately...');
         clearTimeout(timeoutId);
+        clearTimeout(visibleTimeoutId);
+        setLoading(false); // Ensure loading is false before redirect
         router.push("/dashboard");
         return;
       }
@@ -157,6 +171,7 @@ export default function SignupPage() {
     } finally {
       console.log("STEP 7: Cleanup - ensuring loading stops");
       clearTimeout(timeoutId);
+      clearTimeout(visibleTimeoutId);
       setLoading(false);
     }
   }
