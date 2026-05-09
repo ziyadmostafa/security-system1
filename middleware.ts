@@ -61,8 +61,17 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith(route)
   )
   
-  // Check if user is accessing auth route
-  const isAuthRoute = authRoutes.includes(pathname)
+  // Check if user is accessing an auth route
+  const isAuthRoute = authRoutes.some(route => 
+    pathname.startsWith(route)
+  )
+  
+  // If user is authenticated and trying to access auth routes, redirect to dashboard
+  if (session && isAuthRoute) {
+    console.log('[MIDDLEWARE] Authenticated user accessing auth route, redirecting to dashboard');
+    const redirectUrl = new URL('/dashboard', req.url);
+    return NextResponse.redirect(redirectUrl);
+  }
   
   // Redirect logic
   if (isProtectedRoute && !session) {
@@ -72,11 +81,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
   
-  if (isAuthRoute && session) {
-    // User is already authenticated and trying to access auth pages
-    return NextResponse.redirect(new URL('/dashboard', req.url))
-  }
-  
+    
   // Allow access to public routes and authenticated users to protected routes
   return NextResponse.next()
 }

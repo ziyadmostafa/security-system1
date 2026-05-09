@@ -38,6 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const fetchUserData = async (supabaseUser: SupabaseUser) => {
     try {
+      console.log("STEP FETCH: Building user data from Supabase user");
       // Build user data with gate information from user_metadata
       // Open access model: no email-based filtering required
       const userData: AuthUser = {
@@ -50,20 +51,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         gate_number: supabaseUser.user_metadata?.gate_number || null,
         gate_id: supabaseUser.user_metadata?.gate_id || null
       };
+      console.log("STEP FETCH: User data built successfully");
       setUser(userData);
     } catch (error) {
-      console.error('Error fetching user data:', error);
-      const userData: AuthUser = {
-        id: supabaseUser.id,
-        full_name: supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User',
-        email: supabaseUser.email || null,
-        phone: supabaseUser.phone || null,
-        role: supabaseUser.user_metadata?.role || 'User',
-        mall_name: supabaseUser.user_metadata?.mall_name || null,
-        gate_number: supabaseUser.user_metadata?.gate_number || null,
-        gate_id: supabaseUser.user_metadata?.gate_id || null
-      };
-      setUser(userData);
+      console.error('[Auth] Error fetching user data:', error);
     }
   };
 

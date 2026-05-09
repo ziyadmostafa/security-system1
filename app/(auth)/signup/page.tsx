@@ -67,6 +67,7 @@ export default function SignupPage() {
   const [success, setSuccess]     = useState(false);
 
   async function handleSignup(e: React.FormEvent) {
+    console.log("STEP 1: Form submission started");
     e.preventDefault();
     if (password !== confirm) {
       setError("Passwords do not match.");
@@ -75,16 +76,26 @@ export default function SignupPage() {
     setLoading(true);
     setError(null);
 
+    // Fallback timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      console.log("STEP TIMEOUT: Forcing loading to stop after 5 seconds");
+      setLoading(false);
+    }, 5000);
+
     try {
+      console.log("STEP 2: Starting signup process");
       console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
       console.log('[SIGNUP] Attempting signup with email:', email);
       
       // Check if supabase client is available
       if (!supabase) {
         console.error("Supabase client failed to initialize");
+        clearTimeout(timeoutId);
+        setLoading(false);
         return;
       }
 
+      console.log("STEP 3: Making Supabase signup request");
       console.log('[SIGNUP] Request payload:', { 
         email, 
         password: '***', 
@@ -103,15 +114,17 @@ export default function SignupPage() {
       });
       const endTime = Date.now();
       
+      console.log("STEP 4: Received Supabase response");
       console.log("AUTH RESPONSE:", data);
       console.log("AUTH ERROR:", error);
       console.log('[SIGNUP] Request completed in:', endTime - startTime, 'ms');
 
       if (error) {
+        console.log("STEP 5: Handling signup error");
         console.error("Supabase Auth Error:", error);
         setError(error?.message || JSON.stringify(error));
-        setLoading(false);
       } else {
+        console.log("STEP 5: Handling successful signup");
         console.log('[SIGNUP] ✓ Signup successful');
         console.log('[SIGNUP] User data:', { 
           id: data.user?.id, 
@@ -119,19 +132,14 @@ export default function SignupPage() {
           confirmed: data.user?.email_confirmed_at ? '✓' : 'pending'
         });
         
-        // Handle signup completion - check if email confirmation is needed
-        if (data.user?.email_confirmed_at) {
-          console.log('[SIGNUP] Email already confirmed, redirecting to dashboard...');
-          // Wait a moment for session to be established
-          await new Promise(resolve => setTimeout(resolve, 100));
-          router.push("/dashboard");
-        } else {
-          // Show confirmation screen for email verification
-          console.log('[SIGNUP] Email confirmation required, showing verification screen');
-          setSuccess(true);
-        }
+        // IMMEDIATELY redirect to dashboard after successful signup
+        console.log('[SIGNUP] Redirecting to dashboard immediately...');
+        clearTimeout(timeoutId);
+        router.push("/dashboard");
+        return;
       }
     } catch (err) {
+      console.log("STEP 6: Handling unexpected error");
       console.error('[SIGNUP] ❌ Unexpected error during signup:', err);
       console.error('[SIGNUP] Error stack:', err instanceof Error ? err.stack : 'No stack available');
       
@@ -146,6 +154,9 @@ export default function SignupPage() {
       }
       
       setError(errorMessage);
+    } finally {
+      console.log("STEP 7: Cleanup - ensuring loading stops");
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   }
