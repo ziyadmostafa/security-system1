@@ -14,50 +14,17 @@ import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import styles from "./login.module.css";
 
-// ── Project Logo (from Home Page - /logo.png) ──
+// ── Project Logo (same as Home Page /logo.png) ──
 function ProjectLogo() {
   return (
-    <div className="relative w-[140px] h-[140px] flex items-center justify-center">
-      {/* Glow effect behind logo */}
-      <div 
-        className={`absolute inset-0 rounded-full ${styles['animate-pulse']}`}
-        style={{
-          background: 'radial-gradient(circle, rgba(0, 150, 255, 0.4) 0%, rgba(0, 100, 200, 0.2) 40%, transparent 70%)',
-          filter: 'blur(25px)',
-        }}
-      />
-      
-      {/* Rotating outer ring */}
-      <div 
-        className={`absolute w-[180px] h-[180px] rounded-full border border-cyan-400/30 ${styles['animate-spin']}`}
-        style={{
-          boxShadow: '0 0 30px rgba(0, 150, 255, 0.3), inset 0 0 20px rgba(0, 150, 255, 0.1)'
-        }}
-      />
-      
-      {/* Counter-rotating inner ring */}
-      <div 
-        className={`absolute w-[160px] h-[160px] rounded-full border border-cyan-400/40 ${styles['animate-spin-reverse']}`}
-        style={{
-          borderStyle: 'dashed',
-          boxShadow: '0 0 25px rgba(0, 180, 255, 0.4)'
-        }}
-      />
-      
-      {/* Project logo image */}
-      <div className="relative z-10" style={{
-        filter: 'drop-shadow(0 0 20px rgba(0, 150, 255, 0.8)) drop-shadow(0 0 40px rgba(0, 100, 200, 0.5))'
-      }}>
-        <Image
-          src="/logo.png"
-          alt="Security System Logo"
-          width={120}
-          height={120}
-          className="object-contain"
-          priority
-        />
-      </div>
-    </div>
+    <Image
+      src="/logo.png"
+      alt="Security System Logo"
+      width={140}
+      height={140}
+      className="object-contain"
+      priority
+    />
   );
 }
 
