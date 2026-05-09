@@ -11,6 +11,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import Image from "next/image";
 
@@ -59,6 +60,7 @@ export default function SignupPage() {
   const [email, setEmail]         = useState("");
   const [password, setPassword]   = useState("");
   const [confirm, setConfirm]     = useState("");
+  const router = useRouter();
 
   const [loading, setLoading]     = useState(false);
   const [error, setError]         = useState<string | null>(null);
@@ -140,9 +142,19 @@ export default function SignupPage() {
         console.log('[SIGNUP] User data:', { 
           id: data.user?.id, 
           email: data.user?.email,
-          confirmed: data.user?.email_confirmed ? '✓' : 'pending'
+          confirmed: data.user?.email_confirmed_at ? '✓' : 'pending'
         });
-        setSuccess(true);
+        
+        // If email is already confirmed, redirect to dashboard immediately
+        if (data.user?.email_confirmed_at) {
+          console.log('[SIGNUP] Email already confirmed, redirecting to dashboard...');
+          // Wait a moment for session to be established
+          await new Promise(resolve => setTimeout(resolve, 100));
+          router.push("/dashboard");
+        } else {
+          // Show confirmation screen for email verification
+          setSuccess(true);
+        }
       }
     } catch (err) {
       console.error('[SIGNUP] ❌ Unexpected error during signup:', err);

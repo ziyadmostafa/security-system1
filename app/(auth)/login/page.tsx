@@ -556,6 +556,12 @@ export default function LoginPage() {
           email: data.user?.email,
           session: data.session ? '✓' : 'null'
         });
+        
+        // Wait a moment for session to be established
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Redirect to dashboard (homepage for authenticated users)
+        console.log('[LOGIN] Redirecting to dashboard...');
         router.push("/dashboard");
       }
     } catch (err) {
