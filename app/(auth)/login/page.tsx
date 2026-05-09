@@ -544,13 +544,42 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    try {
+      console.log('[LOGIN] Attempting login with email:', email);
+      console.log('[LOGIN] Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+      
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error) {
-      setError(error.message);
+      if (error) {
+        console.error('[LOGIN] Supabase auth error:', error);
+        console.error('[LOGIN] Error details:', {
+          message: error.message,
+          status: error.status,
+          code: error.code
+        });
+        
+        // Provide user-friendly error messages
+        let userMessage = error.message;
+        if (error.message?.toLowerCase().includes('invalid login credentials')) {
+          userMessage = 'Invalid email or password. Please check your credentials and try again.';
+        } else if (error.message?.toLowerCase().includes('email not confirmed')) {
+          userMessage = 'Please check your email and confirm your account before logging in.';
+        } else if (error.message?.toLowerCase().includes('too many requests')) {
+          userMessage = 'Too many login attempts. Please wait a moment and try again.';
+        } else if (error.message?.toLowerCase().includes('network')) {
+          userMessage = 'Network error. Please check your internet connection and try again.';
+        }
+        
+        setError(userMessage);
+        setLoading(false);
+      } else {
+        console.log('[LOGIN] Login successful, redirecting to dashboard');
+        router.push("/dashboard");
+      }
+    } catch (err) {
+      console.error('[LOGIN] Unexpected error during login:', err);
+      setError('An unexpected error occurred. Please try again.');
       setLoading(false);
-    } else {
-      router.push("/dashboard");
     }
   }
 
@@ -686,7 +715,15 @@ export default function LoginPage() {
                 e.currentTarget.style.transform = 'scale(1)';
               }}
             >
-              {loading ? 'AUTHENTICATING...' : 'LOGIN'}
+              {loading ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 mr-2 inline" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V9C13 3.6 10.4 1 7 1H4a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  AUTHENTICATING...
+                </>
+              ) : 'LOGIN'}
             </button>
 
             {/* Sign up link */}

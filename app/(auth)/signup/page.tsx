@@ -73,20 +73,51 @@ export default function SignupPage() {
     setLoading(true);
     setError(null);
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        // Store the user's display name in their profile metadata
-        data: { full_name: fullName },
-      },
-    });
+    try {
+      console.log('[SIGNUP] Attempting signup with email:', email);
+      console.log('[SIGNUP] Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          // Store the user's display name in their profile metadata
+          data: { full_name: fullName },
+        },
+      });
 
-    if (error) {
-      setError(error.message);
+      if (error) {
+        console.error('[SIGNUP] Supabase auth error:', error);
+        console.error('[SIGNUP] Error details:', {
+          message: error.message,
+          status: error.status,
+          code: error.code
+        });
+        
+        // Provide user-friendly error messages
+        let userMessage = error.message;
+        if (error.message?.toLowerCase().includes('user already registered')) {
+          userMessage = 'An account with this email already exists. Please try logging in instead.';
+        } else if (error.message?.toLowerCase().includes('password should be')) {
+          userMessage = 'Password is too weak. Please use a stronger password.';
+        } else if (error.message?.toLowerCase().includes('invalid email')) {
+          userMessage = 'Please enter a valid email address.';
+        } else if (error.message?.toLowerCase().includes('network')) {
+          userMessage = 'Network error. Please check your internet connection and try again.';
+        } else if (error.message?.toLowerCase().includes('rate limit')) {
+          userMessage = 'Too many signup attempts. Please wait a moment and try again.';
+        }
+        
+        setError(userMessage);
+        setLoading(false);
+      } else {
+        console.log('[SIGNUP] Signup successful, showing confirmation screen');
+        setSuccess(true);
+      }
+    } catch (err) {
+      console.error('[SIGNUP] Unexpected error during signup:', err);
+      setError('An unexpected error occurred. Please try again.');
       setLoading(false);
-    } else {
-      setSuccess(true);
     }
   }
 
@@ -242,7 +273,15 @@ export default function SignupPage() {
             disabled={loading}
             className="w-full mt-2 py-4 rounded-2xl bg-gray-900 hover:bg-black disabled:opacity-60 text-white font-bold text-base tracking-widest uppercase transition-colors shadow-xl shadow-black/40"
           >
-            {loading ? "..." : "CREATE ACCOUNT"}
+            {loading ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 mr-2 inline" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V9C13 3.6 10.4 1 7 1H4a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  CREATING ACCOUNT...
+                </>
+              ) : "CREATE ACCOUNT"}
           </button>
 
           {/* Link to login */}
