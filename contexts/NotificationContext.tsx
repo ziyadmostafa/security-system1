@@ -76,7 +76,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     try {
       // Check if supabase client is available
       if (!supabase) {
-        console.warn('[NOTIFICATIONS] Supabase client not available during build/prerender');
+        console.error("Supabase client failed to initialize");
         return;
       }
       
@@ -129,7 +129,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     try {
       // Check if supabase client is available
       if (!supabase) {
-        console.warn('[NOTIFICATIONS] Supabase client not available during build/prerender');
+        console.error("Supabase client failed to initialize");
         return;
       }
       

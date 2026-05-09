@@ -51,7 +51,7 @@ export default function SettingsPage() {
 
   const handleSignOut = async () => {
     if (!supabase) {
-      console.error('[SETTINGS] Supabase client not available');
+      console.error("Supabase client failed to initialize");
       return;
     }
     await supabase.auth.signOut();
@@ -82,9 +82,7 @@ export default function SettingsPage() {
 
     try {
       if (!supabase) {
-        console.error('[SETTINGS] Supabase client not available');
-        setPasswordError('Authentication system not available');
-        setIsChangingPassword(false);
+        console.error("Supabase client failed to initialize");
         return;
       }
       

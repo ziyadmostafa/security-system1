@@ -12,7 +12,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 
 // ── Person icon (right side of full-name input) ──
@@ -81,9 +81,7 @@ export default function SignupPage() {
       
       // Check if supabase client is available
       if (!supabase) {
-        console.error('[SIGNUP] Supabase client not available during build/prerender');
-        setError('Supabase client not available. Please check environment configuration.');
-        setLoading(false);
+        console.error("Supabase client failed to initialize");
         return;
       }
 

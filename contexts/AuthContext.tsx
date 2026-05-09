@@ -98,8 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
         // Check if supabase client is available
         if (!supabase) {
-          console.warn('[Auth] Supabase client not available during build/prerender');
-          setLoading(false);
+          console.error("Supabase client failed to initialize");
           return;
         }
         
@@ -128,8 +127,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       // Check if supabase client is available
       if (!supabase) {
-        console.warn('[Auth] Supabase client not available during build/prerender');
-        setLoading(false);
+        console.error("Supabase client failed to initialize");
         return;
       }
       

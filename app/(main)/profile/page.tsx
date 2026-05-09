@@ -58,8 +58,7 @@ export default function ProfilePage() {
     try {
       // Check if supabase client is available
       if (!supabase) {
-        console.error('[PROFILE] Supabase client not available');
-        setSavingLocation(false);
+        console.error("Supabase client failed to initialize");
         return;
       }
       
