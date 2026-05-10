@@ -524,27 +524,24 @@ export default function LoginPage() {
         return;
       }
       
-      // Require real Supabase session
-      if (!data.session?.user) {
+      // Check for successful login with session
+      if (data?.session?.user) {
+        console.log('[LOGIN] ✓ Login successful');
+        console.log('[LOGIN] User data:', { 
+          id: data.user?.id, 
+          email: data.user?.email,
+          session: data.session ? '✓' : 'null'
+        });
+        
+        // Force immediate redirect and stop all UI updates
+        console.log('[LOGIN] Redirecting to dashboard with valid session...');
+        window.location.replace("/dashboard");
+        return; // Stop execution to prevent re-render
+      } else {
         console.error('[LOGIN] No valid session returned');
         setError("No valid session created");
         return;
       }
-
-      console.log('[LOGIN] ✓ Login successful');
-      console.log('[LOGIN] User data:', { 
-        id: data.user?.id, 
-        email: data.user?.email,
-        session: data.session ? '✓' : 'null'
-      });
-      
-      // Only redirect with real session
-      console.log('[LOGIN] Redirecting to dashboard with valid session...');
-      setSuccess("Login successful! Redirecting...");
-      
-      // Force immediate redirect and stop all UI updates
-      window.location.replace("/dashboard");
-      return;
     } catch (err) {
       console.error('[LOGIN] ❌ Unexpected error during login:', err);
       setError("An unexpected error occurred");
