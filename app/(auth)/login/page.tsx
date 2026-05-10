@@ -493,30 +493,40 @@ export default function LoginPage() {
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [error, setError]       = useState<string | null>(null);
-  const [success, setSuccess]     = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   async function handleLogin(e: React.FormEvent) {
+    console.log("=== LOGIN FUNCTION STARTED ===");
+    console.log("Event type:", e?.type);
+    console.log("Form data:", { email: email?.substring(0, 3) + "...", password: password ? "***" : "empty" });
+    
     e?.preventDefault();
-    console.log("LOGIN CLICKED");
     setError(null);
+    setSuccess(null);
     
     try {
       console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
       console.log('[LOGIN] Attempting login with email:', email);
       
       console.log("SUPABASE CLIENT CHECK:", supabase);
+      console.log("SUPABASE CLIENT TYPE:", typeof supabase);
+      
       if (!supabase) {
         console.error("Supabase client is null/undefined");
         setError("Supabase client not initialized");
         return;
       }
 
+      console.log('[LOGIN] Calling signInWithPassword...');
       console.log('[LOGIN] Request payload:', { email, password: '***' });
       
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      console.log("LOGIN RESPONSE:", data);
-      console.log("LOGIN ERROR:", error);
+      console.log("=== LOGIN RESPONSE ===");
+      console.log("Data:", data);
+      console.log("Error:", error);
+      console.log("Session exists:", !!data?.session);
+      console.log("User exists:", !!data?.session?.user);
 
       if (error) {
         console.error("Supabase Auth Error:", error);
@@ -535,6 +545,7 @@ export default function LoginPage() {
         
         // Force immediate redirect and stop all UI updates
         console.log('[LOGIN] Redirecting to dashboard with valid session...');
+        setSuccess("Login successful! Redirecting...");
         window.location.replace("/dashboard");
         return; // Stop execution to prevent re-render
       } else {
@@ -544,6 +555,7 @@ export default function LoginPage() {
       }
     } catch (err) {
       console.error('[LOGIN] ❌ Unexpected error during login:', err);
+      console.error('[LOGIN] Error stack:', err instanceof Error ? err.stack : 'No stack available');
       setError("An unexpected error occurred");
     }
   }
