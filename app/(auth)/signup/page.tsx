@@ -147,7 +147,7 @@ function NetworkMesh() {
 // ── Central Shield with Half-Human / Half-Digital Face ──
 function ShieldWithFace() {
   return (
-    <div className={`absolute top-[8%] left-1/2 -translate-x-1/2 ${styles['animate-shield-pulse']}`} style={{ filter: 'drop-shadow(0 0 30px rgba(0,170,255,0.4)) drop-shadow(0 0 60px rgba(0,100,200,0.2))' }}>
+    <div className={`absolute top-[10%] left-1/2 -translate-x-1/2 ${styles['animate-shield-pulse']}`} style={{ filter: 'drop-shadow(0 0 30px rgba(0,170,255,0.4)) drop-shadow(0 0 60px rgba(0,100,200,0.2))' }}>
       <svg width="340" height="380" viewBox="0 0 340 380" fill="none">
         <defs>
           <linearGradient id="shieldGlow" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -584,7 +584,7 @@ export default function SignupPage() {
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6">
         
         {/* ── Logo Area with Project Logo and Lock Icon ── */}
-        <div className="relative flex items-center justify-center mb-10">
+        <div className="relative flex items-center justify-center mb-12 mt-4">
           {/* Lock icon on left side */}
           <div className="absolute -left-24 top-1/2 -translate-y-1/2">
             <LockSideIcon />
