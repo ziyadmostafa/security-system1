@@ -500,12 +500,11 @@ export default function LoginPage() {
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
 
-    console.log("LOGIN CLICKED");
+    console.log("LOGIN START");
     console.log("Email:", email);
     console.log("Password:", password ? "***" : "empty");
 
     setError(null);
-    setSuccess(null);
     setLoading(true);
 
     try {
@@ -515,7 +514,6 @@ export default function LoginPage() {
       if (!supabase) {
         console.error("Supabase client is null");
         setError("Authentication system not available");
-        setLoading(false);
         return;
       }
 
@@ -527,7 +525,6 @@ export default function LoginPage() {
       if (error) {
         console.error("Supabase Auth Error:", error);
         setError(error?.message || "Login failed");
-        setLoading(false);
         return;
       }
 
@@ -540,12 +537,14 @@ export default function LoginPage() {
       } else {
         console.error("No valid session returned");
         setError("No valid session created");
-        setLoading(false);
         return;
       }
     } catch (err) {
       console.error("Unexpected error during login:", err);
       setError("An unexpected error occurred");
+    } finally {
+      // GUARANTEED: Always reset loading state
+      console.log("LOGIN FINALLY - Resetting loading state");
       setLoading(false);
     }
   }
