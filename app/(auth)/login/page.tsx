@@ -495,6 +495,7 @@ export default function LoginPage() {
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
@@ -505,6 +506,7 @@ export default function LoginPage() {
 
     setError(null);
     setSuccess(null);
+    setLoading(true);
 
     try {
       console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
@@ -513,6 +515,7 @@ export default function LoginPage() {
       if (!supabase) {
         console.error("Supabase client is null");
         setError("Authentication system not available");
+        setLoading(false);
         return;
       }
 
@@ -524,22 +527,29 @@ export default function LoginPage() {
       if (error) {
         console.error("Supabase Auth Error:", error);
         setError(error?.message || "Login failed");
+        setLoading(false);
         return;
       }
 
       if (data?.session?.user) {
-        console.log("LOGIN SUCCESS - Redirecting to dashboard");
+        console.log("LOGIN SUCCESS - Session created, redirecting to dashboard");
         setSuccess("Login successful! Redirecting...");
-        window.location.replace("/dashboard");
+        
+        // Update auth state before redirect
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        router.push("/dashboard");
         return;
       } else {
         console.error("No valid session returned");
         setError("No valid session created");
+        setLoading(false);
         return;
       }
     } catch (err) {
       console.error("Unexpected error during login:", err);
       setError("An unexpected error occurred");
+      setLoading(false);
     }
   }
 
@@ -666,6 +676,7 @@ export default function LoginPage() {
             {/* LOGIN Button */}
             <button
               type="submit"
+              disabled={loading}
               className="w-full h-[54px] rounded-[27px] text-white font-semibold text-[18px] tracking-[3px] uppercase
                 transition-all duration-300 mb-8"
               style={{ 
@@ -685,7 +696,31 @@ export default function LoginPage() {
                 e.currentTarget.style.transform = 'scale(1)';
               }}
             >
-              LOGIN
+              {loading ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 4-4 0 0 0 0 0zm-1-1h8a2 2 0 0-2 0 0 0z"
+                    ></path>
+                  </svg>
+                  LOGGING IN...
+                </>
+              ) : "LOGIN"}
             </button>
 
             {/* Sign up link */}
