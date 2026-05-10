@@ -68,8 +68,9 @@ export default function ProfilePage() {
   // Load user data on mount
   useEffect(() => {
     if (user) {
-      setMallName(user.mall_name || '');
-      setGateNumber(user.gate_number || '');
+      const authUser = user as any;
+      setMallName(authUser?.user_metadata?.mall_name || authUser?.mall_name || '');
+      setGateNumber(authUser?.user_metadata?.gate_number || authUser?.gate_number || '');
     }
   }, [user]);
 
@@ -209,13 +210,25 @@ export default function ProfilePage() {
     }
   };
 
-  const name = user?.name || user?.email?.split('@')[0] || 'User';
-  const email = user?.email || '';
-  const role = user?.role || 'User';
-  const phone = (user as any)?.phone || '';
+  const authUser = user as any;
+
+  const name =
+    authUser?.user_metadata?.full_name ||
+    authUser?.user_metadata?.name ||
+    authUser?.email?.split('@')[0] ||
+    'User';
+
+  const email = authUser?.email || '';
+
+  const role =
+    authUser?.user_metadata?.role ||
+    authUser?.app_metadata?.role ||
+    'User';
+
+  const phone = authUser?.phone || '';
   const initials = name
     .split(' ')
-    .map((n) => n[0])
+    .map((n: string) => n[0])
     .join('')
     .toUpperCase();
 

@@ -370,11 +370,16 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2">
                 <MapPin size={10} color="#00d4ff" />
                 <span className="text-[12px] font-semibold text-[#1a1a1a]">
-                  {user?.mall_name && user?.gate_number
-                    ? `${user.mall_name}, Gate ${user.gate_number.replace(/gate\s*/i, '').trim()}`
-                    : user?.mall_name
-                    ? `${user.mall_name}`
-                    : "Set your location in Profile"}
+                  {(() => {
+                    const authUser = user as any;
+                    const mallName = authUser?.user_metadata?.mall_name || authUser?.mall_name;
+                    const gateNumber = authUser?.user_metadata?.gate_number || authUser?.gate_number;
+                    return mallName && gateNumber
+                      ? `${mallName}, Gate ${gateNumber.replace(/gate\s*/i, '').trim()}`
+                      : mallName
+                      ? `${mallName}`
+                      : "Set your location in Profile";
+                  })()}
                 </span>
               </div>
             </div>
