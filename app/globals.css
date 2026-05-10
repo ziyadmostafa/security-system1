@@ -7,6 +7,79 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── CYBER KEYFRAME ANIMATIONS (shared across all pages) ── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  25% { transform: translateY(-20px) translateX(10px); }
+  50% { transform: translateY(-10px) translateX(-10px); }
+  75% { transform: translateY(-30px) translateX(5px); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0px); }
+}
+
+@keyframes pulse-circuit {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@keyframes pulse-circuit-slow {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@keyframes pulse-circuit-slower {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@keyframes data-flow {
+  0% { transform: translateX(-100%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(100vw); opacity: 0; }
+}
+
+@keyframes data-flow-reverse {
+  0% { transform: translateX(100vw); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(-100%); opacity: 0; }
+}
+
+@keyframes ambient-glow {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes cyber-pulse {
+  0%, 100% {
+    opacity: 0.8;
+    box-shadow: 0 0 20px rgba(0, 170, 255, 0.4), inset 0 0 10px rgba(0, 170, 255, 0.1);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 40px rgba(0, 170, 255, 0.7), inset 0 0 20px rgba(0, 170, 255, 0.2);
+  }
+}
+
+@keyframes border-glow {
+  0%, 100% { border-color: rgba(0, 170, 255, 0.3); }
+  50% { border-color: rgba(0, 170, 255, 0.8); }
+}
+
 /* Smooth scrolling for the whole app */
 html {
   scroll-behavior: smooth;
