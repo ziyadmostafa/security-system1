@@ -147,7 +147,7 @@ function NetworkMesh() {
 // ── Central Shield with Half-Human / Half-Digital Face ──
 function ShieldWithFace() {
   return (
-    <div className={`absolute top-[10%] left-1/2 -translate-x-1/2 ${styles['animate-shield-pulse']}`} style={{ filter: 'drop-shadow(0 0 30px rgba(0,170,255,0.4)) drop-shadow(0 0 60px rgba(0,100,200,0.2))' }}>
+    <div className={`absolute top-[14%] left-1/2 -translate-x-1/2 ${styles['animate-shield-pulse']}`} style={{ filter: 'drop-shadow(0 0 30px rgba(0,170,255,0.4)) drop-shadow(0 0 60px rgba(0,100,200,0.2))' }}>
       <svg width="340" height="380" viewBox="0 0 340 380" fill="none">
         <defs>
           <linearGradient id="shieldGlow" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -445,11 +445,11 @@ function CyberBackground() {
       <div className={`absolute left-[20px] top-[290px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit-slower']}`} style={{ background: '#0099ff', boxShadow: '0 0 12px #0099ff, 0 0 24px rgba(0,153,255,0.5)' }} />
       <div className={`absolute left-[20px] top-[410px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit']}`} style={{ background: '#00ccff', boxShadow: '0 0 12px #00ccff, 0 0 24px rgba(0,204,255,0.5)' }} />
       <div className={`absolute left-[20px] top-[530px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit-slow']}`} style={{ background: '#00aaff', boxShadow: '0 0 12px #00aaff, 0 0 24px rgba(0,170,255,0.5)' }} />
-      <div className={`absolute right-[20px] top-[70px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit-slower']}`} style={{ background: '#0099ff', boxShadow: '0 0 12px #0099ff, 0 0 24px rgba(0,153,255,0.5)' }} />
-      <div className={`absolute right-[20px] top-[190px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit']}`} style={{ background: '#00ccff', boxShadow: '0 0 12px #00ccff, 0 0 24px rgba(0,204,255,0.5)' }} />
-      <div className={`absolute right-[20px] top-[310px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit-slow']}`} style={{ background: '#00aaff', boxShadow: '0 0 12px #00aaff, 0 0 24px rgba(0,170,255,0.5)' }} />
-      <div className={`absolute right-[20px] top-[430px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit-slower']}`} style={{ background: '#0099ff', boxShadow: '0 0 12px #0099ff, 0 0 24px rgba(0,153,255,0.5)' }} />
-      <div className={`absolute right-[20px] top-[550px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit']}`} style={{ background: '#00ccff', boxShadow: '0 0 12px #00ccff, 0 0 24px rgba(0,204,255,0.5)' }} />
+      <div className={`absolute right-[20px] top-[110px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit-slower']}`} style={{ background: '#0099ff', boxShadow: '0 0 12px #0099ff, 0 0 24px rgba(0,153,255,0.5)' }} />
+      <div className={`absolute right-[20px] top-[230px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit']}`} style={{ background: '#00ccff', boxShadow: '0 0 12px #00ccff, 0 0 24px rgba(0,204,255,0.5)' }} />
+      <div className={`absolute right-[20px] top-[350px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit-slow']}`} style={{ background: '#00aaff', boxShadow: '0 0 12px #00aaff, 0 0 24px rgba(0,170,255,0.5)' }} />
+      <div className={`absolute right-[20px] top-[470px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit-slower']}`} style={{ background: '#0099ff', boxShadow: '0 0 12px #0099ff, 0 0 24px rgba(0,153,255,0.5)' }} />
+      <div className={`absolute right-[20px] top-[590px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit']}`} style={{ background: '#00ccff', boxShadow: '0 0 12px #00ccff, 0 0 24px rgba(0,204,255,0.5)' }} />
 
       {/* === HUD CORNERS === */}
       <div className="absolute top-5 left-5 w-14 h-14">
@@ -591,7 +591,7 @@ export default function SignupPage() {
           </div>
           
           {/* Main Project Logo (replaced from reference design) */}
-          <div className={styles['animate-fade-in']}>
+          <div className={`${styles['animate-fade-in']}`} style={{ marginTop: '40px' }}>
             <ProjectLogo />
           </div>
         </div>
