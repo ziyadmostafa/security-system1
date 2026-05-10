@@ -60,6 +60,11 @@ export default function ProfilePage() {
       </div>
     );
   }
+
+  // Add debug logs to track session flow
+  console.log('[PROFILE] User authenticated:', !!user);
+  console.log('[PROFILE] Loading state:', loading);
+  console.log('[PROFILE] Session check passed - rendering profile');
   
   // Load user data on mount
   useEffect(() => {

@@ -41,6 +41,11 @@ export default function DashboardPage() {
       </div>
     );
   }
+
+  // Add debug logs to track session flow
+  console.log('[DASHBOARD] User authenticated:', !!user);
+  console.log('[DASHBOARD] Loading state:', loading);
+  console.log('[DASHBOARD] Session check passed - rendering dashboard');
   
   const { 
     connected, 

@@ -74,10 +74,22 @@ export async function middleware(req: NextRequest) {
   // Redirect logic - require real Supabase session
   if (isProtectedRoute && !session?.user) {
     // User is not authenticated and trying to access protected route
+    console.log('[MIDDLEWARE] Redirecting to login - no session found');
+    console.log('[MIDDLEWARE] Requested path:', pathname);
+    console.log('[MIDDLEWARE] Session exists:', !!session);
     const redirectUrl = new URL('/login', req.url)
     redirectUrl.searchParams.set('redirectTo', pathname)
     return NextResponse.redirect(redirectUrl)
   }
+
+  // If user is authenticated and trying to access auth routes, redirect to dashboard
+  if (session && isAuthRoute) {
+    console.log('[MIDDLEWARE] Authenticated user accessing auth route, redirecting to dashboard');
+    const redirectUrl = new URL('/dashboard', req.url);
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  console.log('[MIDDLEWARE] Session check passed - allowing access to:', pathname);
   
   // Allow access to public routes and authenticated users to protected routes
   return NextResponse.next()
