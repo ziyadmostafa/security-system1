@@ -533,12 +533,9 @@ export default function LoginPage() {
 
       if (data?.session?.user) {
         console.log("LOGIN SUCCESS - Session created, redirecting to dashboard");
-        setSuccess("Login successful! Redirecting...");
         
-        // Update auth state before redirect
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        router.push("/dashboard");
+        // Immediate redirect without UI blocking
+        router.replace("/dashboard");
         return;
       } else {
         console.error("No valid session returned");
