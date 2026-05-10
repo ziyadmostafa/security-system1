@@ -25,7 +25,7 @@ export async function middleware(req: NextRequest) {
         getAll() {
           return cookieStore.getAll()
         },
-        setAll(cookiesToSet: Record<string, any>) => {
+        setAll(cookiesToSet) => {
           Object.entries(cookiesToSet).forEach(([name, value, ...options]) => {
             cookieStore.set(name, value, options)
           })
