@@ -586,12 +586,12 @@ export default function SignupPage() {
         {/* ── Logo Area with Project Logo and Lock Icon ── */}
         <div className="relative flex items-center justify-center mb-12 mt-4">
           {/* Lock icon on left side */}
-          <div className="absolute -left-24 top-1/2 -translate-y-1/2" style={{ marginTop: '38px' }}>
+          <div className="absolute -left-24 top-1/2 -translate-y-1/2" style={{ marginTop: '78px' }}>
             <LockSideIcon />
           </div>
           
           {/* Main Project Logo (replaced from reference design) */}
-          <div className={`${styles['animate-fade-in']}`} style={{ marginTop: '78px' }}>
+          <div className={`${styles['animate-fade-in']}`} style={{ marginTop: '118px' }}>
             <ProjectLogo />
           </div>
         </div>
