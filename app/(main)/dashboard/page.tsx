@@ -13,6 +13,7 @@ import {
   ChevronRight,
   MapPin,
   User,
+  Settings,
 } from "lucide-react";
 import styles from "./dashboard.module.css";
 
@@ -261,7 +262,7 @@ export default function DashboardPage() {
       <div className="flex flex-col w-full min-h-screen bg-white/95 backdrop-blur-xl shadow-2xl relative sm:max-w-md sm:mx-auto">
         
         {/* ── Futuristic Header (Mobile App Style) ── */}
-        <header className="flex items-center justify-center px-4 py-3 relative"
+        <header className="flex items-center justify-between px-4 py-3 relative"
                 style={{
                   background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.98) 100%)',
                   borderBottom: '2px solid rgba(0, 170, 255, 0.4)',
@@ -275,8 +276,22 @@ export default function DashboardPage() {
             animation: 'shimmer 3s infinite'
           }} />
           
-          {/* Logo with cyber glow - CENTERED */}
-          <div className="relative">
+          {/* LEFT: Hamburger Menu */}
+          <button
+            aria-label="Open menu"
+            onClick={() => setMenuOpen((v) => !v)}
+            className="p-2 rounded-xl transition-all duration-300 relative z-10"
+            style={{
+              background: 'rgba(0, 170, 255, 0.15)',
+              border: '1px solid rgba(0, 170, 255, 0.3)',
+              boxShadow: '0 0 12px rgba(0, 170, 255, 0.2)'
+            }}
+          >
+            <Menu size={22} color="#00d4ff" />
+          </button>
+
+          {/* CENTER: Logo + Text */}
+          <div className="flex flex-col items-center relative">
             <Image
               src="/logo.png"
               alt="Security System Logo"
@@ -288,8 +303,71 @@ export default function DashboardPage() {
                 filter: 'drop-shadow(0 0 20px rgba(0, 170, 255, 0.6))'
               }}
             />
+            <span 
+              className="text-white text-sm font-medium mt-1"
+              style={{
+                textShadow: '0 0 10px rgba(0, 170, 255, 0.5)',
+                letterSpacing: '0.5px'
+              }}
+            >
+              Security System
+            </span>
           </div>
+
+          {/* RIGHT: Settings Icon */}
+          <button
+            aria-label="Settings"
+            className="p-2 rounded-xl transition-all duration-300 relative z-10"
+            style={{
+              background: 'rgba(0, 170, 255, 0.15)',
+              border: '1px solid rgba(0, 170, 255, 0.3)',
+              boxShadow: '0 0 12px rgba(0, 170, 255, 0.2)'
+            }}
+          >
+            <Settings size={22} color="#00d4ff" />
+          </button>
         </header>
+
+        {/* ── Navigation Menu (Mobile App Style) ── */}
+        {menuOpen && (
+          <nav className="flex flex-col px-4 pb-4 pt-2 relative"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.9) 100%)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(0, 170, 255, 0.3)',
+                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(0, 170, 255, 0.1)'
+                }}
+                aria-label="Main menu">
+            
+            {/* Navigation glow overlay */}
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(180deg, transparent, rgba(0, 170, 255, 0.08), transparent)',
+              animation: 'shimmer 4s infinite'
+            }} />
+            
+            {[
+              { label: "Home",     href: "/dashboard" },
+              { label: "History",  href: "/history" },
+              { label: "Settings", href: "/settings" },
+              { label: "Profile",  href: "/profile" },
+            ].map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-between text-white/90 text-sm py-3 px-4 border-b border-white/10 last:border-0 hover:text-white transition-all duration-300 hover:bg-white/10 rounded-lg relative z-10"
+                style={{
+                  background: 'rgba(0, 170, 255, 0.05)',
+                  border: '1px solid rgba(0, 170, 255, 0.2)',
+                  boxShadow: '0 0 8px rgba(0, 170, 255, 0.1)'
+                }}
+              >
+                <span className="font-medium">{label}</span>
+                <ChevronRight size={14} className="opacity-80" />
+              </Link>
+            ))}
+          </nav>
+        )}
 
         {/* ── Main Content Area (Mobile App Style) ── */}
         <div className="flex-1 bg-white px-4 pt-4 pb-16 flex flex-col gap-3 relative"
