@@ -531,8 +531,8 @@ export default function LoginPage() {
       if (data?.session?.user) {
         console.log("LOGIN SUCCESS - Session created, redirecting to dashboard");
         
-        // Immediate redirect without UI blocking
-        router.replace("/dashboard");
+        // FORCE redirect using window.location.href - bypasses any router issues
+        window.location.href = "/dashboard";
         return;
       } else {
         console.error("No valid session returned");
