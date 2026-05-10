@@ -536,8 +536,12 @@ export default function LoginPage() {
 
       if (data?.session?.user) {
         console.log("LOGIN SUCCESS - Redirecting to dashboard");
+        console.log("Session data:", data.session);
+        console.log("User data:", data.user);
         
         setLoading(false);
+        
+        // Force immediate redirect
         window.location.href = '/dashboard';
         return;
       } else {
