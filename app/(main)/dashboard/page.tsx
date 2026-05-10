@@ -14,6 +14,7 @@ import {
   MapPin,
   User,
   Settings,
+  Bell,
 } from "lucide-react";
 import styles from "./dashboard.module.css";
 
@@ -291,7 +292,7 @@ export default function DashboardPage() {
           </button>
 
           {/* CENTER: Logo + Text */}
-          <div className="flex flex-col items-center relative">
+          <div className="flex flex-col items-center relative" style={{ transform: 'translateY(2px)' }}>
             <Image
               src="/logo.png"
               alt="Security System Logo"
@@ -304,19 +305,20 @@ export default function DashboardPage() {
               }}
             />
             <span 
-              className="text-white text-sm font-medium mt-1"
+              className="text-white text-sm font-medium"
               style={{
                 textShadow: '0 0 10px rgba(0, 170, 255, 0.5)',
-                letterSpacing: '0.5px'
+                letterSpacing: '0.5px',
+                marginTop: '2px'
               }}
             >
               Security System
             </span>
           </div>
 
-          {/* RIGHT: Settings Icon */}
+          {/* RIGHT: Notification Bell Icon */}
           <button
-            aria-label="Settings"
+            aria-label="Notifications"
             className="p-2 rounded-xl transition-all duration-300 relative z-10"
             style={{
               background: 'rgba(0, 170, 255, 0.15)',
@@ -324,7 +326,7 @@ export default function DashboardPage() {
               boxShadow: '0 0 12px rgba(0, 170, 255, 0.2)'
             }}
           >
-            <Settings size={22} color="#00d4ff" />
+            <Bell size={22} color="#00d4ff" />
           </button>
         </header>
 
