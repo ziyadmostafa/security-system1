@@ -457,7 +457,7 @@ export default function DashboardPage() {
 
         </div>
 
-        {/* ── Bottom Navigation (Matches Removed Upper Navbar Style) ── */}
+        {/* ── Bottom Navigation (Dark Navy Premium Style) ── */}
         <div className="fixed bottom-0 left-0 right-0 z-50"
              style={{
                background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.98) 100%)',
