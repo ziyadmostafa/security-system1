@@ -60,13 +60,15 @@ export default function SignupPage() {
   const [email, setEmail]         = useState("");
   const [password, setPassword]   = useState("");
   const [confirm, setConfirm]     = useState("");
+  const [success, setSuccess]     = useState<string | null>(null);
+  const [error, setError]         = useState<string | null>(null);
   const router = useRouter();
-
-  // REMOVED: All loading state logic for simplicity
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
     console.log('[SIGNUP] Real authentication attempt');
+    setError(null);
+    setSuccess(null);
     
     try {
       console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
@@ -96,29 +98,38 @@ export default function SignupPage() {
 
       if (error) {
         console.error("Supabase Auth Error:", error);
-        // Don't redirect on error - require real authentication
+        setError(error?.message || "Signup failed");
         return;
       }
       
-      // Require real Supabase session
-      if (!data.session?.user) {
-        console.error('[SIGNUP] No valid session returned - email confirmation may be required');
-        return;
-      }
-
-      console.log('[SIGNUP] ✓ Signup successful');
+      console.log('[SIGNUP] ✓ Account created successfully');
       console.log('[SIGNUP] User data:', { 
         id: data.user?.id, 
-        email: data.user?.email,
-        confirmed: data.user?.email_confirmed_at ? '✓' : 'pending'
+        email: data.user?.email
       });
       
-      // Only redirect with real session
-      console.log('[SIGNUP] Redirecting to dashboard with valid session...');
-      window.location.href = "/dashboard";
+      // Auto login after successful signup
+      const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      if (loginError) {
+        console.error('[SIGNUP] Auto login failed:', loginError);
+        setError(loginError?.message || "Auto login failed");
+        return;
+      }
+      
+      if (loginData.session?.user) {
+        console.log('[SIGNUP] Auto login successful - redirecting to dashboard');
+        setSuccess("Account created successfully! Redirecting...");
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 1000);
+      }
     } catch (err) {
       console.error('[SIGNUP] ❌ Unexpected error during signup:', err);
-      // Don't redirect on error - require real authentication
+      setError("An unexpected error occurred");
     }
   }
 
@@ -232,6 +243,32 @@ export default function SignupPage() {
               </span>
             </div>
           </div>
+
+          {/* Success message */}
+          {success && (
+            <div className="mb-5 p-3 rounded-xl text-center text-green-300 text-sm"
+              style={{
+                background: 'rgba(0, 200, 50, 0.2)',
+                border: '1px solid rgba(0, 255, 100, 0.4)',
+                boxShadow: '0 0 15px rgba(0, 255, 50, 0.2)',
+              }}
+            >
+              {success}
+            </div>
+          )}
+
+          {/* Error message */}
+          {error && (
+            <div className="mb-5 p-3 rounded-xl text-center text-red-300 text-sm"
+              style={{
+                background: 'rgba(200, 0, 50, 0.2)',
+                border: '1px solid rgba(255, 50, 100, 0.4)',
+                boxShadow: '0 0 15px rgba(255, 0, 50, 0.2)',
+              }}
+            >
+              {error}
+            </div>
+          )}
 
           {/* CREATE ACCOUNT button — dark pill, bold uppercase */}
           <button

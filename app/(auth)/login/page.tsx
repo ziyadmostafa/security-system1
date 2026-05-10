@@ -494,6 +494,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [error, setError]       = useState<string | null>(null);
+  const [success, setSuccess]     = useState<string | null>(null);
 
   async function handleLogin(e: React.FormEvent) {
     e?.preventDefault();
@@ -539,7 +540,10 @@ export default function LoginPage() {
       
       // Only redirect with real session
       console.log('[LOGIN] Redirecting to dashboard with valid session...');
-      router.push("/dashboard");
+      setSuccess("Login successful! Redirecting...");
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 500);
     } catch (err) {
       console.error('[LOGIN] ❌ Unexpected error during login:', err);
       setError("An unexpected error occurred");
@@ -628,6 +632,19 @@ export default function LoginPage() {
                 </span>
               </div>
             </div>
+
+            {/* Success message */}
+            {success && (
+              <div className="mb-5 p-3 rounded-xl text-center text-green-300 text-sm"
+                style={{
+                  background: 'rgba(0, 200, 50, 0.2)',
+                  border: '1px solid rgba(0, 255, 100, 0.4)',
+                  boxShadow: '0 0 15px rgba(0, 255, 50, 0.2)',
+                }}
+              >
+                {success}
+              </div>
+            )}
 
             {/* Error message */}
             {error && (
