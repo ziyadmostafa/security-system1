@@ -253,210 +253,260 @@ export default function DashboardPage() {
   };
 
   return (
-    /* ── Premium Cyber Security Dashboard ── */
+    /* ── Mobile App Style Cyber Security Dashboard ── */
     <div className="min-h-screen relative overflow-hidden">
       <CyberBackground />
       
-      {/* ── Premium Centered Layout (Cinematic) ── */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-8">
+      {/* ── Mobile App Container (matches Profile/History proportions) ── */}
+      <div className="flex flex-col w-full min-h-screen bg-white/95 backdrop-blur-xl shadow-2xl relative sm:max-w-md sm:mx-auto">
         
-        {/* ── Dashboard Shell (Premium Mobile/Tablet Feel) ── */}
-        <div className="w-full max-w-md lg:max-w-xl xl:max-w-2xl">
-          <div className={`flex flex-col w-full min-h-screen ${styles['cyber-glass-premium']} rounded-3xl overflow-hidden relative`}
-               style={{ 
-                 minHeight: '85vh',
-                 maxHeight: '90vh'
-               }}>
+        {/* ── Futuristic Header (Mobile App Style) ── */}
+        <header className="flex items-center justify-between px-4 py-3 relative"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.98) 100%)',
+                  borderBottom: '2px solid rgba(0, 170, 255, 0.4)',
+                  backdropFilter: 'blur(20px)',
+                  boxShadow: '0 0 25px rgba(0, 170, 255, 0.3), inset 0 0 15px rgba(0, 170, 255, 0.1)'
+                }}>
+          
+          {/* Animated header glow */}
+          <div className="absolute inset-0" style={{
+            background: 'linear-gradient(90deg, transparent, rgba(0, 170, 255, 0.12), transparent)',
+            animation: 'shimmer 3s infinite'
+          }} />
+          
+          {/* Menu Button */}
+          <button
+            aria-label="Open menu"
+            onClick={() => setMenuOpen((v) => !v)}
+            className="p-2 rounded-xl transition-all duration-300 relative z-10"
+            style={{
+              background: 'rgba(0, 170, 255, 0.15)',
+              border: '1px solid rgba(0, 170, 255, 0.3)',
+              boxShadow: '0 0 12px rgba(0, 170, 255, 0.2)'
+            }}
+          >
+            <Menu size={22} color="#00d4ff" />
+          </button>
 
-            {/* ── Premium Header (Cinematic) ── */}
-            <header className={`flex items-center justify-between px-6 py-5 relative ${styles['cyber-glass-dark']} rounded-t-3xl`}
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.9) 0%, rgba(0, 20, 60, 0.95) 100%)',
-                    borderBottom: '2px solid rgba(0, 170, 255, 0.4)',
-                    backdropFilter: 'blur(20px)',
-                    boxShadow: '0 0 30px rgba(0, 170, 255, 0.3), inset 0 0 20px rgba(0, 170, 255, 0.1)'
-                  }}>
-              
-              {/* Animated header glow */}
-              <div className="absolute inset-0" style={{
-                background: 'linear-gradient(90deg, transparent, rgba(0, 170, 255, 0.15), transparent)',
-                animation: 'shimmer 4s infinite'
-              }} />
-              
-              {/* Menu Button */}
-              <button
-                aria-label="Open menu"
-                onClick={() => setMenuOpen((v) => !v)}
-                className={`p-3 rounded-2xl transition-all duration-300 relative z-10 ${styles['cyber-button']}`}
+          {/* Logo with cyber glow */}
+          <div className="relative">
+            <Image
+              src="/logo.png"
+              alt="Security System Logo"
+              width={60}
+              height={60}
+              className="object-contain"
+              priority
+              style={{
+                filter: 'drop-shadow(0 0 20px rgba(0, 170, 255, 0.6))'
+              }}
+            />
+          </div>
+
+          {/* Notification Bell */}
+          <div className="relative z-10">
+            <NotificationBell />
+          </div>
+        </header>
+
+        {/* ── Futuristic Navigation Menu (Mobile App Style) ── */}
+        {menuOpen && (
+          <nav className="flex flex-col px-4 pb-4 pt-2 relative"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.9) 100%)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(0, 170, 255, 0.3)',
+                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(0, 170, 255, 0.1)'
+                }}
+                aria-label="Main menu">
+            
+            {/* Navigation glow overlay */}
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(180deg, transparent, rgba(0, 170, 255, 0.08), transparent)',
+              animation: 'shimmer 4s infinite'
+            }} />
+            
+            {[
+              { label: "Home",     href: "/dashboard" },
+              { label: "History",  href: "/history" },
+              { label: "Settings", href: "/settings" },
+              { label: "Profile",  href: "/profile" },
+            ].map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-between text-white/90 text-sm py-3 px-4 border-b border-white/10 last:border-0 hover:text-white transition-all duration-300 hover:bg-white/10 rounded-lg relative z-10"
+                style={{
+                  background: 'rgba(0, 170, 255, 0.05)',
+                  border: '1px solid rgba(0, 170, 255, 0.2)',
+                  boxShadow: '0 0 8px rgba(0, 170, 255, 0.1)'
+                }}
               >
-                <Menu size={24} color="#00d4ff" />
-              </button>
+                <span className="font-medium">{label}</span>
+                <ChevronRight size={14} className="opacity-80" />
+              </Link>
+            ))}
+          </nav>
+        )}
 
-              {/* Logo with enhanced glow */}
-              <div className="relative">
-                <Image
-                  src="/logo.png"
-                  alt="Security System Logo"
-                  width={70}
-                  height={70}
-                  className="object-contain"
-                  priority
+        {/* ── Futuristic Title Section (Mobile App Style) ── */}
+        <div className="px-4 pt-2 pb-4 text-center relative"
+             style={{
+               background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.98) 100%)',
+               borderBottom: '2px solid rgba(0, 170, 255, 0.4)',
+               backdropFilter: 'blur(20px)',
+               boxShadow: '0 0 25px rgba(0, 170, 255, 0.3), inset 0 0 15px rgba(0, 170, 255, 0.1)'
+             }}>
+          
+          {/* Title glow overlay */}
+          <div className="absolute inset-0" style={{
+            background: 'linear-gradient(90deg, transparent, rgba(0, 170, 255, 0.12), transparent)',
+            animation: 'shimmer 3.5s infinite'
+          }} />
+          
+          <h1 className="text-white text-[22px] font-extrabold tracking-wide relative z-10"
+              style={{
+                textShadow: '0 0 20px rgba(0, 170, 255, 0.5), 0 0 40px rgba(0, 100, 200, 0.3)'
+              }}>
+            Security System
+          </h1>
+        </div>
+
+        {/* ── Main Content Area (Mobile App Style) ── */}
+        <div className="flex-1 bg-white px-4 pt-4 pb-24 flex flex-col gap-3 relative"
+             style={{
+               background: 'rgba(255, 255, 255, 0.98)',
+               backdropFilter: 'blur(8px)'
+             }}>
+
+          {/* ── Location Card (Mobile App Style) ── */}
+          <div className="flex items-center gap-3 rounded-2xl px-4 py-3 relative"
+               style={{
+                 background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.06) 0%, rgba(0, 80, 180, 0.1) 100%)',
+                 border: '1px solid rgba(0, 170, 255, 0.25)',
+                 boxShadow: '0 0 20px rgba(0, 170, 255, 0.12), inset 0 0 12px rgba(0, 170, 255, 0.06)'
+               }}>
+            
+            {/* Card glow effect */}
+            <div className="absolute inset-0 rounded-2xl" style={{
+              background: 'linear-gradient(135deg, transparent 25%, rgba(0, 170, 255, 0.06) 75%, transparent)',
+              animation: 'cyber-pulse 3s ease-in-out infinite'
+            }} />
+            
+            {/* User icon */}
+            <div className="w-9 h-9 rounded-full shrink-0 flex items-center justify-center relative z-10"
+                 style={{
+                   background: 'linear-gradient(135deg, #00ccff 0%, #0088ee 100%)',
+                   border: '2px solid #00d4ff',
+                   boxShadow: '0 0 15px rgba(0, 170, 255, 0.4), inset 0 0 8px rgba(0, 100, 200, 0.3)'
+                 }}>
+              <User size={18} color="#ffffff" />
+            </div>
+            
+            {/* Location info */}
+            <div className="relative z-10 flex-1">
+              <p className="text-[10px] font-semibold mb-1" style={{ color: '#00aaff' }}>Delivered from</p>
+              <div className="flex items-center gap-2">
+                <MapPin size={10} color="#00d4ff" />
+                <span className="text-[12px] font-semibold text-[#1a1a1a]">
+                  {user?.mall_name && user?.gate_number
+                    ? `${user.mall_name}, Gate ${user.gate_number.replace(/gate\s*/i, '').trim()}`
+                    : user?.mall_name
+                    ? `${user.mall_name}`
+                    : "Set your location in Profile"}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Data Table Area (Mobile App Style) ── */}
+          <div className="flex-1 relative">
+            {/* Table container with cyber styling */}
+            <div className="absolute inset-0 rounded-2xl"
+                 style={{
+                   background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.03) 0%, rgba(0, 80, 180, 0.06) 100%)',
+                   border: '1px solid rgba(0, 170, 255, 0.15)',
+                   boxShadow: '0 0 25px rgba(0, 170, 255, 0.1), inset 0 0 15px rgba(0, 170, 255, 0.05)',
+                   pointerEvents: 'none'
+                 }} />
+            
+            {/* Data table container */}
+            <div className="relative z-10 h-full rounded-2xl overflow-hidden"
+                 style={{
+                   background: 'rgba(255, 255, 255, 0.95)',
+                   backdropFilter: 'blur(6px)',
+                   border: '1px solid rgba(0, 170, 255, 0.12)'
+                 }}>
+              
+              <RealTimeDataTable
+                data={matches}
+                connected={connected}
+                loading={loading}
+                error={error}
+                lastUpdate={lastUpdate}
+                connectionType={connectionType}
+                onRefresh={refreshData}
+                onSendTest={sendTestData}
+                onConfirmMatch={handleConfirmMatch}
+                onRejectMatch={handleRejectMatch}
+              />
+            </div>
+          </div>
+
+        </div>
+
+        {/* ── Futuristic Bottom Navigation (Mobile App Style) ── */}
+        <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200"
+             style={{
+               background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%)',
+               borderTop: '1px solid rgba(0, 170, 255, 0.2)',
+               boxShadow: '0 -5px 20px rgba(0, 170, 255, 0.1), inset 0 0 10px rgba(0, 170, 255, 0.05)',
+               backdropFilter: 'blur(10px)'
+             }}>
+          <div className="flex items-center justify-around py-2">
+            {[
+              { icon: Menu, label: "Home", href: "/dashboard", active: true },
+              { icon: Menu, label: "History", href: "/history", active: false },
+              { icon: Menu, label: "Settings", href: "/settings", active: false },
+              { icon: User, label: "Profile", href: "/profile", active: false },
+            ].map(({ icon: Icon, label, href, active }) => (
+              <Link
+                key={href}
+                href={href}
+                className="flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all duration-200"
+                style={{
+                  background: active 
+                    ? 'linear-gradient(135deg, rgba(0, 170, 255, 0.15) 0%, rgba(0, 100, 200, 0.2) 100%)'
+                    : 'transparent',
+                  border: active ? '1px solid rgba(0, 170, 255, 0.3)' : '1px solid transparent',
+                  boxShadow: active 
+                    ? '0 0 15px rgba(0, 170, 255, 0.2), inset 0 0 8px rgba(0, 170, 255, 0.1)'
+                    : 'none'
+                }}
+              >
+                <Icon 
+                  size={20} 
+                  color={active ? "#00d4ff" : "#7A8BB0"}
                   style={{
-                    filter: 'drop-shadow(0 0 25px rgba(0, 170, 255, 0.7))'
+                    filter: active ? 'drop-shadow(0 0 8px rgba(0, 170, 255, 0.5))' : 'none'
                   }}
                 />
-              </div>
-
-              {/* Notification Bell */}
-              <div className="relative z-10">
-                <NotificationBell />
-              </div>
-            </header>
-
-            {/* ── Premium Navigation Menu ── */}
-            {menuOpen && (
-              <nav className={`flex flex-col px-6 pb-5 pt-3 relative ${styles['cyber-glass-dark']} rounded-b-3xl`}
-                    style={{
-                      background: 'linear-gradient(180deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.9) 100%)',
-                      backdropFilter: 'blur(25px)',
-                      border: '1px solid rgba(0, 170, 255, 0.4)',
-                      boxShadow: '0 15px 40px rgba(0, 0, 0, 0.4), inset 0 0 25px rgba(0, 170, 255, 0.15)'
-                    }}
-                    aria-label="Main menu">
-                
-                {/* Navigation glow overlay */}
-                <div className="absolute inset-0" style={{
-                  background: 'linear-gradient(180deg, transparent, rgba(0, 170, 255, 0.1), transparent)',
-                  animation: 'shimmer 5s infinite'
-                }} />
-                
-                {[
-                  { label: "Home",     href: "/dashboard" },
-                  { label: "History",  href: "/history" },
-                  { label: "Settings", href: "/settings" },
-                  { label: "Profile",  href: "/profile" },
-                ].map(({ label, href }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    onClick={() => setMenuOpen(false)}
-                    className={`flex items-center justify-between text-white/90 text-sm py-4 px-5 border-b border-white/10 last:border-0 hover:text-white transition-all duration-300 hover:bg-white/10 rounded-xl relative z-10 ${styles['cyber-button']}`}
-                  >
-                    <span className="font-medium">{label}</span>
-                    <ChevronRight size={16} className="opacity-80" />
-                  </Link>
-                ))}
-              </nav>
-            )}
-
-            {/* ── Premium Title Section ── */}
-            <div className={`px-6 pt-5 pb-4 text-center relative ${styles['cyber-glass-dark']}`}
-                 style={{
-                   background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.9) 0%, rgba(0, 20, 60, 0.95) 100%)',
-                   borderBottom: '2px solid rgba(0, 170, 255, 0.4)',
-                   backdropFilter: 'blur(20px)',
-                   boxShadow: '0 0 30px rgba(0, 170, 255, 0.3), inset 0 0 20px rgba(0, 170, 255, 0.1)'
-                 }}>
-              
-              {/* Title glow overlay */}
-              <div className="absolute inset-0" style={{
-                background: 'linear-gradient(90deg, transparent, rgba(0, 170, 255, 0.15), transparent)',
-                animation: 'shimmer 4.5s infinite'
-              }} />
-              
-              <h1 className={`text-white text-[26px] font-extrabold tracking-wide relative z-10 ${styles['cyber-text-glow']}`}
-                  style={{
-                    textShadow: '0 0 25px rgba(0, 170, 255, 0.6), 0 0 50px rgba(0, 100, 200, 0.4)'
-                  }}>
-                Security System
-              </h1>
-            </div>
-
-            {/* ── Premium Content Area (Enhanced) ── */}
-            <div className="flex-1 bg-white/98 backdrop-blur-sm px-5 sm:px-6 pt-5 pb-6 flex flex-col gap-4 relative"
-                 style={{
-                   background: 'rgba(255, 255, 255, 0.98)',
-                   backdropFilter: 'blur(10px)'
-                 }}>
-
-              {/* ── Enhanced Location Card ── */}
-              <div className={`flex items-center gap-4 rounded-3xl px-5 py-4 relative ${styles['cyber-glass']}`}
-                   style={{
-                     background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.08) 0%, rgba(0, 80, 180, 0.12) 100%)',
-                     border: '2px solid rgba(0, 170, 255, 0.3)',
-                     boxShadow: '0 0 25px rgba(0, 170, 255, 0.15), inset 0 0 15px rgba(0, 170, 255, 0.08)'
-                   }}>
-                
-                {/* Card glow effect */}
-                <div className="absolute inset-0 rounded-3xl" style={{
-                  background: 'linear-gradient(135deg, transparent 20%, rgba(0, 170, 255, 0.08) 80%, transparent)',
-                  animation: 'cyber-pulse 3.5s ease-in-out infinite'
-                }} />
-                
-                {/* Enhanced user icon */}
-                <div className={`w-10 h-10 rounded-full shrink-0 flex items-center justify-center relative z-10`}
-                    style={{
-                      background: 'linear-gradient(135deg, #00ccff 0%, #0088ee 100%)',
-                      border: '2px solid #00d4ff',
-                      boxShadow: '0 0 20px rgba(0, 170, 255, 0.5), inset 0 0 10px rgba(0, 100, 200, 0.4)'
-                    }}>
-                  <User size={20} color="#ffffff" />
-                </div>
-                
-                {/* Location info */}
-                <div className="relative z-10 flex-1">
-                  <p className={`text-[11px] font-semibold mb-2 ${styles['cyber-text-glow']}`}>Delivered from</p>
-                  <div className="flex items-center gap-3">
-                    <MapPin size={12} color="#00d4ff" />
-                    <span className="text-[13px] font-semibold text-[#1a1a1a]">
-                      {user?.mall_name && user?.gate_number
-                        ? `${user.mall_name}, Gate ${user.gate_number.replace(/gate\s*/i, '').trim()}`
-                        : user?.mall_name
-                        ? `${user.mall_name}`
-                        : "Set your location in Profile"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* ── Enhanced Data Table Area ── */}
-              <div className="flex-1 relative">
-                {/* Table container with premium styling */}
-                <div className={`absolute inset-0 rounded-3xl ${styles['cyber-glass']}`}
-                     style={{
-                       background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.04) 0%, rgba(0, 80, 180, 0.08) 100%)',
-                       border: '2px solid rgba(0, 170, 255, 0.2)',
-                       boxShadow: '0 0 30px rgba(0, 170, 255, 0.12), inset 0 0 20px rgba(0, 170, 255, 0.06)',
-                       pointerEvents: 'none'
-                     }} />
-                
-                {/* Enhanced data table container */}
-                <div className={`relative z-10 h-full rounded-3xl overflow-hidden ${styles['cyber-glass']}`}
-                     style={{
-                       background: 'rgba(255, 255, 255, 0.95)',
-                       backdropFilter: 'blur(8px)',
-                       border: '1px solid rgba(0, 170, 255, 0.15)'
-                     }}>
-                  
-                  <RealTimeDataTable
-                    data={matches}
-                    connected={connected}
-                    loading={loading}
-                    error={error}
-                    lastUpdate={lastUpdate}
-                    connectionType={connectionType}
-                    onRefresh={refreshData}
-                    onSendTest={sendTestData}
-                    onConfirmMatch={handleConfirmMatch}
-                    onRejectMatch={handleRejectMatch}
-                  />
-                </div>
-              </div>
-
-            </div>
-
+                <span 
+                  className="text-xs font-medium"
+                  style={{ 
+                    color: active ? "#00d4ff" : "#7A8BB0",
+                    textShadow: active ? '0 0 8px rgba(0, 170, 255, 0.5)' : 'none'
+                  }}
+                >
+                  {label}
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
+
       </div>
     </div>
   );
