@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createServerClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -14,57 +14,45 @@ export async function middleware(req: NextRequest) {
   const protectedRoutes = ['/dashboard', '/profile', '/settings', '/history']
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
 
-  // Allow access to public routes
-  if (isPublicRoute) {
-    console.log(`[MIDDLEWARE] Public route access: ${pathname}`)
-    return NextResponse.next()
-  }
+  // Create Supabase client for server-side auth
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
 
-  // For protected routes, check authentication
-  if (isProtectedRoute) {
-    try {
-      // Create Supabase client
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  try {
+    // Get session using official Supabase SSR helper
+    const { data: { session }, error } = await supabase.auth.getSession()
 
-      if (!supabaseUrl || !supabaseKey) {
-        console.warn('[MIDDLEWARE] Supabase environment variables not configured')
-        return NextResponse.redirect(new URL('/login', req.url))
-      }
+    console.log("[MIDDLEWARE] SESSION:", session)
+    console.log("[MIDDLEWARE] PATHNAME:", pathname)
+    console.log("[MIDDLEWARE] IS PUBLIC:", isPublicRoute)
+    console.log("[MIDDLEWARE] IS PROTECTED:", isProtectedRoute)
 
-      const supabase = createClient(supabaseUrl, supabaseKey)
+    // If user is logged in and trying to access login/signup, redirect to dashboard
+    if (session?.user && isPublicRoute) {
+      console.log("[MIDDLEWARE] Authenticated user accessing public route, redirecting to dashboard")
+      return NextResponse.redirect(new URL('/dashboard', req.url))
+    }
 
-      // Get session from cookies
-      const token = req.cookies.get('sb-access-token')?.value
-      const refreshToken = req.cookies.get('sb-refresh-token')?.value
-
-      if (!token || !refreshToken) {
-        console.log(`[MIDDLEWARE] No session found for protected route: ${pathname}`)
-        return NextResponse.redirect(new URL('/login', req.url))
-      }
-
-      // Validate session
-      const { data: { session }, error } = await supabase.auth.setSession({
-        access_token: token,
-        refresh_token: refreshToken
-      })
-
-      if (error || !session?.user) {
-        console.log(`[MIDDLEWARE] Invalid session for protected route: ${pathname}`)
-        return NextResponse.redirect(new URL('/login', req.url))
-      }
-
-      console.log(`[MIDDLEWARE] Valid session for protected route: ${pathname}`)
-      return NextResponse.next()
-
-    } catch (error) {
-      console.error('[MIDDLEWARE] Error checking authentication:', error)
+    // If user is not logged in and trying to access protected routes, redirect to login
+    if (!session?.user && isProtectedRoute) {
+      console.log("[MIDDLEWARE] Unauthenticated user accessing protected route, redirecting to login")
       return NextResponse.redirect(new URL('/login', req.url))
     }
-  }
 
-  // Allow access to all other routes
-  return NextResponse.next()
+    // Allow access to all other routes
+    console.log("[MIDDLEWARE] Allowing access to:", pathname)
+    return NextResponse.next()
+
+  } catch (error) {
+    console.error('[MIDDLEWARE] Error checking authentication:', error)
+    // If there's an error, only redirect protected routes
+    if (isProtectedRoute) {
+      return NextResponse.redirect(new URL('/login', req.url))
+    }
+    return NextResponse.next()
+  }
 }
 
 export const config = {
