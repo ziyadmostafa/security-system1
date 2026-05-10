@@ -260,7 +260,120 @@ export default function DashboardPage() {
       {/* ── Mobile App Container (matches Profile/History proportions) ── */}
       <div className="flex flex-col w-full min-h-screen bg-white/95 backdrop-blur-xl shadow-2xl relative sm:max-w-md sm:mx-auto">
         
-        
+        {/* ── Futuristic Header (Mobile App Style) ── */}
+        <header className="flex items-center justify-between px-4 py-3 relative"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.98) 100%)',
+                  borderBottom: '2px solid rgba(0, 170, 255, 0.4)',
+                  backdropFilter: 'blur(20px)',
+                  boxShadow: '0 0 25px rgba(0, 170, 255, 0.3), inset 0 0 15px rgba(0, 170, 255, 0.1)'
+                }}>
+          
+          {/* Animated header glow */}
+          <div className="absolute inset-0" style={{
+            background: 'linear-gradient(90deg, transparent, rgba(0, 170, 255, 0.12), transparent)',
+            animation: 'shimmer 3s infinite'
+          }} />
+          
+          {/* Menu Button */}
+          <button
+            aria-label="Open menu"
+            onClick={() => setMenuOpen((v) => !v)}
+            className="p-2 rounded-xl transition-all duration-300 relative z-10"
+            style={{
+              background: 'rgba(0, 170, 255, 0.15)',
+              border: '1px solid rgba(0, 170, 255, 0.3)',
+              boxShadow: '0 0 12px rgba(0, 170, 255, 0.2)'
+            }}
+          >
+            <Menu size={22} color="#00d4ff" />
+          </button>
+
+          {/* Logo with cyber glow */}
+          <div className="relative">
+            <Image
+              src="/logo.png"
+              alt="Security System Logo"
+              width={60}
+              height={60}
+              className="object-contain"
+              priority
+              style={{
+                filter: 'drop-shadow(0 0 20px rgba(0, 170, 255, 0.6))'
+              }}
+            />
+          </div>
+
+          {/* Notification Bell */}
+          <div className="relative z-10">
+            <NotificationBell />
+          </div>
+        </header>
+
+        {/* ── Futuristic Navigation Menu (Mobile App Style) ── */}
+        {menuOpen && (
+          <nav className="flex flex-col px-4 pb-4 pt-2 relative"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.9) 100%)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(0, 170, 255, 0.3)',
+                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(0, 170, 255, 0.1)'
+                }}
+                aria-label="Main menu">
+            
+            {/* Navigation glow overlay */}
+            <div className="absolute inset-0" style={{
+              background: 'linear-gradient(180deg, transparent, rgba(0, 170, 255, 0.08), transparent)',
+              animation: 'shimmer 4s infinite'
+            }} />
+            
+            {[
+              { label: "Home",     href: "/dashboard" },
+              { label: "History",  href: "/history" },
+              { label: "Settings", href: "/settings" },
+              { label: "Profile",  href: "/profile" },
+            ].map(({ label, href }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-between text-white/90 text-sm py-3 px-4 border-b border-white/10 last:border-0 hover:text-white transition-all duration-300 hover:bg-white/10 rounded-lg relative z-10"
+                style={{
+                  background: 'rgba(0, 170, 255, 0.05)',
+                  border: '1px solid rgba(0, 170, 255, 0.2)',
+                  boxShadow: '0 0 8px rgba(0, 170, 255, 0.1)'
+                }}
+              >
+                <span className="font-medium">{label}</span>
+                <ChevronRight size={14} className="opacity-80" />
+              </Link>
+            ))}
+          </nav>
+        )}
+
+        {/* ── Futuristic Title Section (Mobile App Style) ── */}
+        <div className="px-4 pt-2 pb-4 text-center relative"
+             style={{
+               background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.98) 100%)',
+               borderBottom: '2px solid rgba(0, 170, 255, 0.4)',
+               backdropFilter: 'blur(20px)',
+               boxShadow: '0 0 25px rgba(0, 170, 255, 0.3), inset 0 0 15px rgba(0, 170, 255, 0.1)'
+             }}>
+          
+          {/* Title glow overlay */}
+          <div className="absolute inset-0" style={{
+            background: 'linear-gradient(90deg, transparent, rgba(0, 170, 255, 0.12), transparent)',
+            animation: 'shimmer 3.5s infinite'
+          }} />
+          
+          <h1 className="text-white text-[22px] font-extrabold tracking-wide relative z-10"
+              style={{
+                textShadow: '0 0 20px rgba(0, 170, 255, 0.5), 0 0 40px rgba(0, 100, 200, 0.3)'
+              }}>
+            Security System
+          </h1>
+        </div>
+
         {/* ── Main Content Area (Mobile App Style) ── */}
         <div className="flex-1 bg-white px-4 pt-4 pb-16 flex flex-col gap-3 relative"
              style={{
