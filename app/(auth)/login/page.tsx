@@ -525,26 +525,30 @@ export default function LoginPage() {
       if (error) {
         console.error("Supabase Auth Error:", error);
         setError(error?.message || "Login failed");
+        setLoading(false);
         return;
       }
 
       if (data?.session?.user) {
         console.log("LOGIN SUCCESS - Session created, redirecting to dashboard");
+        console.log("Session data:", data.session);
+        console.log("User data:", data.user);
         
-        // FORCE redirect using window.location.href - bypasses any router issues
-        window.location.href = "/dashboard";
+        // Stop loading immediately
+        setLoading(false);
+        
+        // Force redirect using router.replace
+        router.replace('/dashboard');
         return;
       } else {
         console.error("No valid session returned");
         setError("No valid session created");
+        setLoading(false);
         return;
       }
     } catch (err) {
       console.error("Unexpected error during login:", err);
       setError("An unexpected error occurred");
-    } finally {
-      // GUARANTEED: Always reset loading state
-      console.log("LOGIN FINALLY - Resetting loading state");
       setLoading(false);
     }
   }
