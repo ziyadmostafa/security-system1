@@ -45,15 +45,8 @@ export default function ProfilePage() {
     return null;
   }
 
-  // Fallback state for infinite loading
+  // Loading state
   if (loading) {
-    // Add timeout to prevent infinite loading
-    const timeoutId = setTimeout(() => {
-      console.log('[PROFILE] Loading timeout - forcing redirect to login');
-      router.replace("/login");
-    }, 5000);
-    
-    // Return loading indicator instead of cleanup function
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-white">Loading...</div>
