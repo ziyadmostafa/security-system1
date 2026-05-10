@@ -1,5 +1,6 @@
-/* Dashboard Page Animations - Production Safe CSS */
+/* Dashboard Page Animations - Premium Cyber Security CSS */
 
+/* ── CORE ANIMATIONS ── */
 @keyframes float {
   0%, 100% { transform: translateY(0px) translateX(0px); }
   25% { transform: translateY(-20px) translateX(10px); }
@@ -48,35 +49,11 @@
   50% { opacity: 1; }
 }
 
-.animate-float {
-  animation: float var(--duration, 6s) ease-in-out infinite;
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
-.animate-fade-in {
-  animation: fade-in 0.6s ease-out forwards;
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.8s ease-out forwards;
-}
-
-.animate-shimmer {
-  animation: shimmer 2s infinite;
-}
-
-.animate-pulse-circuit {
-  animation: pulse-circuit 2s ease-in-out infinite;
-}
-
-.animate-pulse-circuit-slow {
-  animation: pulse-circuit-slow 2.5s ease-in-out infinite;
-}
-
-.animate-pulse-circuit-slower {
-  animation: pulse-circuit-slower 3s ease-in-out infinite;
-}
-
-/* Spin animations for logo rings */
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -87,25 +64,7 @@
   to { transform: rotate(0deg); }
 }
 
-.animate-spin {
-  animation: spin 20s linear infinite;
-}
-
-.animate-spin-reverse {
-  animation: spin-reverse 15s linear infinite;
-}
-
-.animate-pulse {
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-/* ── Cyber Background Animations ── */
-
+/* ── CYBER BACKGROUND ANIMATIONS ── */
 @keyframes data-flow {
   0% { transform: translateX(-100%); opacity: 0; }
   10% { opacity: 1; }
@@ -165,6 +124,68 @@
   100% { transform: scale(1.2); opacity: 0; }
 }
 
+@keyframes ambient-glow {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes cyber-pulse {
+  0%, 100% { 
+    opacity: 0.8; 
+    box-shadow: 0 0 20px rgba(0, 170, 255, 0.4), inset 0 0 10px rgba(0, 170, 255, 0.1);
+  }
+  50% { 
+    opacity: 1; 
+    box-shadow: 0 0 40px rgba(0, 170, 255, 0.7), inset 0 0 20px rgba(0, 170, 255, 0.2);
+  }
+}
+
+@keyframes border-glow {
+  0%, 100% { border-color: rgba(0, 170, 255, 0.3); }
+  50% { border-color: rgba(0, 170, 255, 0.8); }
+}
+
+/* ── ANIMATION CLASSES ── */
+.animate-float {
+  animation: float var(--duration, 6s) ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite;
+}
+
+.animate-pulse-circuit {
+  animation: pulse-circuit 2s ease-in-out infinite;
+}
+
+.animate-pulse-circuit-slow {
+  animation: pulse-circuit-slow 2.5s ease-in-out infinite;
+}
+
+.animate-pulse-circuit-slower {
+  animation: pulse-circuit-slower 3s ease-in-out infinite;
+}
+
+.animate-spin {
+  animation: spin 20s linear infinite;
+}
+
+.animate-spin-reverse {
+  animation: spin-reverse 15s linear infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
 .animate-data-flow {
   animation: data-flow var(--duration, 8s) linear infinite;
 }
@@ -203,4 +224,62 @@
 
 .animate-ring-expand {
   animation: ring-expand 4s ease-out infinite;
+}
+
+.animate-ambient-glow {
+  animation: ambient-glow 4s ease-in-out infinite;
+}
+
+.animate-cyber-pulse {
+  animation: cyber-pulse 3s ease-in-out infinite;
+}
+
+.animate-border-glow {
+  animation: border-glow 2s ease-in-out infinite;
+}
+
+/* ── PREMIUM CYBER COMPONENTS ── */
+.cyber-glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 170, 255, 0.2);
+  box-shadow: 0 0 30px rgba(0, 170, 255, 0.1), inset 0 0 20px rgba(0, 170, 255, 0.05);
+}
+
+.cyber-glass-dark {
+  background: rgba(0, 20, 40, 0.7);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(0, 170, 255, 0.3);
+  box-shadow: 0 0 25px rgba(0, 170, 255, 0.2), inset 0 0 15px rgba(0, 170, 255, 0.1);
+}
+
+.cyber-glass-premium {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(0, 170, 255, 0.25);
+  box-shadow: 0 0 40px rgba(0, 170, 255, 0.15), 0 0 80px rgba(0, 100, 200, 0.08), inset 0 0 25px rgba(0, 170, 255, 0.08);
+}
+
+.cyber-button {
+  background: linear-gradient(135deg, rgba(0, 170, 255, 0.2) 0%, rgba(0, 100, 200, 0.3) 100%);
+  border: 1px solid rgba(0, 170, 255, 0.4);
+  color: #00d4ff;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.cyber-button:hover {
+  background: linear-gradient(135deg, rgba(0, 170, 255, 0.3) 0%, rgba(0, 100, 200, 0.4) 100%);
+  border: 1px solid rgba(0, 170, 255, 0.6);
+  box-shadow: 0 0 20px rgba(0, 170, 255, 0.3), inset 0 0 10px rgba(0, 170, 255, 0.1);
+}
+
+.cyber-text-glow {
+  color: #00d4ff;
+  text-shadow: 0 0 10px rgba(0, 170, 255, 0.5), 0 0 20px rgba(0, 170, 255, 0.3);
+}
+
+.cyber-border-glow {
+  border: 2px solid rgba(0, 170, 255, 0.3);
+  box-shadow: 0 0 20px rgba(0, 170, 255, 0.2), inset 0 0 10px rgba(0, 170, 255, 0.1);
 }

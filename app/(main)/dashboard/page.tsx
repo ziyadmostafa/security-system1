@@ -63,103 +63,129 @@ function NetworkMesh() {
   );
 }
 
-// ── Cyber Background (simplified for dashboard) ──
+// ── Premium Cyber Background (immersive) ──
 function CyberBackground() {
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none">
 
-      {/* === BASE === */}
+      {/* === DEEP BASE === */}
       <div className="absolute inset-0" style={{
-        background: 'linear-gradient(180deg, #000008 0%, #000511 20%, #000a1a 40%, #000511 70%, #000008 100%)'
+        background: 'radial-gradient(ellipse at 30% 20%, rgba(0, 20, 60, 0.4) 0%, transparent 50%), linear-gradient(180deg, #000008 0%, #000511 20%, #000a1a 40%, #000511 70%, #000008 100%)'
+      }} />
+
+      {/* === AMBIENT LIGHTING === */}
+      <div className="absolute inset-0 opacity-30" style={{
+        background: 'radial-gradient(circle at 20% 30%, rgba(0, 100, 200, 0.2) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(0, 150, 255, 0.15) 0%, transparent 35%)'
       }} />
 
       {/* === CENTER GLOW === */}
-      <div className="absolute top-[18%] left-1/2 -translate-x-1/2 w-[600px] h-[500px]" style={{
-        background: 'radial-gradient(ellipse, rgba(0, 120, 220, 0.15) 0%, rgba(0, 60, 140, 0.07) 40%, transparent 65%)'
+      <div className="absolute top-[18%] left-1/2 -translate-x-1/2 w-[800px] h-[600px]" style={{
+        background: 'radial-gradient(ellipse, rgba(0, 120, 220, 0.2) 0%, rgba(0, 60, 140, 0.1) 40%, transparent 65%)'
       }} />
-      <div className="absolute top-[25%] left-1/2 -translate-x-1/2 w-[400px] h-[350px]" style={{
-        background: 'radial-gradient(circle, rgba(0, 170, 255, 0.08) 0%, transparent 55%)'
+      <div className="absolute top-[25%] left-1/2 -translate-x-1/2 w-[500px] h-[400px]" style={{
+        background: 'radial-gradient(circle, rgba(0, 170, 255, 0.1) 0%, transparent 55%)'
       }} />
 
-      {/* === NETWORK MESH (blurred, background depth) === */}
+      {/* === NETWORK MESH (enhanced) === */}
       <NetworkMesh />
 
-      {/* === DATA FLOW LINES === */}
-      <div className="absolute top-[8%] left-0" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,220,255,0.7), transparent)', width: '250px', height: '1.5px', animation: 'data-flow 9s linear infinite' }} />
-      <div className="absolute top-[18%] left-0" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,180,255,0.5), transparent)', width: '180px', height: '1px', animation: 'data-flow-reverse 13s linear infinite' }} />
-      <div className="absolute top-[32%] left-0" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,240,255,0.6), transparent)', width: '220px', height: '1.5px', animation: 'data-flow 11s linear infinite 2.5s' }} />
-      <div className="absolute top-[48%] left-0" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,160,255,0.4), transparent)', width: '140px', height: '1px', animation: 'data-flow-reverse 15s linear infinite 1.8s' }} />
-      <div className="absolute top-[62%] left-0" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,210,255,0.6), transparent)', width: '240px', height: '1.5px', animation: 'data-flow 10s linear infinite 4.2s' }} />
-      <div className="absolute top-[78%] left-0" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,190,255,0.5), transparent)', width: '190px', height: '1px', animation: 'data-flow-reverse 12s linear infinite 3.5s' }} />
-      <div className="absolute top-[92%] left-0" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,200,255,0.6), transparent)', width: '210px', height: '1.5px', animation: 'data-flow 8s linear infinite 1.2s' }} />
-
-      {/* === FLOATING PARTICLES (foreground, sharper) === */}
-      <FloatingParticle delay={0} duration={3.5} size={4} top="5%" left="6%" color="#00ccff" />
-      <FloatingParticle delay={0.4} duration={4.5} size={2} top="10%" left="94%" color="#00aaff" />
-      <FloatingParticle delay={0.8} duration={4} size={3} top="3%" left="45%" color="#00ddff" />
-      <FloatingParticle delay={1.2} duration={5} size={2} top="22%" left="12%" color="#0099ff" />
-      <FloatingParticle delay={0.2} duration={3.5} size={5} top="8%" left="78%" color="#00ccff" />
-      <FloatingParticle delay={0.6} duration={4.5} size={2} top="16%" left="3%" color="#00aaff" />
-      <FloatingParticle delay={1} duration={4} size={3} top="28%" left="97%" color="#00ddff" />
-      <FloatingParticle delay={1.5} duration={5} size={2} top="33%" left="2%" color="#0099ff" />
-      <FloatingParticle delay={0.3} duration={4} size={4} top="38%" left="96%" color="#00ccff" />
-      <FloatingParticle delay={1.8} duration={5.5} size={2} top="45%" left="8%" color="#00aaff" />
-      <FloatingParticle delay={0.5} duration={4.5} size={3} top="50%" left="92%" color="#00ddff" />
-      <FloatingParticle delay={1.1} duration={4} size={2} top="56%" left="18%" color="#0099ff" />
-      <FloatingParticle delay={0.7} duration={5.5} size={5} top="62%" left="82%" color="#00ccff" />
-      <FloatingParticle delay={1.4} duration={4.5} size={2} top="68%" left="10%" color="#00aaff" />
-      <FloatingParticle delay={0.1} duration={4} size={3} top="74%" left="94%" color="#00ddff" />
-      <FloatingParticle delay={0.9} duration={5} size={2} top="80%" left="6%" color="#0099ff" />
-      <FloatingParticle delay={1.3} duration={5.5} size={3} top="86%" left="88%" color="#00ccff" />
-      <FloatingParticle delay={0.4} duration={4} size={2} top="92%" left="42%" color="#00aaff" />
-      <FloatingParticle delay={1.6} duration={4.5} size={3} top="1%" left="70%" color="#00ddff" />
-      <FloatingParticle delay={0.8} duration={5} size={2} top="15%" left="55%" color="#0099ff" />
-      <FloatingParticle delay={0.2} duration={3.5} size={4} top="25%" left="35%" color="#00ccff" />
-      <FloatingParticle delay={1} duration={4.5} size={2} top="35%" left="65%" color="#00aaff" />
-      <FloatingParticle delay={0.5} duration={5} size={3} top="42%" left="25%" color="#00ddff" />
-      <FloatingParticle delay={1.3} duration={4} size={2} top="55%" left="75%" color="#0099ff" />
-      <FloatingParticle delay={0.6} duration={5.5} size={4} top="72%" left="30%" color="#00ccff" />
-      <FloatingParticle delay={1} duration={4.5} size={2} top="85%" left="22%" color="#00aaff" />
-      <FloatingParticle delay={0.3} duration={4} size={3} top="95%" left="78%" color="#00ddff" />
-
-      {/* === PULSE NODES (circuit glow points) === */}
-      <div className={`absolute left-[20px] top-[50px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit']}`} style={{ background: '#00ccff', boxShadow: '0 0 12px #00ccff, 0 0 24px rgba(0,204,255,0.5)' }} />
-      <div className={`absolute left-[20px] top-[170px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit-slow']}`} style={{ background: '#00aaff', boxShadow: '0 0 12px #00aaff, 0 0 24px rgba(0,170,255,0.5)' }} />
-      <div className={`absolute left-[20px] top-[290px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit-slower']}`} style={{ background: '#0099ff', boxShadow: '0 0 12px #0099ff, 0 0 24px rgba(0,153,255,0.5)' }} />
-      <div className={`absolute left-[20px] top-[410px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit']}`} style={{ background: '#00ccff', boxShadow: '0 0 12px #00ccff, 0 0 24px rgba(0,204,255,0.5)' }} />
-      <div className={`absolute left-[20px] top-[530px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit-slow']}`} style={{ background: '#00aaff', boxShadow: '0 0 12px #00aaff, 0 0 24px rgba(0,170,255,0.5)' }} />
-      <div className={`absolute right-[20px] top-[70px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit-slower']}`} style={{ background: '#0099ff', boxShadow: '0 0 12px #0099ff, 0 0 24px rgba(0,153,255,0.5)' }} />
-      <div className={`absolute right-[20px] top-[190px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit']}`} style={{ background: '#00ccff', boxShadow: '0 0 12px #00ccff, 0 0 24px rgba(0,204,255,0.5)' }} />
-      <div className={`absolute right-[20px] top-[310px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit-slow']}`} style={{ background: '#00aaff', boxShadow: '0 0 12px #00aaff, 0 0 24px rgba(0,170,255,0.5)' }} />
-      <div className={`absolute right-[20px] top-[430px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit-slower']}`} style={{ background: '#0099ff', boxShadow: '0 0 12px #0099ff, 0 0 24px rgba(0,153,255,0.5)' }} />
-      <div className={`absolute right-[20px] top-[550px] w-[7px] h-[7px] rounded-full ${styles['animate-pulse-circuit']}`} style={{ background: '#00ccff', boxShadow: '0 0 12px #00ccff, 0 0 24px rgba(0,204,255,0.5)' }} />
-
-      {/* === HUD CORNERS === */}
-      <div className="absolute top-5 left-5 w-14 h-14">
-        <div className="absolute top-0 left-0 w-full h-[2px]" style={{ background: 'linear-gradient(90deg, #00ccff, transparent)', boxShadow: '0 0 10px #00ccff' }} />
-        <div className="absolute top-0 left-0 w-[2px] h-full" style={{ background: 'linear-gradient(180deg, #00ccff, transparent)', boxShadow: '0 0 10px #00ccff' }} />
-      </div>
-      <div className="absolute top-5 right-5 w-14 h-14">
-        <div className="absolute top-0 right-0 w-full h-[2px]" style={{ background: 'linear-gradient(270deg, #00ccff, transparent)', boxShadow: '0 0 10px #00ccff' }} />
-        <div className="absolute top-0 right-0 w-[2px] h-full" style={{ background: 'linear-gradient(180deg, #00ccff, transparent)', boxShadow: '0 0 10px #00ccff' }} />
-      </div>
-      <div className="absolute bottom-5 left-5 w-14 h-14">
-        <div className="absolute bottom-0 left-0 w-full h-[2px]" style={{ background: 'linear-gradient(90deg, #00ccff, transparent)', boxShadow: '0 0 10px #00ccff' }} />
-        <div className="absolute bottom-0 left-0 w-[2px] h-full" style={{ background: 'linear-gradient(0deg, #00ccff, transparent)', boxShadow: '0 0 10px #00ccff' }} />
-      </div>
-      <div className="absolute bottom-5 right-5 w-14 h-14">
-        <div className="absolute bottom-0 right-0 w-full h-[2px]" style={{ background: 'linear-gradient(270deg, #00ccff, transparent)', boxShadow: '0 0 10px #00ccff' }} />
-        <div className="absolute bottom-0 right-0 w-[2px] h-full" style={{ background: 'linear-gradient(0deg, #00ccff, transparent)', boxShadow: '0 0 10px #00ccff' }} />
-      </div>
-
-      {/* === SCAN LINES === */}
-      <div className="absolute inset-0 opacity-[0.012]" style={{
-        background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 180, 255, 0.05) 2px, rgba(0, 180, 255, 0.05) 4px)'
+      {/* === AMBIENT GLOW ORBS === */}
+      <div className="absolute top-[15%] left-[10%] w-[120px] h-[120px] rounded-full" style={{
+        background: 'radial-gradient(circle, rgba(0, 170, 255, 0.1) 0%, transparent 70%)',
+        animation: 'ambient-glow 6s ease-in-out infinite'
+      }} />
+      <div className="absolute top-[60%] right-[15%] w-[80px] h-[80px] rounded-full" style={{
+        background: 'radial-gradient(circle, rgba(0, 200, 255, 0.08) 0%, transparent 60%)',
+        animation: 'ambient-glow 8s ease-in-out infinite 2s'
+      }} />
+      <div className="absolute bottom-[20%] left-[20%] w-[100px] h-[100px] rounded-full" style={{
+        background: 'radial-gradient(circle, rgba(0, 150, 255, 0.06) 0%, transparent 50%)',
+        animation: 'ambient-glow 7s ease-in-out infinite 4s'
       }} />
 
-      {/* === VIGNETTE === */}
+      {/* === DATA FLOW LINES (enhanced) === */}
+      <div className="absolute top-[8%] left-0" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,220,255,0.8), transparent)', width: '300px', height: '2px', animation: 'data-flow 7s linear infinite' }} />
+      <div className="absolute top-[18%] left-0" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,180,255,0.6), transparent)', width: '200px', height: '1.5px', animation: 'data-flow-reverse 11s linear infinite' }} />
+      <div className="absolute top-[32%] left-0" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,240,255,0.7), transparent)', width: '250px', height: '2px', animation: 'data-flow 9s linear infinite 2.5s' }} />
+      <div className="absolute top-[48%] left-0" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,160,255,0.5), transparent)', width: '180px', height: '1.5px', animation: 'data-flow-reverse 13s linear infinite 1.8s' }} />
+      <div className="absolute top-[62%] left-0" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,210,255,0.7), transparent)', width: '280px', height: '2px', animation: 'data-flow 8s linear infinite 4.2s' }} />
+      <div className="absolute top-[78%] left-0" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,190,255,0.6), transparent)', width: '220px', height: '1.5px', animation: 'data-flow-reverse 10s linear infinite 3.5s' }} />
+      <div className="absolute top-[92%] left-0" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,200,255,0.7), transparent)', width: '240px', height: '2px', animation: 'data-flow 6s linear infinite 1.2s' }} />
+
+      {/* === FLOATING PARTICLES (enhanced) === */}
+      <FloatingParticle delay={0} duration={3.5} size={5} top="5%" left="6%" color="#00ccff" />
+      <FloatingParticle delay={0.4} duration={4.5} size={3} top="10%" left="94%" color="#00aaff" />
+      <FloatingParticle delay={0.8} duration={4} size={4} top="3%" left="45%" color="#00ddff" />
+      <FloatingParticle delay={1.2} duration={5} size={3} top="22%" left="12%" color="#0099ff" />
+      <FloatingParticle delay={0.2} duration={3.5} size={6} top="8%" left="78%" color="#00ccff" />
+      <FloatingParticle delay={0.6} duration={4.5} size={3} top="16%" left="3%" color="#00aaff" />
+      <FloatingParticle delay={1} duration={4} size={4} top="28%" left="97%" color="#00ddff" />
+      <FloatingParticle delay={1.5} duration={5} size={3} top="33%" left="2%" color="#0099ff" />
+      <FloatingParticle delay={0.3} duration={4} size={5} top="38%" left="96%" color="#00ccff" />
+      <FloatingParticle delay={1.8} duration={5.5} size={3} top="45%" left="8%" color="#00aaff" />
+      <FloatingParticle delay={0.5} duration={4.5} size={4} top="50%" left="92%" color="#00ddff" />
+      <FloatingParticle delay={1.1} duration={4} size={3} top="56%" left="18%" color="#0099ff" />
+      <FloatingParticle delay={0.7} duration={5.5} size={6} top="62%" left="82%" color="#00ccff" />
+      <FloatingParticle delay={1.4} duration={4.5} size={3} top="68%" left="10%" color="#00aaff" />
+      <FloatingParticle delay={0.1} duration={4} size={4} top="74%" left="94%" color="#00ddff" />
+      <FloatingParticle delay={0.9} duration={5} size={3} top="80%" left="6%" color="#0099ff" />
+      <FloatingParticle delay={1.3} duration={5.5} size={4} top="86%" left="88%" color="#00ccff" />
+      <FloatingParticle delay={0.4} duration={4} size={3} top="92%" left="42%" color="#00aaff" />
+      <FloatingParticle delay={1.6} duration={4.5} size={4} top="1%" left="70%" color="#00ddff" />
+      <FloatingParticle delay={0.8} duration={5} size={3} top="15%" left="55%" color="#0099ff" />
+      <FloatingParticle delay={0.2} duration={3.5} size={5} top="25%" left="35%" color="#00ccff" />
+      <FloatingParticle delay={1} duration={4.5} size={3} top="35%" left="65%" color="#00aaff" />
+      <FloatingParticle delay={0.5} duration={5} size={4} top="42%" left="25%" color="#00ddff" />
+      <FloatingParticle delay={1.3} duration={4} size={3} top="55%" left="75%" color="#0099ff" />
+      <FloatingParticle delay={0.6} duration={5.5} size={5} top="72%" left="30%" color="#00ccff" />
+      <FloatingParticle delay={1} duration={4.5} size={3} top="85%" left="22%" color="#00aaff" />
+      <FloatingParticle delay={0.3} duration={4} size={4} top="95%" left="78%" color="#00ddff" />
+
+      {/* === PULSE NODES (enhanced) === */}
+      <div className={`absolute left-[20px] top-[50px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit']}`} style={{ background: '#00ccff', boxShadow: '0 0 15px #00ccff, 0 0 30px rgba(0,204,255,0.6)' }} />
+      <div className={`absolute left-[20px] top-[170px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit-slow']}`} style={{ background: '#00aaff', boxShadow: '0 0 15px #00aaff, 0 0 30px rgba(0,170,255,0.6)' }} />
+      <div className={`absolute left-[20px] top-[290px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit-slower']}`} style={{ background: '#0099ff', boxShadow: '0 0 15px #0099ff, 0 0 30px rgba(0,153,255,0.6)' }} />
+      <div className={`absolute left-[20px] top-[410px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit']}`} style={{ background: '#00ccff', boxShadow: '0 0 15px #00ccff, 0 0 30px rgba(0,204,255,0.6)' }} />
+      <div className={`absolute left-[20px] top-[530px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit-slow']}`} style={{ background: '#00aaff', boxShadow: '0 0 15px #00aaff, 0 0 30px rgba(0,170,255,0.6)' }} />
+      <div className={`absolute right-[20px] top-[70px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit-slower']}`} style={{ background: '#0099ff', boxShadow: '0 0 15px #0099ff, 0 0 30px rgba(0,153,255,0.6)' }} />
+      <div className={`absolute right-[20px] top-[190px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit']}`} style={{ background: '#00ccff', boxShadow: '0 0 15px #00ccff, 0 0 30px rgba(0,204,255,0.6)' }} />
+      <div className={`absolute right-[20px] top-[310px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit-slow']}`} style={{ background: '#00aaff', boxShadow: '0 0 15px #00aaff, 0 0 30px rgba(0,170,255,0.6)' }} />
+      <div className={`absolute right-[20px] top-[430px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit-slower']}`} style={{ background: '#0099ff', boxShadow: '0 0 15px #0099ff, 0 0 30px rgba(0,153,255,0.6)' }} />
+      <div className={`absolute right-[20px] top-[550px] w-[8px] h-[8px] rounded-full ${styles['animate-pulse-circuit']}`} style={{ background: '#00ccff', boxShadow: '0 0 15px #00ccff, 0 0 30px rgba(0,204,255,0.6)' }} />
+
+      {/* === ENHANCED HUD CORNERS === */}
+      <div className="absolute top-5 left-5 w-16 h-16">
+        <div className="absolute top-0 left-0 w-full h-[3px]" style={{ background: 'linear-gradient(90deg, #00ccff, transparent)', boxShadow: '0 0 15px #00ccff' }} />
+        <div className="absolute top-0 left-0 w-[3px] h-full" style={{ background: 'linear-gradient(180deg, #00ccff, transparent)', boxShadow: '0 0 15px #00ccff' }} />
+        <div className="absolute top-2 left-2 w-2 h-2 rounded-full" style={{ background: '#00ccff', boxShadow: '0 0 10px #00ccff', animation: 'pulse 2s ease-in-out infinite' }} />
+      </div>
+      <div className="absolute top-5 right-5 w-16 h-16">
+        <div className="absolute top-0 right-0 w-full h-[3px]" style={{ background: 'linear-gradient(270deg, #00ccff, transparent)', boxShadow: '0 0 15px #00ccff' }} />
+        <div className="absolute top-0 right-0 w-[3px] h-full" style={{ background: 'linear-gradient(180deg, #00ccff, transparent)', boxShadow: '0 0 15px #00ccff' }} />
+        <div className="absolute top-2 right-2 w-2 h-2 rounded-full" style={{ background: '#00ccff', boxShadow: '0 0 10px #00ccff', animation: 'pulse 2s ease-in-out infinite 0.5s' }} />
+      </div>
+      <div className="absolute bottom-5 left-5 w-16 h-16">
+        <div className="absolute bottom-0 left-0 w-full h-[3px]" style={{ background: 'linear-gradient(90deg, #00ccff, transparent)', boxShadow: '0 0 15px #00ccff' }} />
+        <div className="absolute bottom-0 left-0 w-[3px] h-full" style={{ background: 'linear-gradient(0deg, #00ccff, transparent)', boxShadow: '0 0 15px #00ccff' }} />
+        <div className="absolute bottom-2 left-2 w-2 h-2 rounded-full" style={{ background: '#00ccff', boxShadow: '0 0 10px #00ccff', animation: 'pulse 2s ease-in-out infinite 1s' }} />
+      </div>
+      <div className="absolute bottom-5 right-5 w-16 h-16">
+        <div className="absolute bottom-0 right-0 w-full h-[3px]" style={{ background: 'linear-gradient(270deg, #00ccff, transparent)', boxShadow: '0 0 15px #00ccff' }} />
+        <div className="absolute bottom-0 right-0 w-[3px] h-full" style={{ background: 'linear-gradient(0deg, #00ccff, transparent)', boxShadow: '0 0 15px #00ccff' }} />
+        <div className="absolute bottom-2 right-2 w-2 h-2 rounded-full" style={{ background: '#00ccff', boxShadow: '0 0 10px #00ccff', animation: 'pulse 2s ease-in-out infinite 1.5s' }} />
+      </div>
+
+      {/* === ENHANCED SCAN LINES === */}
+      <div className="absolute inset-0 opacity-[0.02]" style={{
+        background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 180, 255, 0.08) 2px, rgba(0, 180, 255, 0.08) 4px)'
+      }} />
+      <div className="absolute inset-0 opacity-[0.015]" style={{
+        background: 'repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(0, 200, 255, 0.05) 3px, rgba(0, 200, 255, 0.05) 6px)'
+      }} />
+
+      {/* === DEEP VIGNETTE === */}
       <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse at center, transparent 35%, rgba(0, 0, 8, 0.6) 100%)'
+        background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 8, 0.8) 100%)'
       }} />
     </div>
   );
@@ -227,85 +253,81 @@ export default function DashboardPage() {
   };
 
   return (
-    /* ── Full-screen cyber security background ── */
+    /* ── Premium Cyber Security Dashboard ── */
     <div className="min-h-screen relative overflow-hidden">
       <CyberBackground />
       
-      {/* Main content container with glassmorphism */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-6">
+      {/* ── Premium Centered Layout (Cinematic) ── */}
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-8">
         
-        {/* ── Dashboard Container with futuristic styling ── */}
-        <div className="w-full max-w-2xl lg:max-w-4xl">
-          <div className="flex flex-col w-full min-h-screen bg-white/95 backdrop-blur-xl shadow-2xl relative rounded-2xl overflow-hidden"
+        {/* ── Dashboard Shell (Premium Mobile/Tablet Feel) ── */}
+        <div className="w-full max-w-md lg:max-w-xl xl:max-w-2xl">
+          <div className={`flex flex-col w-full min-h-screen ${styles['cyber-glass-premium']} rounded-3xl overflow-hidden relative`}
                style={{ 
-                 background: 'rgba(255, 255, 255, 0.95)',
-                 border: '1px solid rgba(0, 170, 255, 0.2)',
-                 boxShadow: '0 0 40px rgba(0, 170, 255, 0.15), 0 0 80px rgba(0, 100, 200, 0.1), inset 0 0 20px rgba(0, 170, 255, 0.05)'
+                 minHeight: '85vh',
+                 maxHeight: '90vh'
                }}>
 
-            {/* ── Futuristic Header ── */}
-            <header
-              className="flex items-center justify-between px-6 py-4 relative"
-              style={{
-                background: 'linear-gradient(135deg, rgba(0, 80, 180, 0.9) 0%, rgba(0, 40, 120, 0.9) 100%)',
-                borderBottom: '2px solid rgba(0, 170, 255, 0.3)',
-                backdropFilter: 'blur(10px)'
-              }}
-            >
-              {/* Glow overlay */}
+            {/* ── Premium Header (Cinematic) ── */}
+            <header className={`flex items-center justify-between px-6 py-5 relative ${styles['cyber-glass-dark']} rounded-t-3xl`}
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.9) 0%, rgba(0, 20, 60, 0.95) 100%)',
+                    borderBottom: '2px solid rgba(0, 170, 255, 0.4)',
+                    backdropFilter: 'blur(20px)',
+                    boxShadow: '0 0 30px rgba(0, 170, 255, 0.3), inset 0 0 20px rgba(0, 170, 255, 0.1)'
+                  }}>
+              
+              {/* Animated header glow */}
               <div className="absolute inset-0" style={{
-                background: 'linear-gradient(90deg, transparent, rgba(0, 170, 255, 0.1), transparent)',
-                animation: 'shimmer 3s infinite'
+                background: 'linear-gradient(90deg, transparent, rgba(0, 170, 255, 0.15), transparent)',
+                animation: 'shimmer 4s infinite'
               }} />
               
+              {/* Menu Button */}
               <button
                 aria-label="Open menu"
                 onClick={() => setMenuOpen((v) => !v)}
-                className="p-2 rounded-xl transition-all duration-300 hover:bg-white/10 active:bg-white/20 relative z-10"
-                style={{
-                  background: 'rgba(0, 170, 255, 0.1)',
-                  border: '1px solid rgba(0, 170, 255, 0.3)',
-                  boxShadow: '0 0 15px rgba(0, 170, 255, 0.2)'
-                }}
+                className={`p-3 rounded-2xl transition-all duration-300 relative z-10 ${styles['cyber-button']}`}
               >
-                <Menu size={22} color="#00d4ff" />
+                <Menu size={24} color="#00d4ff" />
               </button>
 
+              {/* Logo with enhanced glow */}
               <div className="relative">
                 <Image
                   src="/logo.png"
                   alt="Security System Logo"
-                  width={80}
-                  height={80}
+                  width={70}
+                  height={70}
                   className="object-contain"
                   priority
                   style={{
-                    filter: 'drop-shadow(0 0 20px rgba(0, 170, 255, 0.5))'
+                    filter: 'drop-shadow(0 0 25px rgba(0, 170, 255, 0.7))'
                   }}
                 />
               </div>
 
+              {/* Notification Bell */}
               <div className="relative z-10">
                 <NotificationBell />
               </div>
             </header>
 
-            {/* ── Futuristic Navigation Menu ── */}
+            {/* ── Premium Navigation Menu ── */}
             {menuOpen && (
-              <nav
-                className="flex flex-col px-6 pb-4 pt-2 relative"
-                style={{
-                  background: 'linear-gradient(180deg, rgba(0, 60, 140, 0.95) 0%, rgba(0, 40, 100, 0.95) 100%)',
-                  backdropFilter: 'blur(15px)',
-                  border: '1px solid rgba(0, 170, 255, 0.3)',
-                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)'
-                }}
-                aria-label="Main menu"
-              >
-                {/* Glow overlay */}
+              <nav className={`flex flex-col px-6 pb-5 pt-3 relative ${styles['cyber-glass-dark']} rounded-b-3xl`}
+                    style={{
+                      background: 'linear-gradient(180deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.9) 100%)',
+                      backdropFilter: 'blur(25px)',
+                      border: '1px solid rgba(0, 170, 255, 0.4)',
+                      boxShadow: '0 15px 40px rgba(0, 0, 0, 0.4), inset 0 0 25px rgba(0, 170, 255, 0.15)'
+                    }}
+                    aria-label="Main menu">
+                
+                {/* Navigation glow overlay */}
                 <div className="absolute inset-0" style={{
-                  background: 'linear-gradient(180deg, transparent, rgba(0, 170, 255, 0.05), transparent)',
-                  animation: 'shimmer 4s infinite'
+                  background: 'linear-gradient(180deg, transparent, rgba(0, 170, 255, 0.1), transparent)',
+                  animation: 'shimmer 5s infinite'
                 }} />
                 
                 {[
@@ -318,71 +340,75 @@ export default function DashboardPage() {
                     key={href}
                     href={href}
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center justify-between text-white/90 text-sm py-3 px-4 border-b border-white/10 last:border-0 hover:text-white transition-all duration-300 hover:bg-white/10 rounded-lg relative z-10"
+                    className={`flex items-center justify-between text-white/90 text-sm py-4 px-5 border-b border-white/10 last:border-0 hover:text-white transition-all duration-300 hover:bg-white/10 rounded-xl relative z-10 ${styles['cyber-button']}`}
                   >
-                    {label}
-                    <ChevronRight size={14} className="opacity-70" />
+                    <span className="font-medium">{label}</span>
+                    <ChevronRight size={16} className="opacity-80" />
                   </Link>
                 ))}
               </nav>
             )}
 
-            {/* ── Futuristic Title Section ── */}
-            <div
-              className="px-6 pt-4 pb-3 text-center relative"
-              style={{
-                background: 'linear-gradient(135deg, rgba(0, 80, 180, 0.9) 0%, rgba(0, 40, 100, 0.9) 100%)',
-                borderBottom: '2px solid rgba(0, 170, 255, 0.3)',
-                backdropFilter: 'blur(10px)'
-              }}
-            >
-              {/* Glow overlay */}
+            {/* ── Premium Title Section ── */}
+            <div className={`px-6 pt-5 pb-4 text-center relative ${styles['cyber-glass-dark']}`}
+                 style={{
+                   background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.9) 0%, rgba(0, 20, 60, 0.95) 100%)',
+                   borderBottom: '2px solid rgba(0, 170, 255, 0.4)',
+                   backdropFilter: 'blur(20px)',
+                   boxShadow: '0 0 30px rgba(0, 170, 255, 0.3), inset 0 0 20px rgba(0, 170, 255, 0.1)'
+                 }}>
+              
+              {/* Title glow overlay */}
               <div className="absolute inset-0" style={{
-                background: 'linear-gradient(90deg, transparent, rgba(0, 170, 255, 0.1), transparent)',
-                animation: 'shimmer 3.5s infinite'
+                background: 'linear-gradient(90deg, transparent, rgba(0, 170, 255, 0.15), transparent)',
+                animation: 'shimmer 4.5s infinite'
               }} />
               
-              <h1 className="text-white text-[24px] font-extrabold tracking-wide relative z-10"
+              <h1 className={`text-white text-[26px] font-extrabold tracking-wide relative z-10 ${styles['cyber-text-glow']}`}
                   style={{
-                    textShadow: '0 0 20px rgba(0, 170, 255, 0.5), 0 0 40px rgba(0, 100, 200, 0.3)'
+                    textShadow: '0 0 25px rgba(0, 170, 255, 0.6), 0 0 50px rgba(0, 100, 200, 0.4)'
                   }}>
                 Security System
               </h1>
             </div>
 
-            {/* ── Main Content Area (preserved for readability) ── */}
-            <div className="flex-1 bg-white px-4 sm:px-6 pt-4 pb-6 flex flex-col gap-3 relative">
+            {/* ── Premium Content Area (Enhanced) ── */}
+            <div className="flex-1 bg-white/98 backdrop-blur-sm px-5 sm:px-6 pt-5 pb-6 flex flex-col gap-4 relative"
+                 style={{
+                   background: 'rgba(255, 255, 255, 0.98)',
+                   backdropFilter: 'blur(10px)'
+                 }}>
 
-              {/* ── Location Card with futuristic styling ── */}
-              <div
-                className="flex items-center gap-3 rounded-2xl px-4 py-3 relative"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.05) 0%, rgba(0, 80, 180, 0.08) 100%)',
-                  border: '1px solid rgba(0, 170, 255, 0.2)',
-                  boxShadow: '0 0 20px rgba(0, 170, 255, 0.1), inset 0 0 10px rgba(0, 170, 255, 0.05)'
-                }}
-              >
-                {/* Glow effect */}
-                <div className="absolute inset-0 rounded-2xl" style={{
-                  background: 'linear-gradient(135deg, transparent 30%, rgba(0, 170, 255, 0.05) 70%, transparent)',
-                  animation: 'pulse 3s ease-in-out infinite'
+              {/* ── Enhanced Location Card ── */}
+              <div className={`flex items-center gap-4 rounded-3xl px-5 py-4 relative ${styles['cyber-glass']}`}
+                   style={{
+                     background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.08) 0%, rgba(0, 80, 180, 0.12) 100%)',
+                     border: '2px solid rgba(0, 170, 255, 0.3)',
+                     boxShadow: '0 0 25px rgba(0, 170, 255, 0.15), inset 0 0 15px rgba(0, 170, 255, 0.08)'
+                   }}>
+                
+                {/* Card glow effect */}
+                <div className="absolute inset-0 rounded-3xl" style={{
+                  background: 'linear-gradient(135deg, transparent 20%, rgba(0, 170, 255, 0.08) 80%, transparent)',
+                  animation: 'cyber-pulse 3.5s ease-in-out infinite'
                 }} />
                 
-                <div
-                  className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center relative z-10"
-                  style={{
-                    background: 'linear-gradient(135deg, #00aaff 0%, #0066cc 100%)',
-                    border: '2px solid #00d4ff',
-                    boxShadow: '0 0 15px rgba(0, 170, 255, 0.4), inset 0 0 8px rgba(0, 100, 200, 0.3)'
-                  }}
-                >
-                  <User size={18} color="#ffffff" />
+                {/* Enhanced user icon */}
+                <div className={`w-10 h-10 rounded-full shrink-0 flex items-center justify-center relative z-10`}
+                    style={{
+                      background: 'linear-gradient(135deg, #00ccff 0%, #0088ee 100%)',
+                      border: '2px solid #00d4ff',
+                      boxShadow: '0 0 20px rgba(0, 170, 255, 0.5), inset 0 0 10px rgba(0, 100, 200, 0.4)'
+                    }}>
+                  <User size={20} color="#ffffff" />
                 </div>
-                <div className="relative z-10">
-                  <p className="text-[10px] text-[#00aaff] font-semibold mb-1">Delivered from</p>
-                  <div className="flex items-center gap-2">
-                    <MapPin size={10} color="#00d4ff" />
-                    <span className="text-[12px] font-semibold text-[#1a1a1a]">
+                
+                {/* Location info */}
+                <div className="relative z-10 flex-1">
+                  <p className={`text-[11px] font-semibold mb-2 ${styles['cyber-text-glow']}`}>Delivered from</p>
+                  <div className="flex items-center gap-3">
+                    <MapPin size={12} color="#00d4ff" />
+                    <span className="text-[13px] font-semibold text-[#1a1a1a]">
                       {user?.mall_name && user?.gate_number
                         ? `${user.mall_name}, Gate ${user.gate_number.replace(/gate\s*/i, '').trim()}`
                         : user?.mall_name
@@ -393,15 +419,25 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* ── Main Data Table Area (preserved white content) ── */}
+              {/* ── Enhanced Data Table Area ── */}
               <div className="flex-1 relative">
-                <div className="absolute inset-0 rounded-2xl" style={{
-                  background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.02) 0%, rgba(0, 80, 180, 0.04) 100%)',
-                  border: '1px solid rgba(0, 170, 255, 0.1)',
-                  pointerEvents: 'none'
-                }} />
+                {/* Table container with premium styling */}
+                <div className={`absolute inset-0 rounded-3xl ${styles['cyber-glass']}`}
+                     style={{
+                       background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.04) 0%, rgba(0, 80, 180, 0.08) 100%)',
+                       border: '2px solid rgba(0, 170, 255, 0.2)',
+                       boxShadow: '0 0 30px rgba(0, 170, 255, 0.12), inset 0 0 20px rgba(0, 170, 255, 0.06)',
+                       pointerEvents: 'none'
+                     }} />
                 
-                <div className="relative z-10 h-full">
+                {/* Enhanced data table container */}
+                <div className={`relative z-10 h-full rounded-3xl overflow-hidden ${styles['cyber-glass']}`}
+                     style={{
+                       background: 'rgba(255, 255, 255, 0.95)',
+                       backdropFilter: 'blur(8px)',
+                       border: '1px solid rgba(0, 170, 255, 0.15)'
+                     }}>
+                  
                   <RealTimeDataTable
                     data={matches}
                     connected={connected}
