@@ -260,36 +260,48 @@ export default function DashboardPage() {
       {/* ── Mobile App Container (matches Profile/History proportions) ── */}
       <div className="flex flex-col w-full min-h-screen bg-white/95 backdrop-blur-xl shadow-2xl relative sm:max-w-md sm:mx-auto">
         
-
-        
-        {/* ── Futuristic Title Section (Mobile App Style) ── */}
-        <div className="px-4 pt-2 pb-4 text-center relative"
-             style={{
-               background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.98) 100%)',
-               borderBottom: '2px solid rgba(0, 170, 255, 0.4)',
-               backdropFilter: 'blur(20px)',
-               boxShadow: '0 0 25px rgba(0, 170, 255, 0.3), inset 0 0 15px rgba(0, 170, 255, 0.1)'
-             }}>
+        {/* ── Futuristic Header (Mobile App Style) ── */}
+        <header className="flex items-center justify-between px-4 py-3 relative"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.98) 100%)',
+                  borderBottom: '2px solid rgba(0, 170, 255, 0.4)',
+                  backdropFilter: 'blur(20px)',
+                  boxShadow: '0 0 25px rgba(0, 170, 255, 0.3), inset 0 0 15px rgba(0, 170, 255, 0.1)'
+                }}>
           
-          {/* Title glow overlay */}
+          {/* Animated header glow */}
           <div className="absolute inset-0" style={{
             background: 'linear-gradient(90deg, transparent, rgba(0, 170, 255, 0.12), transparent)',
-            animation: 'shimmer 3.5s infinite'
+            animation: 'shimmer 3s infinite'
           }} />
           
-          <h1 className="text-white text-[22px] font-extrabold tracking-wide relative z-10"
+          {/* Logo with cyber glow */}
+          <div className="relative">
+            <Image
+              src="/logo.png"
+              alt="Security System Logo"
+              width={60}
+              height={60}
+              className="object-contain"
+              priority
               style={{
-                textShadow: '0 0 20px rgba(0, 170, 255, 0.5), 0 0 40px rgba(0, 100, 200, 0.3)'
-              }}>
-            Security System
-          </h1>
-        </div>
+                filter: 'drop-shadow(0 0 20px rgba(0, 170, 255, 0.6))'
+              }}
+            />
+          </div>
+
+          {/* Notification Bell */}
+          <div className="relative z-10">
+            <NotificationBell />
+          </div>
+        </header>
 
         {/* ── Main Content Area (Mobile App Style) ── */}
         <div className="flex-1 bg-white px-4 pt-4 pb-16 flex flex-col gap-3 relative"
              style={{
                background: 'rgba(255, 255, 255, 0.98)',
-               backdropFilter: 'blur(8px)'
+               backdropFilter: 'blur(6px)',
+               border: '1px solid rgba(0, 170, 255, 0.12)'
              }}>
 
           {/* ── Location Card (Mobile App Style) ── */}
