@@ -292,7 +292,7 @@ export default function DashboardPage() {
           </button>
 
           {/* CENTER: Logo + Text */}
-          <div className="flex flex-col items-center relative" style={{ transform: 'translateY(2px)' }}>
+          <div className="flex flex-col items-center relative" style={{ transform: 'translateY(4px)' }}>
             <Image
               src="/logo.png"
               alt="Security System Logo"
