@@ -15,6 +15,7 @@ import {
   User,
   Settings,
   Bell,
+  Home,
 } from "lucide-react";
 import styles from "./dashboard.module.css";
 
@@ -432,9 +433,9 @@ export default function DashboardPage() {
           
           <div className="flex items-center justify-around py-3 relative z-10">
             {[
-              { icon: Menu, label: "Home", href: "/dashboard", active: true },
+              { icon: Home, label: "Home", href: "/dashboard", active: true },
               { icon: Menu, label: "History", href: "/history", active: false },
-              { icon: Menu, label: "Settings", href: "/settings", active: false },
+              { icon: Settings, label: "Settings", href: "/settings", active: false },
               { icon: User, label: "Profile", href: "/profile", active: false },
             ].map(({ icon: Icon, label, href, active }) => (
               <Link
