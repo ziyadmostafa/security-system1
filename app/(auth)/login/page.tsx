@@ -497,13 +497,17 @@ export default function LoginPage() {
   const [success, setSuccess] = useState<string | null>(null);
 
   async function handleLogin(e: React.FormEvent) {
-    console.log("=== LOGIN FUNCTION STARTED ===");
+    console.log("=== LOGIN CLICKED ===");
     console.log("Event type:", e?.type);
-    console.log("Form data:", { email: email?.substring(0, 3) + "...", password: password ? "***" : "empty" });
+    console.log("Form data before prevent:", { email: email?.substring(0, 3) + "...", password: password ? "***" : "empty" });
     
     e?.preventDefault();
+    console.log("Form data after prevent:", { email: email?.substring(0, 3) + "...", password: password ? "***" : "empty" });
+    
     setError(null);
     setSuccess(null);
+    
+    console.log("=== STARTING SUPABASE AUTH ===");
     
     try {
       console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
@@ -522,7 +526,7 @@ export default function LoginPage() {
       console.log('[LOGIN] Request payload:', { email, password: '***' });
       
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      console.log("=== LOGIN RESPONSE ===");
+      console.log("=== LOGIN RESPONSE RECEIVED ===");
       console.log("Data:", data);
       console.log("Error:", error);
       console.log("Session exists:", !!data?.session);
@@ -536,6 +540,7 @@ export default function LoginPage() {
       
       // Check for successful login with session
       if (data?.session?.user) {
+        console.log('=== LOGIN SUCCESS - REDIRECTING ===');
         console.log('[LOGIN] ✓ Login successful');
         console.log('[LOGIN] User data:', { 
           id: data.user?.id, 
