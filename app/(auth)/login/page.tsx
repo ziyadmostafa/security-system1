@@ -514,13 +514,18 @@ export default function LoginPage() {
       if (!supabase) {
         console.error("Supabase client is null");
         setError("Authentication system not available");
+        setLoading(false);
         return;
       }
 
       console.log("Calling signInWithPassword...");
       
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      console.log("LOGIN RESULT:", data, error);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+      console.log("RESULT:", data);
+      console.log("ERROR:", error);
 
       if (error) {
         console.error("Supabase Auth Error:", error);
@@ -530,15 +535,10 @@ export default function LoginPage() {
       }
 
       if (data?.session?.user) {
-        console.log("LOGIN SUCCESS - Session created, redirecting to dashboard");
-        console.log("Session data:", data.session);
-        console.log("User data:", data.user);
+        console.log("LOGIN SUCCESS - Redirecting to dashboard");
         
-        // Stop loading immediately
         setLoading(false);
-        
-        // Force redirect using router.replace
-        router.replace('/dashboard');
+        window.location.href = '/dashboard';
         return;
       } else {
         console.error("No valid session returned");
