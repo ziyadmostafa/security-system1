@@ -497,70 +497,48 @@ export default function LoginPage() {
   const [success, setSuccess] = useState<string | null>(null);
 
   async function handleLogin(e: React.FormEvent) {
-    console.log("=== LOGIN CLICKED ===");
-    console.log("Event type:", e?.type);
-    console.log("Form data before prevent:", { email: email?.substring(0, 3) + "...", password: password ? "***" : "empty" });
-    
-    e?.preventDefault();
-    console.log("Form data after prevent:", { email: email?.substring(0, 3) + "...", password: password ? "***" : "empty" });
-    
+    e.preventDefault();
+
+    console.log("LOGIN CLICKED");
+    console.log("Email:", email);
+    console.log("Password:", password ? "***" : "empty");
+
     setError(null);
     setSuccess(null);
-    
-    console.log("=== STARTING SUPABASE AUTH ===");
-    
+
     try {
       console.log("SUPABASE URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
-      console.log('[LOGIN] Attempting login with email:', email);
-      
-      console.log("SUPABASE CLIENT CHECK:", supabase);
-      console.log("SUPABASE CLIENT TYPE:", typeof supabase);
-      
+      console.log("SUPABASE CLIENT:", supabase);
+
       if (!supabase) {
-        console.error("Supabase client is null/undefined");
-        setError("Supabase client not initialized");
+        console.error("Supabase client is null");
+        setError("Authentication system not available");
         return;
       }
 
-      console.log('[LOGIN] Calling signInWithPassword...');
-      console.log('[LOGIN] Request payload:', { email, password: '***' });
+      console.log("Calling signInWithPassword...");
       
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      console.log("=== LOGIN RESPONSE RECEIVED ===");
-      console.log("Data:", data);
-      console.log("Error:", error);
-      console.log("Session exists:", !!data?.session);
-      console.log("User exists:", !!data?.session?.user);
+      console.log("LOGIN RESULT:", data, error);
 
       if (error) {
         console.error("Supabase Auth Error:", error);
         setError(error?.message || "Login failed");
         return;
       }
-      
-      // Check for successful login with session
+
       if (data?.session?.user) {
-        console.log('=== LOGIN SUCCESS - REDIRECTING ===');
-        console.log('[LOGIN] ✓ Login successful');
-        console.log('[LOGIN] User data:', { 
-          id: data.user?.id, 
-          email: data.user?.email,
-          session: data.session ? '✓' : 'null'
-        });
-        
-        // Force immediate redirect and stop all UI updates
-        console.log('[LOGIN] Redirecting to dashboard with valid session...');
+        console.log("LOGIN SUCCESS - Redirecting to dashboard");
         setSuccess("Login successful! Redirecting...");
         window.location.replace("/dashboard");
-        return; // Stop execution to prevent re-render
+        return;
       } else {
-        console.error('[LOGIN] No valid session returned');
+        console.error("No valid session returned");
         setError("No valid session created");
         return;
       }
     } catch (err) {
-      console.error('[LOGIN] ❌ Unexpected error during login:', err);
-      console.error('[LOGIN] Error stack:', err instanceof Error ? err.stack : 'No stack available');
+      console.error("Unexpected error during login:", err);
       setError("An unexpected error occurred");
     }
   }
