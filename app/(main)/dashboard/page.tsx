@@ -260,55 +260,6 @@ export default function DashboardPage() {
       {/* ── Mobile App Container (matches Profile/History proportions) ── */}
       <div className="flex flex-col w-full min-h-screen bg-white/95 backdrop-blur-xl shadow-2xl relative sm:max-w-md sm:mx-auto">
         
-        {/* ── Futuristic Header (Mobile App Style) ── */}
-        <header className="flex items-center justify-between px-4 py-3 relative"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.98) 100%)',
-                  borderBottom: '2px solid rgba(0, 170, 255, 0.4)',
-                  backdropFilter: 'blur(20px)',
-                  boxShadow: '0 0 25px rgba(0, 170, 255, 0.3), inset 0 0 15px rgba(0, 170, 255, 0.1)'
-                }}>
-          
-          {/* Animated header glow */}
-          <div className="absolute inset-0" style={{
-            background: 'linear-gradient(90deg, transparent, rgba(0, 170, 255, 0.12), transparent)',
-            animation: 'shimmer 3s infinite'
-          }} />
-          
-          {/* Menu Button */}
-          <button
-            aria-label="Open menu"
-            onClick={() => setMenuOpen((v) => !v)}
-            className="p-2 rounded-xl transition-all duration-300 relative z-10"
-            style={{
-              background: 'rgba(0, 170, 255, 0.15)',
-              border: '1px solid rgba(0, 170, 255, 0.3)',
-              boxShadow: '0 0 12px rgba(0, 170, 255, 0.2)'
-            }}
-          >
-            <Menu size={22} color="#00d4ff" />
-          </button>
-
-          {/* Logo with cyber glow */}
-          <div className="relative">
-            <Image
-              src="/logo.png"
-              alt="Security System Logo"
-              width={60}
-              height={60}
-              className="object-contain"
-              priority
-              style={{
-                filter: 'drop-shadow(0 0 20px rgba(0, 170, 255, 0.6))'
-              }}
-            />
-          </div>
-
-          {/* Notification Bell */}
-          <div className="relative z-10">
-            <NotificationBell />
-          </div>
-        </header>
 
         
         {/* ── Futuristic Title Section (Mobile App Style) ── */}
