@@ -310,47 +310,7 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        {/* ── Futuristic Navigation Menu (Mobile App Style) ── */}
-        {menuOpen && (
-          <nav className="flex flex-col px-4 pb-4 pt-2 relative"
-                style={{
-                  background: 'linear-gradient(180deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.9) 100%)',
-                  backdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(0, 170, 255, 0.3)',
-                  boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(0, 170, 255, 0.1)'
-                }}
-                aria-label="Main menu">
-            
-            {/* Navigation glow overlay */}
-            <div className="absolute inset-0" style={{
-              background: 'linear-gradient(180deg, transparent, rgba(0, 170, 255, 0.08), transparent)',
-              animation: 'shimmer 4s infinite'
-            }} />
-            
-            {[
-              { label: "Home",     href: "/dashboard" },
-              { label: "History",  href: "/history" },
-              { label: "Settings", href: "/settings" },
-              { label: "Profile",  href: "/profile" },
-            ].map(({ label, href }) => (
-              <Link
-                key={href}
-                href={href}
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center justify-between text-white/90 text-sm py-3 px-4 border-b border-white/10 last:border-0 hover:text-white transition-all duration-300 hover:bg-white/10 rounded-lg relative z-10"
-                style={{
-                  background: 'rgba(0, 170, 255, 0.05)',
-                  border: '1px solid rgba(0, 170, 255, 0.2)',
-                  boxShadow: '0 0 8px rgba(0, 170, 255, 0.1)'
-                }}
-              >
-                <span className="font-medium">{label}</span>
-                <ChevronRight size={14} className="opacity-80" />
-              </Link>
-            ))}
-          </nav>
-        )}
-
+        
         {/* ── Futuristic Title Section (Mobile App Style) ── */}
         <div className="px-4 pt-2 pb-4 text-center relative"
              style={{
