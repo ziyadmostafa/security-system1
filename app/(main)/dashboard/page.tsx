@@ -309,7 +309,7 @@ export default function DashboardPage() {
               style={{
                 textShadow: '0 0 10px rgba(0, 170, 255, 0.5)',
                 letterSpacing: '0.5px',
-                marginTop: '2px'
+                marginTop: '0px'
               }}
             >
               Security System
