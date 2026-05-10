@@ -30,8 +30,24 @@ interface RealTimeDataState {
   connectionType: 'websocket' | 'fallback' | 'offline' | 'reconnecting';
 }
 
-const SERVER_URL = 'https://spireless-elmira-unmurmurously.ngrok-free.dev';
-const WS_URL = 'https://spireless-elmira-unmurmurously.ngrok-free.dev';
+// Dynamic server URLs based on environment
+const getServerUrl = () => {
+  if (typeof window === 'undefined') return 'http://localhost:8080';
+  
+  const isProduction = process.env.NODE_ENV === 'production';
+  const ngrokUrl = process.env.NEXT_PUBLIC_NGROK_URL;
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  
+  if (isProduction && ngrokUrl) {
+    return ngrokUrl;
+  } else if (apiUrl) {
+    return apiUrl;
+  }
+  return 'http://localhost:8080';
+};
+
+const SERVER_URL = getServerUrl();
+const WS_URL = SERVER_URL;
 
 // ── Gate number normalization helper ──
 // Converts "Gate 1", "gate 2", "3" → "1", "2", "3"
@@ -263,28 +279,44 @@ export function useRealTimeData() {
       timestamp: new Date().toISOString()
     };
 
+    console.log('🧪 Sending test data:', testData);
+    console.log('🔌 WebSocket connected:', socketRef.current?.connected);
+    console.log('🌐 Server URL:', SERVER_URL);
+
     if (socketRef.current?.connected) {
+      // Send via WebSocket
       socketRef.current.emit('new_match', testData);
-      console.log('Sent test data via WebSocket');
+      console.log('✅ Sent test data via WebSocket');
     } else {
       // Send via REST API as fallback
+      console.log('🔄 WebSocket not connected, using REST API fallback');
+      
       fetch(`${SERVER_URL}/api/new_match`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(testData)
-      }).then(response => response.json())
+      }).then(response => {
+        console.log('📡 REST API response status:', response.status);
+        return response.json();
+      })
         .then(result => {
-          console.log('Sent test data via REST API:', result);
-          // Refresh data
-          fetchFallbackData();
+          console.log('✅ Sent test data via REST API:', result);
+          // Refresh data after a short delay to allow server processing
+          setTimeout(() => {
+            fetchFallbackData();
+          }, 500);
         })
         .catch(error => {
-          console.error('Failed to send test data:', error);
+          console.error('❌ Failed to send test data via REST API:', error);
+          setState(prev => ({
+            ...prev,
+            error: 'Failed to send test data'
+          }));
         });
     }
-  }, [fetchFallbackData]);
+  }, [fetchFallbackData, SERVER_URL]);
 
   // Emit criminal confirmed event
   const emitCriminalConfirmed = useCallback((data: SecurityData) => {

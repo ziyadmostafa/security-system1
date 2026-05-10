@@ -16,13 +16,30 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "*", // Allow all origins for development
-    methods: ["GET", "POST"]
+    origin: [
+      "https://spireless-elmira-unmurmurably.ngrok-free.dev",
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "https://*.vercel.app",
+      "https://vercel.app"
+    ],
+    methods: ["GET", "POST", "OPTIONS"],
+    credentials: true
   }
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://spireless-elmira-unmurmurably.ngrok-free.dev",
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://*.vercel.app",
+    "https://vercel.app"
+  ],
+  methods: ["GET", "POST", "OPTIONS"],
+  credentials: true
+}));
 app.use(express.json());
 
 // Store connected clients
@@ -266,8 +283,8 @@ app.get('/api/detections', (req, res) => {
   });
 });
 
-// Start server on port 5050
-const PORT = process.env.PORT || 5050;
+// Start server on port 8080 to match ngrok configuration
+const PORT = process.env.PORT || 8080;
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Security System WebSocket Server running on port ${PORT}`);
   console.log(`📡 WebSocket endpoint: ws://192.168.2.8:${PORT}`);

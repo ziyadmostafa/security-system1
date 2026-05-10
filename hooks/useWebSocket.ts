@@ -6,6 +6,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from 'react';
+import { io } from 'socket.io-client';
 
 interface MatchData {
   person_name: string;
@@ -37,14 +38,20 @@ export function useWebSocket() {
 
   const connect = () => {
     try {
-      // Connect to WebSocket server (Socket.IO uses HTTP URL)
-      const SOCKET_URL = 'https://spireless-elmira-unmurmurously.ngrok-free.dev';
+      // Get WebSocket URL from environment variables
+      const WS_URL = process.env.NEXT_PUBLIC_WS_URL || process.env.NEXT_PUBLIC_NGROK_URL || 'http://localhost:8080';
+      const isProduction = process.env.NODE_ENV === 'production';
       
-      console.log('Connecting to socket...');
-      socketRef.current = (window as any).io(SOCKET_URL, {
+      console.log(' Connecting to WebSocket server:', WS_URL);
+      console.log(' Environment:', isProduction ? 'production' : 'development');
+      
+      socketRef.current = io(WS_URL, {
         transports: ['websocket'],
         forceNew: true,
-        reconnection: true
+        reconnection: true,
+        reconnectionAttempts: parseInt(process.env.NEXT_PUBLIC_WS_RECONNECT_ATTEMPTS || '5'),
+        reconnectionDelay: parseInt(process.env.NEXT_PUBLIC_WS_RECONNECT_DELAY || '1000'),
+        timeout: 10000
       });
 
       socketRef.current.on('connect', () => {
