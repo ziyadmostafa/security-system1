@@ -297,8 +297,8 @@ export default function DashboardPage() {
             <Image
               src="/logo.png"
               alt="Security System Logo"
-              width={60}
-              height={60}
+              width={72}
+              height={72}
               className="object-contain"
               priority
               style={{
