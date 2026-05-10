@@ -297,8 +297,8 @@ export default function DashboardPage() {
             <Image
               src="/logo.png"
               alt="Security System Logo"
-              width={72}
-              height={72}
+              width={88}
+              height={88}
               className="object-contain"
               priority
               style={{
@@ -306,7 +306,7 @@ export default function DashboardPage() {
               }}
             />
             <span 
-              className="text-white text-sm font-medium"
+              className="text-white text-base font-medium"
               style={{
                 textShadow: '0 0 10px rgba(0, 170, 255, 0.5)',
                 letterSpacing: '0.5px',
