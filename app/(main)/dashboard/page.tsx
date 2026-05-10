@@ -375,7 +375,7 @@ export default function DashboardPage() {
         </div>
 
         {/* ── Main Content Area (Mobile App Style) ── */}
-        <div className="flex-1 bg-white px-4 pt-4 pb-20 flex flex-col gap-3 relative"
+        <div className="flex-1 bg-white px-4 pt-4 pb-16 flex flex-col gap-3 relative"
              style={{
                background: 'rgba(255, 255, 255, 0.98)',
                backdropFilter: 'blur(8px)'
@@ -457,8 +457,8 @@ export default function DashboardPage() {
 
         </div>
 
-        {/* ── Premium Bottom Navigation (Matches Top Header Theme) ── */}
-        <div className="absolute bottom-0 left-0 right-0"
+        {/* ── Single Fixed Bottom Navigation (Rounded Glowing Cards Style) ── */}
+        <div className="fixed bottom-0 left-0 right-0 z-50"
              style={{
                background: 'linear-gradient(135deg, rgba(0, 40, 100, 0.95) 0%, rgba(0, 20, 60, 0.98) 100%)',
                borderTop: '2px solid rgba(0, 170, 255, 0.4)',
