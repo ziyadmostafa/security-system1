@@ -542,10 +542,9 @@ export default function LoginPage() {
       console.log('[LOGIN] Redirecting to dashboard with valid session...');
       setSuccess("Login successful! Redirecting...");
       
-      // Force immediate redirect using window.location
-      setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 100);
+      // Force immediate redirect and stop all UI updates
+      window.location.replace("/dashboard");
+      return;
     } catch (err) {
       console.error('[LOGIN] ❌ Unexpected error during login:', err);
       setError("An unexpected error occurred");
