@@ -302,6 +302,7 @@ export default function DashboardPage() {
               className="object-contain"
               priority
               style={{
+                marginTop: '8px',
                 filter: 'drop-shadow(0 0 20px rgba(0, 170, 255, 0.6))'
               }}
             />
