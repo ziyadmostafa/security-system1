@@ -90,6 +90,7 @@ export default function ProfilePage() {
       }
 
       setSavingLocation(true);
+      setError(null);
       const sanitizedGateNumber = gateNumber.replace(/gate\s*/i, '').trim();
 
       console.log('[PROFILE] Updating user metadata:', { mall_name: mallName, gate_number: sanitizedGateNumber });
@@ -107,18 +108,26 @@ export default function ProfilePage() {
       if (updateError) {
         console.error("Supabase Auth Error:", updateError);
         setError(updateError?.message || JSON.stringify(updateError));
+        alert('Failed to save location');
+        return;
       }
 
-      const { data: existingGate } = await supabase
+      const { data: existingGate, error: queryError } = await supabase
         .from('gates')
         .select('id')
         .eq('gate_number', sanitizedGateNumber)
-        .single();
+        .maybeSingle();
+
+      if (queryError && queryError.code !== 'PGRST116') {
+        console.error('Error checking gate existence:', queryError);
+        alert('Failed to check gate status');
+        return;
+      }
 
       if (existingGate) {
         console.log('Gate exists, user can access it:', sanitizedGateNumber);
         await refreshUser();
-        alert('Location saved successfully. You can now access this gate.');
+        alert('Location saved successfully');
       } else {
         const { error: insertError } = await supabase
           .from('gates')
@@ -133,7 +142,7 @@ export default function ProfilePage() {
           alert('Failed to create gate');
         } else {
           await refreshUser();
-          alert('Gate created successfully. You can now access it.');
+          alert('Location saved successfully');
         }
       }
     } catch (error) {
