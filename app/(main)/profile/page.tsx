@@ -112,39 +112,43 @@ export default function ProfilePage() {
         return;
       }
 
-      const { data: existingGate, error: queryError } = await supabase
-        .from('gates')
-        .select('id')
-        .eq('gate_number', sanitizedGateNumber)
-        .maybeSingle();
-
-      if (queryError && queryError.code !== 'PGRST116') {
-        console.error('Error checking gate existence:', queryError);
-        alert('Failed to check gate status');
-        return;
-      }
-
-      if (existingGate) {
-        console.log('Gate exists, user can access it:', sanitizedGateNumber);
-        await refreshUser();
-        alert('Location saved successfully');
-      } else {
-        const { error: insertError } = await supabase
+      // Auth update succeeded - this is the primary success condition
+      // Gate check is non-critical, don't let it override success
+      try {
+        const { data: existingGate, error: queryError } = await supabase
           .from('gates')
-          .insert([{
-            gate_number: sanitizedGateNumber,
-            mall_name: mallName,
-            status: 'active'
-          }] as any);
+          .select('id')
+          .eq('gate_number', sanitizedGateNumber)
+          .maybeSingle();
 
-        if (insertError) {
-          console.error('Error creating gate:', insertError);
-          alert('Failed to create gate');
-        } else {
-          await refreshUser();
-          alert('Location saved successfully');
+        if (queryError && queryError.code !== 'PGRST116') {
+          console.error('Error checking gate existence:', queryError);
+          // Don't show error or return - gate check is non-critical
         }
+
+        if (existingGate) {
+          console.log('Gate exists, user can access it:', sanitizedGateNumber);
+        } else {
+          const { error: insertError } = await supabase
+            .from('gates')
+            .insert([{
+              gate_number: sanitizedGateNumber,
+              mall_name: mallName,
+              status: 'active'
+            }] as any);
+
+          if (insertError) {
+            console.error('Error creating gate:', insertError);
+            // Don't show error - auth update already succeeded
+          }
+        }
+      } catch (gateError) {
+        console.error('Gate check/insert error (non-critical):', gateError);
+        // Don't show error - auth update already succeeded
       }
+
+      await refreshUser();
+      alert('Location saved successfully');
     } catch (error) {
       console.error('Error saving location:', error);
       alert('An error occurred while saving');
