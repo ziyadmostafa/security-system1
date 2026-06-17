@@ -17,49 +17,12 @@ import { getNotifications, addNotification, NotificationRecord, addHistoryRecord
 export default function NotificationBell() {
   const { pendingNotifications, confirmNotification, rejectNotification, getPendingCount } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
-  const [localNotifications, setLocalNotifications] = useState<NotificationRecord[]>([]);
   const pendingCount = getPendingCount();
-
-  // Load notifications from localStorage on mount
-  useEffect(() => {
-    setLocalNotifications(getNotifications());
-  }, []);
-
-  // Sync with context notifications
-  useEffect(() => {
-    if (pendingNotifications.length > 0) {
-      // Add new context notifications to localStorage
-      pendingNotifications.forEach((notification) => {
-        const notificationRecord: NotificationRecord = {
-          id: notification.id,
-          type: notification.type,
-          person_name: notification.person_name,
-          person_id: notification.person_id,
-          age: notification.age,
-          legal_case: notification.legal_case,
-          score: notification.score,
-          node_id: notification.node_id,
-          timestamp: notification.timestamp,
-          server_timestamp: notification.server_timestamp,
-          status: "accepted", // Default status for new notifications
-        };
-        addNotification(notificationRecord);
-      });
-      setLocalNotifications(getNotifications());
-    }
-  }, [pendingNotifications]);
 
   const handleConfirm = (id: string) => {
     confirmNotification(id);
-    // Update notification status in localStorage
-    const updatedNotifications = localNotifications.map((n) =>
-      n.id === id ? { ...n, status: "accepted" as const } : n
-    );
-    setLocalNotifications(updatedNotifications);
-    localStorage.setItem("security_system_notifications", JSON.stringify(updatedNotifications));
-
-    // Also save to history
-    const notification = localNotifications.find((n) => n.id === id);
+    // Save to history with confirmed status
+    const notification = pendingNotifications.find((n) => n.id === id);
     if (notification) {
       const historyRecord: HistoryRecord = {
         id: notification.id,
@@ -78,15 +41,8 @@ export default function NotificationBell() {
 
   const handleReject = (id: string) => {
     rejectNotification(id);
-    // Update notification status in localStorage
-    const updatedNotifications = localNotifications.map((n) =>
-      n.id === id ? { ...n, status: "rejected" as const } : n
-    );
-    setLocalNotifications(updatedNotifications);
-    localStorage.setItem("security_system_notifications", JSON.stringify(updatedNotifications));
-
-    // Also save to history
-    const notification = localNotifications.find((n) => n.id === id);
+    // Save to history with rejected status
+    const notification = pendingNotifications.find((n) => n.id === id);
     if (notification) {
       const historyRecord: HistoryRecord = {
         id: notification.id,
@@ -144,18 +100,18 @@ export default function NotificationBell() {
           >
             <div className="p-4 border-b" style={{ borderColor: "#C8D0E7" }}>
               <h3 className="text-sm font-bold text-[#1A1A1A]">
-                Notifications ({localNotifications.length})
+                Notifications ({pendingCount})
               </h3>
             </div>
 
-            {localNotifications.length === 0 ? (
+            {pendingNotifications.length === 0 ? (
               <div className="p-8 text-center">
                 <AlertTriangle size={32} color="#7A8BB0" className="mx-auto mb-2" />
-                <p className="text-sm text-[#7A8BB0]">No notifications yet</p>
+                <p className="text-sm text-[#7A8BB0]">No pending notifications</p>
               </div>
             ) : (
               <div className="divide-y" style={{ borderColor: "#C8D0E7" }}>
-                {localNotifications.map((notification) => (
+                {pendingNotifications.map((notification) => (
                   <NotificationCard
                     key={notification.id}
                     notification={notification}
@@ -177,7 +133,7 @@ function NotificationCard({
   onConfirm,
   onReject
 }: {
-  notification: NotificationRecord;
+  notification: NotificationItem;
   onConfirm: (id: string) => void;
   onReject: (id: string) => void;
 }) {
@@ -186,15 +142,9 @@ function NotificationCard({
       <div className="flex items-start gap-3 mb-3">
         <div
           className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-          style={{ 
-            background: notification.status === "accepted" ? "#22C55E" : "#E8334A"
-          }}
+          style={{ background: "#1F49D8" }}
         >
-          {notification.status === "accepted" ? (
-            <Check size={16} color="#fff" />
-          ) : (
-            <X size={16} color="#fff" />
-          )}
+          <AlertTriangle size={16} color="#fff" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-bold text-[#1A1A1A] truncate">
@@ -212,15 +162,22 @@ function NotificationCard({
         </div>
       </div>
 
-      {notification.status === "accepted" ? (
-        <span className="inline-block px-2 py-1 rounded text-xs font-semibold text-white" style={{ background: "#22C55E" }}>
-          Accepted
-        </span>
-      ) : (
-        <span className="inline-block px-2 py-1 rounded text-xs font-semibold text-white" style={{ background: "#E8334A" }}>
-          Rejected
-        </span>
-      )}
+      <div className="flex gap-2">
+        <button
+          onClick={() => onConfirm(notification.id)}
+          className="flex-1 py-2 px-3 rounded-lg text-xs font-semibold text-white transition-colors"
+          style={{ background: "#22C55E" }}
+        >
+          Confirm
+        </button>
+        <button
+          onClick={() => onReject(notification.id)}
+          className="flex-1 py-2 px-3 rounded-lg text-xs font-semibold text-white transition-colors"
+          style={{ background: "#E8334A" }}
+        >
+          Reject
+        </button>
+      </div>
     </div>
   );
 }

@@ -72,6 +72,18 @@ export const clearHistory = (): void => {
   }
 };
 
+export const deleteHistoryRecord = (id: string): void => {
+  if (typeof window === "undefined") return;
+  
+  try {
+    const history = getHistory();
+    const updatedHistory = history.filter((record) => record.id !== id);
+    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(updatedHistory));
+  } catch (error) {
+    console.error("Error deleting history record from localStorage:", error);
+  }
+};
+
 // ── Notification Operations ──
 
 export const getNotifications = (): NotificationRecord[] => {

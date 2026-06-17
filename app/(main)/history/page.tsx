@@ -15,7 +15,7 @@ import { History, Check, X, RefreshCw, Trash2 } from "lucide-react";
 import { useNotifications } from "@/contexts/NotificationContext";
 import CyberBackground from "@/components/CyberBackground";
 import CyberBottomNav from "@/components/CyberBottomNav";
-import { getHistory, clearHistory, HistoryRecord } from "@/utils/localStorage";
+import { getHistory, clearHistory, deleteHistoryRecord, HistoryRecord } from "@/utils/localStorage";
 
 export default function HistoryPage() {
   const { processedResults, refreshProcessedResults } = useNotifications();
@@ -67,6 +67,11 @@ export default function HistoryPage() {
     clearHistory();
     setLocalHistory([]);
     setShowClearDialog(false);
+  };
+
+  const handleDeleteRecord = (id: string) => {
+    deleteHistoryRecord(id);
+    setLocalHistory(getHistory());
   };
 
   return (
@@ -168,6 +173,14 @@ export default function HistoryPage() {
                     animation: "cyber-pulse 3s ease-in-out infinite",
                   }} />
                   <div className="flex items-start gap-3 relative z-10">
+                    <button
+                      onClick={() => handleDeleteRecord(result.id)}
+                      className="absolute top-0 right-0 p-1 rounded-lg transition-all duration-200 hover:bg-red-100"
+                      style={{ background: "rgba(239, 68, 68, 0.1)" }}
+                      title="Delete record"
+                    >
+                      <Trash2 size={14} color="#EF4444" />
+                    </button>
                     <div
                       className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
                       style={{
