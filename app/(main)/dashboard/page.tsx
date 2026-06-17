@@ -320,17 +320,7 @@ export default function DashboardPage() {
           </div>
 
           {/* RIGHT: Notification Bell Icon */}
-          <button
-            aria-label="Notifications"
-            className="p-2 rounded-xl transition-all duration-300 relative z-10"
-            style={{
-              background: 'rgba(0, 170, 255, 0.15)',
-              border: '1px solid rgba(0, 170, 255, 0.3)',
-              boxShadow: '0 0 12px rgba(0, 170, 255, 0.2)'
-            }}
-          >
-            <Bell size={22} color="#00d4ff" />
-          </button>
+          <NotificationBell />
         </header>
 
         {/* ── Sidebar Menu ── */}
