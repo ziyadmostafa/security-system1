@@ -12,17 +12,57 @@
 import { useState, useEffect } from "react";
 import { useNotifications, NotificationItem } from "@/contexts/NotificationContext";
 import { Bell, Check, X, AlertTriangle } from "lucide-react";
-import { getNotifications, addNotification, NotificationRecord, addHistoryRecord, HistoryRecord } from "@/utils/localStorage";
+import { 
+  getPendingNotifications, 
+  addNotification, 
+  NotificationRecord, 
+  addHistoryRecord, 
+  HistoryRecord,
+  updateNotificationStatus 
+} from "@/utils/localStorage";
 
 export default function NotificationBell() {
-  const { pendingNotifications, confirmNotification, rejectNotification, getPendingCount } = useNotifications();
+  const { pendingNotifications, confirmNotification, rejectNotification } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
-  const pendingCount = getPendingCount();
+  const [pendingNotificationsList, setPendingNotificationsList] = useState<NotificationRecord[]>([]);
+
+  // Load pending notifications from localStorage on mount
+  useEffect(() => {
+    setPendingNotificationsList(getPendingNotifications());
+  }, []);
+
+  // Sync context notifications to localStorage as pending when they arrive
+  useEffect(() => {
+    if (pendingNotifications.length > 0) {
+      pendingNotifications.forEach((notification) => {
+        const notificationRecord: NotificationRecord = {
+          id: notification.id,
+          type: notification.type,
+          person_name: notification.person_name,
+          person_id: notification.person_id,
+          age: notification.age,
+          legal_case: notification.legal_case,
+          score: notification.score,
+          node_id: notification.node_id,
+          timestamp: notification.timestamp,
+          server_timestamp: notification.server_timestamp,
+          status: "pending", // New notifications start as pending
+        };
+        addNotification(notificationRecord);
+      });
+      setPendingNotificationsList(getPendingNotifications());
+    }
+  }, [pendingNotifications]);
 
   const handleConfirm = (id: string) => {
+    // Update status in localStorage
+    updateNotificationStatus(id, "confirmed");
+    
+    // Remove from context pending
     confirmNotification(id);
+    
     // Save to history with confirmed status
-    const notification = pendingNotifications.find((n) => n.id === id);
+    const notification = pendingNotificationsList.find((n) => n.id === id);
     if (notification) {
       const historyRecord: HistoryRecord = {
         id: notification.id,
@@ -37,12 +77,20 @@ export default function NotificationBell() {
       };
       addHistoryRecord(historyRecord);
     }
+    
+    // Update local state to remove from pending list
+    setPendingNotificationsList(getPendingNotifications());
   };
 
   const handleReject = (id: string) => {
+    // Update status in localStorage
+    updateNotificationStatus(id, "rejected");
+    
+    // Remove from context pending
     rejectNotification(id);
+    
     // Save to history with rejected status
-    const notification = pendingNotifications.find((n) => n.id === id);
+    const notification = pendingNotificationsList.find((n) => n.id === id);
     if (notification) {
       const historyRecord: HistoryRecord = {
         id: notification.id,
@@ -57,6 +105,9 @@ export default function NotificationBell() {
       };
       addHistoryRecord(historyRecord);
     }
+    
+    // Update local state to remove from pending list
+    setPendingNotificationsList(getPendingNotifications());
   };
 
   return (
@@ -68,7 +119,7 @@ export default function NotificationBell() {
         style={{ background: "transparent" }}
       >
         <Bell size={24} color="#fff" />
-        {pendingCount > 0 && (
+        {pendingNotificationsList.length > 0 && (
           <span
             className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
             style={{
@@ -76,7 +127,7 @@ export default function NotificationBell() {
               minHeight: "20px"
             }}
           >
-            {pendingCount > 9 ? "9+" : pendingCount}
+            {pendingNotificationsList.length > 9 ? "9+" : pendingNotificationsList.length}
           </span>
         )}
       </button>

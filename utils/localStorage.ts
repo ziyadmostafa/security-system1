@@ -29,7 +29,7 @@ export interface NotificationRecord {
   node_id: string;
   timestamp: string;
   server_timestamp?: string;
-  status: "accepted" | "rejected";
+  status: "pending" | "confirmed" | "rejected";
 }
 
 const HISTORY_STORAGE_KEY = "security_system_history";
@@ -98,20 +98,43 @@ export const getNotifications = (): NotificationRecord[] => {
   }
 };
 
+export const getPendingNotifications = (): NotificationRecord[] => {
+  const notifications = getNotifications();
+  return notifications.filter((n) => n.status === "pending");
+};
+
 export const addNotification = (notification: NotificationRecord): void => {
   if (typeof window === "undefined") return;
   
   try {
     const notifications = getNotifications();
-    // Add new notification at the beginning (latest first)
-    notifications.unshift(notification);
-    // Keep only last 50 notifications to prevent storage overflow
-    if (notifications.length > 50) {
-      notifications.pop();
+    // Check if notification already exists
+    const existing = notifications.find((n) => n.id === notification.id);
+    if (!existing) {
+      // Add new notification at the beginning (latest first)
+      notifications.unshift(notification);
+      // Keep only last 50 notifications to prevent storage overflow
+      if (notifications.length > 50) {
+        notifications.pop();
+      }
+      localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(notifications));
     }
-    localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(notifications));
   } catch (error) {
     console.error("Error adding notification to localStorage:", error);
+  }
+};
+
+export const updateNotificationStatus = (id: string, status: "confirmed" | "rejected"): void => {
+  if (typeof window === "undefined") return;
+  
+  try {
+    const notifications = getNotifications();
+    const updatedNotifications = notifications.map((n) =>
+      n.id === id ? { ...n, status } : n
+    );
+    localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(updatedNotifications));
+  } catch (error) {
+    console.error("Error updating notification status in localStorage:", error);
   }
 };
 
