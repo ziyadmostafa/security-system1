@@ -12,18 +12,28 @@ import { useState, useEffect } from "react";
 import { Bell, Check, X, AlertTriangle } from "lucide-react";
 import CyberBackground from "@/components/CyberBackground";
 import CyberBottomNav from "@/components/CyberBottomNav";
-import { getNotifications, NotificationRecord } from "@/utils/localStorage";
+import { NotificationRecord } from "@/utils/localStorage";
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<NotificationRecord[]>([]);
 
-  // Load all notifications from localStorage on mount
+  // Load notifications from localStorage on mount
   useEffect(() => {
-    setNotifications(getNotifications());
+    const data = localStorage.getItem("security_system_notifications");
+    if (data) {
+      setNotifications(JSON.parse(data));
+    }
   }, []);
 
   // Derived value: pending notifications only (work queue)
   const pendingNotifications = notifications.filter(n => n.status === "pending");
+
+  // Sync notifications to localStorage whenever state changes
+  useEffect(() => {
+    if (notifications.length > 0) {
+      localStorage.setItem("security_system_notifications", JSON.stringify(notifications));
+    }
+  }, [notifications]);
 
   const handleAccept = (id: string) => {
     setNotifications((prev) => 
