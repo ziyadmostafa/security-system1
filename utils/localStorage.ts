@@ -29,6 +29,7 @@ export interface NotificationRecord {
   node_id: string;
   timestamp: string;
   server_timestamp?: string;
+  processedAt?: string;
   status: "pending" | "confirmed" | "rejected";
 }
 
@@ -145,5 +146,17 @@ export const clearNotifications = (): void => {
     localStorage.removeItem(NOTIFICATIONS_STORAGE_KEY);
   } catch (error) {
     console.error("Error clearing notifications from localStorage:", error);
+  }
+};
+
+export const deleteNotification = (id: string): void => {
+  if (typeof window === "undefined") return;
+  
+  try {
+    const notifications = getNotifications();
+    const updatedNotifications = notifications.filter((record) => record.id !== id);
+    localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(updatedNotifications));
+  } catch (error) {
+    console.error("Error deleting notification from localStorage:", error);
   }
 };

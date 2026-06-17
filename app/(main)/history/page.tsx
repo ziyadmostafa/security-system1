@@ -15,17 +15,17 @@ import { History, Check, X, RefreshCw, Trash2 } from "lucide-react";
 import { useNotifications } from "@/contexts/NotificationContext";
 import CyberBackground from "@/components/CyberBackground";
 import CyberBottomNav from "@/components/CyberBottomNav";
-import { getHistory, clearHistory, deleteHistoryRecord, HistoryRecord } from "@/utils/localStorage";
+import { getNotifications, clearNotifications, deleteNotification, NotificationRecord } from "@/utils/localStorage";
 
 export default function HistoryPage() {
   const { processedResults, refreshProcessedResults } = useNotifications();
   const [refreshing, setRefreshing] = useState(false);
-  const [localHistory, setLocalHistory] = useState<HistoryRecord[]>([]);
+  const [notifications, setNotifications] = useState<NotificationRecord[]>([]);
   const [showClearDialog, setShowClearDialog] = useState(false);
 
-  // Load history from localStorage on mount
+  // Load all notifications from localStorage on mount
   useEffect(() => {
-    setLocalHistory(getHistory());
+    setNotifications(getNotifications());
   }, []);
 
   // Sync with context processed results
@@ -33,45 +33,53 @@ export default function HistoryPage() {
     if (processedResults.length > 0) {
       // Add new processed results to localStorage
       processedResults.forEach((result) => {
-        const historyRecord: HistoryRecord = {
+        const notificationRecord: NotificationRecord = {
           id: result.id,
+          type: "match",
           person_name: result.person_name,
           person_id: result.person_id,
+          age: "",
           legal_case: result.legal_case,
           score: result.score,
           node_id: result.node_id,
           timestamp: result.timestamp,
+          server_timestamp: undefined,
           processedAt: result.processedAt,
-          status: result.status,
+          status: result.status === "confirmed" ? "confirmed" : "rejected",
         };
         // Check if record already exists to avoid duplicates
-        const existing = localHistory.find((h) => h.id === historyRecord.id);
+        const existing = notifications.find((n) => n.id === notificationRecord.id);
         if (!existing) {
-          const history = getHistory();
-          history.unshift(historyRecord);
-          localStorage.setItem("security_system_history", JSON.stringify(history));
-          setLocalHistory(history);
+          const allNotifications = getNotifications();
+          allNotifications.unshift(notificationRecord);
+          localStorage.setItem("security_system_notifications", JSON.stringify(allNotifications));
+          setNotifications(allNotifications);
         }
       });
     }
   }, [processedResults]);
 
+  // Derived value: history = confirmed + rejected only
+  const localHistory = notifications.filter(n => n.status !== "pending");
+
   const handleRefresh = async () => {
     setRefreshing(true);
     await refreshProcessedResults();
-    setLocalHistory(getHistory());
+    setNotifications(getNotifications());
     setRefreshing(false);
   };
 
   const handleClearHistory = () => {
-    clearHistory();
-    setLocalHistory([]);
+    // Clear only confirmed/rejected notifications
+    const pendingOnly = notifications.filter(n => n.status === "pending");
+    localStorage.setItem("security_system_notifications", JSON.stringify(pendingOnly));
+    setNotifications(pendingOnly);
     setShowClearDialog(false);
   };
 
   const handleDeleteRecord = (id: string) => {
-    deleteHistoryRecord(id);
-    setLocalHistory(getHistory());
+    deleteNotification(id);
+    setNotifications(getNotifications());
   };
 
   return (
@@ -226,9 +234,11 @@ export default function HistoryPage() {
                       <p className="text-[10px] text-[#7A8BB0] mt-1">
                         {new Date(result.timestamp).toLocaleString()}
                       </p>
-                      <p className="text-[9px] text-[#7A8BB0] mt-0.5">
-                        Processed: {new Date(result.processedAt).toLocaleString()}
-                      </p>
+                      {result.processedAt && (
+                        <p className="text-[9px] text-[#7A8BB0] mt-0.5">
+                          Processed: {new Date(result.processedAt).toLocaleString()}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>

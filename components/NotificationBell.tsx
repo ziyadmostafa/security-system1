@@ -75,7 +75,7 @@ export default function NotificationBell() {
         status: "confirmed",
       });
     }
-    setNotifications((prev) => prev.map((n) => n.id === id ? { ...n, status: "confirmed" as const } : n));
+    setNotifications((prev) => prev.map((n) => n.id === id ? { ...n, status: "confirmed" as const, processedAt: new Date().toISOString() } : n));
   };
 
   const handleReject = (id: string) => {
@@ -95,7 +95,7 @@ export default function NotificationBell() {
         status: "rejected",
       });
     }
-    setNotifications((prev) => prev.map((n) => n.id === id ? { ...n, status: "rejected" as const } : n));
+    setNotifications((prev) => prev.map((n) => n.id === id ? { ...n, status: "rejected" as const, processedAt: new Date().toISOString() } : n));
   };
 
   return (
