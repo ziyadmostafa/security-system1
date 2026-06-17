@@ -151,18 +151,18 @@ export default function NotificationBell() {
           >
             <div className="p-4 border-b" style={{ borderColor: "#C8D0E7" }}>
               <h3 className="text-sm font-bold text-[#1A1A1A]">
-                Notifications ({pendingCount})
+                Notifications ({pendingNotificationsList.length})
               </h3>
             </div>
 
-            {pendingNotifications.length === 0 ? (
+            {pendingNotificationsList.length === 0 ? (
               <div className="p-8 text-center">
                 <AlertTriangle size={32} color="#7A8BB0" className="mx-auto mb-2" />
                 <p className="text-sm text-[#7A8BB0]">No pending notifications</p>
               </div>
             ) : (
               <div className="divide-y" style={{ borderColor: "#C8D0E7" }}>
-                {pendingNotifications.map((notification) => (
+                {pendingNotificationsList.map((notification) => (
                   <NotificationCard
                     key={notification.id}
                     notification={notification}
@@ -184,7 +184,7 @@ function NotificationCard({
   onConfirm,
   onReject
 }: {
-  notification: NotificationItem;
+  notification: NotificationRecord;
   onConfirm: (id: string) => void;
   onReject: (id: string) => void;
 }) {
