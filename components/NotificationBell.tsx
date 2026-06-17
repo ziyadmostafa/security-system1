@@ -55,6 +55,9 @@ export default function NotificationBell() {
   }, [pendingNotifications]);
 
   const handleConfirm = (id: string) => {
+    // Find the notification before updating
+    const notification = pendingNotificationsList.find((n) => n.id === id);
+    
     // Update status in localStorage
     updateNotificationStatus(id, "confirmed");
     
@@ -62,7 +65,6 @@ export default function NotificationBell() {
     confirmNotification(id);
     
     // Save to history with confirmed status
-    const notification = pendingNotificationsList.find((n) => n.id === id);
     if (notification) {
       const historyRecord: HistoryRecord = {
         id: notification.id,
@@ -78,11 +80,14 @@ export default function NotificationBell() {
       addHistoryRecord(historyRecord);
     }
     
-    // Update local state to remove from pending list
-    setPendingNotificationsList(getPendingNotifications());
+    // Immediately update local state to remove from pending list
+    setPendingNotificationsList((prev) => prev.filter((n) => n.id !== id));
   };
 
   const handleReject = (id: string) => {
+    // Find the notification before updating
+    const notification = pendingNotificationsList.find((n) => n.id === id);
+    
     // Update status in localStorage
     updateNotificationStatus(id, "rejected");
     
@@ -90,7 +95,6 @@ export default function NotificationBell() {
     rejectNotification(id);
     
     // Save to history with rejected status
-    const notification = pendingNotificationsList.find((n) => n.id === id);
     if (notification) {
       const historyRecord: HistoryRecord = {
         id: notification.id,
@@ -106,8 +110,8 @@ export default function NotificationBell() {
       addHistoryRecord(historyRecord);
     }
     
-    // Update local state to remove from pending list
-    setPendingNotificationsList(getPendingNotifications());
+    // Immediately update local state to remove from pending list
+    setPendingNotificationsList((prev) => prev.filter((n) => n.id !== id));
   };
 
   return (
