@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 import { useNotifications, NotificationItem } from "@/contexts/NotificationContext";
 import { Bell, Check, X, AlertTriangle } from "lucide-react";
 import { 
-  getPendingNotifications, 
+  getNotifications, 
   addNotification, 
   NotificationRecord, 
   addHistoryRecord, 
@@ -24,11 +24,11 @@ import {
 export default function NotificationBell() {
   const { pendingNotifications, confirmNotification, rejectNotification } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
-  const [pendingNotificationsList, setPendingNotificationsList] = useState<NotificationRecord[]>([]);
+  const [notifications, setNotifications] = useState<NotificationRecord[]>([]);
 
-  // Load pending notifications from localStorage on mount
+  // Load all notifications from localStorage on mount
   useEffect(() => {
-    setPendingNotificationsList(getPendingNotifications());
+    setNotifications(getNotifications());
   }, []);
 
   // Sync context notifications to localStorage as pending when they arrive
@@ -50,23 +50,20 @@ export default function NotificationBell() {
         };
         addNotification(notificationRecord);
       });
-      setPendingNotificationsList(getPendingNotifications());
+      setNotifications(getNotifications());
     }
   }, [pendingNotifications]);
 
+  // Derived values (no separate state)
+  const pendingNotificationsList = notifications.filter(n => n.status === "pending");
+  const pendingCount = pendingNotificationsList.length;
+
   const handleConfirm = (id: string) => {
-    // Find the notification before updating
-    const notification = pendingNotificationsList.find((n) => n.id === id);
-    
-    // Update status in localStorage
+    const notification = notifications.find((n) => n.id === id);
     updateNotificationStatus(id, "confirmed");
-    
-    // Remove from context pending
     confirmNotification(id);
-    
-    // Save to history with confirmed status
     if (notification) {
-      const historyRecord: HistoryRecord = {
+      addHistoryRecord({
         id: notification.id,
         person_name: notification.person_name,
         person_id: notification.person_id,
@@ -76,27 +73,17 @@ export default function NotificationBell() {
         timestamp: notification.timestamp,
         processedAt: new Date().toISOString(),
         status: "confirmed",
-      };
-      addHistoryRecord(historyRecord);
+      });
     }
-    
-    // Immediately update local state to remove from pending list
-    setPendingNotificationsList((prev) => prev.filter((n) => n.id !== id));
+    setNotifications((prev) => prev.map((n) => n.id === id ? { ...n, status: "confirmed" as const } : n));
   };
 
   const handleReject = (id: string) => {
-    // Find the notification before updating
-    const notification = pendingNotificationsList.find((n) => n.id === id);
-    
-    // Update status in localStorage
+    const notification = notifications.find((n) => n.id === id);
     updateNotificationStatus(id, "rejected");
-    
-    // Remove from context pending
     rejectNotification(id);
-    
-    // Save to history with rejected status
     if (notification) {
-      const historyRecord: HistoryRecord = {
+      addHistoryRecord({
         id: notification.id,
         person_name: notification.person_name,
         person_id: notification.person_id,
@@ -106,12 +93,9 @@ export default function NotificationBell() {
         timestamp: notification.timestamp,
         processedAt: new Date().toISOString(),
         status: "rejected",
-      };
-      addHistoryRecord(historyRecord);
+      });
     }
-    
-    // Immediately update local state to remove from pending list
-    setPendingNotificationsList((prev) => prev.filter((n) => n.id !== id));
+    setNotifications((prev) => prev.map((n) => n.id === id ? { ...n, status: "rejected" as const } : n));
   };
 
   return (
