@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRealTimeData } from "@/hooks/useRealTimeData";
 import RealTimeDataTable from "@/components/RealTimeDataTable";
@@ -197,6 +197,7 @@ function CyberBackground() {
 export default function DashboardPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   // Authentication guard - require real user
   if (!user && !loading) {
@@ -331,6 +332,94 @@ export default function DashboardPage() {
             <Bell size={22} color="#00d4ff" />
           </button>
         </header>
+
+        {/* ── Sidebar Menu ── */}
+        {menuOpen && (
+          <>
+            {/* Overlay */}
+            <div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+              onClick={() => setMenuOpen(false)}
+              style={{
+                animation: 'fadeIn 0.3s ease-out'
+              }}
+            />
+            
+            {/* Sidebar */}
+            <div
+              className="fixed top-0 left-0 h-full w-72 z-50"
+              style={{
+                background: 'linear-gradient(180deg, rgba(0, 40, 100, 0.98) 0%, rgba(0, 20, 60, 0.99) 100%)',
+                backdropFilter: 'blur(20px)',
+                borderRight: '2px solid rgba(0, 170, 255, 0.4)',
+                boxShadow: '0 0 40px rgba(0, 170, 255, 0.3)',
+                animation: 'slideInLeft 0.3s ease-out'
+              }}
+            >
+              {/* Sidebar Header */}
+              <div className="px-6 py-6 border-b border-white/10">
+                <h2 className="text-white text-xl font-bold" style={{ textShadow: '0 0 15px rgba(0, 170, 255, 0.6)' }}>
+                  Menu
+                </h2>
+              </div>
+
+              {/* Navigation Items */}
+              <nav className="flex flex-col py-4">
+                {[
+                  { icon: Menu, label: "History", href: "/history" },
+                  { icon: Settings, label: "Settings", href: "/settings" },
+                  { icon: User, label: "Profile", href: "/profile" },
+                ].map(({ icon: Icon, label, href }) => {
+                  const isActive = pathname === href;
+                  return (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setMenuOpen(false)}
+                      className="flex items-center gap-4 px-6 py-4 text-white transition-all duration-200 hover:bg-white/10"
+                      style={{
+                        borderLeft: isActive ? '3px solid #00d4ff' : '3px solid transparent',
+                        background: isActive ? 'rgba(0, 170, 255, 0.2)' : 'transparent'
+                      }}
+                    >
+                      <Icon 
+                        size={20} 
+                        color={isActive ? "#00d4ff" : "#ffffff"}
+                        style={{ 
+                          filter: isActive ? 'drop-shadow(0 0 10px rgba(0, 170, 255, 0.8))' : 'drop-shadow(0 0 5px rgba(255, 255, 255, 0.3))'
+                        }} 
+                      />
+                      <span 
+                        className="text-base font-medium"
+                        style={{
+                          color: isActive ? "#00d4ff" : "#ffffff",
+                          textShadow: isActive ? '0 0 10px rgba(0, 170, 255, 0.6)' : 'none'
+                        }}
+                      >
+                        {label}
+                      </span>
+                    </Link>
+                  );
+                })}
+              </nav>
+
+              {/* Close Button */}
+              <div className="absolute bottom-6 left-6 right-6">
+                <button
+                  onClick={() => setMenuOpen(false)}
+                  className="w-full py-3 rounded-xl text-white font-semibold transition-all duration-200"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    backdropFilter: 'blur(10px)'
+                  }}
+                >
+                  Close Menu
+                </button>
+              </div>
+            </div>
+          </>
+        )}
 
         
         {/* ── Main Content Area (Mobile App Style) ── */}
