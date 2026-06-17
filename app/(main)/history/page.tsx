@@ -3,26 +3,70 @@
 //
 // Shows processed results from notifications
 // Displays confirmed/rejected status for each item
-// Loads from Supabase for persistent storage
+// Loads from localStorage for persistent storage
+// Includes Clear All History button
 // ─────────────────────────────────────────────
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { History, Check, X, RefreshCw } from "lucide-react";
+import { History, Check, X, RefreshCw, Trash2 } from "lucide-react";
 import { useNotifications } from "@/contexts/NotificationContext";
 import CyberBackground from "@/components/CyberBackground";
 import CyberBottomNav from "@/components/CyberBottomNav";
+import { getHistory, clearHistory, HistoryRecord } from "@/utils/localStorage";
 
 export default function HistoryPage() {
   const { processedResults, refreshProcessedResults } = useNotifications();
   const [refreshing, setRefreshing] = useState(false);
+  const [localHistory, setLocalHistory] = useState<HistoryRecord[]>([]);
+  const [showClearDialog, setShowClearDialog] = useState(false);
+
+  // Load history from localStorage on mount
+  useEffect(() => {
+    setLocalHistory(getHistory());
+  }, []);
+
+  // Sync with context processed results
+  useEffect(() => {
+    if (processedResults.length > 0) {
+      // Add new processed results to localStorage
+      processedResults.forEach((result) => {
+        const historyRecord: HistoryRecord = {
+          id: result.id,
+          person_name: result.person_name,
+          person_id: result.person_id,
+          legal_case: result.legal_case,
+          score: result.score,
+          node_id: result.node_id,
+          timestamp: result.timestamp,
+          processedAt: result.processedAt,
+          status: result.status,
+        };
+        // Check if record already exists to avoid duplicates
+        const existing = localHistory.find((h) => h.id === historyRecord.id);
+        if (!existing) {
+          const history = getHistory();
+          history.unshift(historyRecord);
+          localStorage.setItem("security_system_history", JSON.stringify(history));
+          setLocalHistory(history);
+        }
+      });
+    }
+  }, [processedResults]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
     await refreshProcessedResults();
+    setLocalHistory(getHistory());
     setRefreshing(false);
+  };
+
+  const handleClearHistory = () => {
+    clearHistory();
+    setLocalHistory([]);
+    setShowClearDialog(false);
   };
 
   return (
@@ -82,7 +126,7 @@ export default function HistoryPage() {
               Activity Log
             </h1>
             <p className="text-white/70 text-xs mt-1" style={{ textShadow: "0 0 5px rgba(0, 170, 255, 0.3)" }}>
-              {processedResults.length} {processedResults.length === 1 ? "result" : "results"} recorded
+              {localHistory.length} {localHistory.length === 1 ? "result" : "results"} recorded
             </p>
           </div>
         </div>
@@ -96,7 +140,7 @@ export default function HistoryPage() {
             border: "1px solid rgba(0, 170, 255, 0.12)",
           }}
         >
-          {processedResults.length === 0 ? (
+          {localHistory.length === 0 ? (
             <div className="text-center py-12">
               <History size={40} color="#00aaff" className="mx-auto mb-3" style={{ filter: "drop-shadow(0 0 12px rgba(0, 170, 255, 0.4))" }} />
               <p className="text-[#1A1A1A] text-sm font-medium">No processed results yet</p>
@@ -104,7 +148,7 @@ export default function HistoryPage() {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              {processedResults.map((result) => (
+              {localHistory.map((result) => (
                 <div
                   key={result.id}
                   className="rounded-2xl px-4 py-4 relative overflow-hidden"
@@ -179,6 +223,64 @@ export default function HistoryPage() {
             </div>
           )}
         </div>
+
+        {/* ── Clear All History Button ── */}
+        {localHistory.length > 0 && (
+          <div className="px-4 pb-4">
+            <button
+              onClick={() => setShowClearDialog(true)}
+              className="w-full py-3 rounded-xl text-white font-semibold transition-all duration-200 flex items-center justify-center gap-2"
+              style={{
+                background: "linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.95) 100%)",
+                border: "1px solid rgba(239, 68, 68, 0.5)",
+                boxShadow: "0 0 20px rgba(220, 38, 38, 0.3)",
+              }}
+            >
+              <Trash2 size={18} />
+              Clear All History
+            </button>
+          </div>
+        )}
+
+        {/* ── Confirmation Dialog ── */}
+        {showClearDialog && (
+          <>
+            <div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+              onClick={() => setShowClearDialog(false)}
+            />
+            <div className="fixed bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2 w-80 bg-white rounded-2xl shadow-2xl z-50 p-6">
+              <h3 className="text-lg font-bold text-[#1A1A1A] mb-2">
+                Clear All History?
+              </h3>
+              <p className="text-sm text-[#7A8BB0] mb-6">
+                This action cannot be undone. All history records will be permanently deleted.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowClearDialog(false)}
+                  className="flex-1 py-3 rounded-xl text-sm font-semibold transition-all duration-200"
+                  style={{
+                    background: "#F3F3F6",
+                    color: "#1A1A1A",
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleClearHistory}
+                  className="flex-1 py-3 rounded-xl text-sm font-semibold text-white transition-all duration-200"
+                  style={{
+                    background: "linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(185, 28, 28, 0.95) 100%)",
+                    boxShadow: "0 0 15px rgba(220, 38, 38, 0.3)",
+                  }}
+                >
+                  Clear All
+                </button>
+              </div>
+            </div>
+          </>
+        )}
 
         <CyberBottomNav />
       </div>
