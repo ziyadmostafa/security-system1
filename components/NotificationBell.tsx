@@ -16,8 +16,6 @@ import {
   getNotifications, 
   addNotification, 
   NotificationRecord, 
-  addHistoryRecord, 
-  HistoryRecord,
   updateNotificationStatus 
 } from "@/utils/localStorage";
 
@@ -30,6 +28,13 @@ export default function NotificationBell() {
   useEffect(() => {
     setNotifications(getNotifications());
   }, []);
+
+  // Sync notifications to localStorage whenever state changes
+  useEffect(() => {
+    if (notifications.length > 0) {
+      localStorage.setItem("security_system_notifications", JSON.stringify(notifications));
+    }
+  }, [notifications]);
 
   // Sync context notifications to localStorage as pending when they arrive
   useEffect(() => {
@@ -46,7 +51,7 @@ export default function NotificationBell() {
           node_id: notification.node_id,
           timestamp: notification.timestamp,
           server_timestamp: notification.server_timestamp,
-          status: "pending", // New notifications start as pending
+          status: "pending",
         };
         addNotification(notificationRecord);
       });
@@ -59,42 +64,12 @@ export default function NotificationBell() {
   const pendingCount = pendingNotificationsList.length;
 
   const handleConfirm = (id: string) => {
-    const notification = notifications.find((n) => n.id === id);
-    updateNotificationStatus(id, "confirmed");
     confirmNotification(id);
-    if (notification) {
-      addHistoryRecord({
-        id: notification.id,
-        person_name: notification.person_name,
-        person_id: notification.person_id,
-        legal_case: notification.legal_case,
-        score: notification.score,
-        node_id: notification.node_id,
-        timestamp: notification.timestamp,
-        processedAt: new Date().toISOString(),
-        status: "confirmed",
-      });
-    }
     setNotifications((prev) => prev.map((n) => n.id === id ? { ...n, status: "confirmed" as const, processedAt: new Date().toISOString() } : n));
   };
 
   const handleReject = (id: string) => {
-    const notification = notifications.find((n) => n.id === id);
-    updateNotificationStatus(id, "rejected");
     rejectNotification(id);
-    if (notification) {
-      addHistoryRecord({
-        id: notification.id,
-        person_name: notification.person_name,
-        person_id: notification.person_id,
-        legal_case: notification.legal_case,
-        score: notification.score,
-        node_id: notification.node_id,
-        timestamp: notification.timestamp,
-        processedAt: new Date().toISOString(),
-        status: "rejected",
-      });
-    }
     setNotifications((prev) => prev.map((n) => n.id === id ? { ...n, status: "rejected" as const, processedAt: new Date().toISOString() } : n));
   };
 
