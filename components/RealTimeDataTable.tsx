@@ -17,7 +17,6 @@ interface RealTimeDataTableProps {
   lastUpdate: string | null;
   connectionType: 'websocket' | 'fallback' | 'offline' | 'reconnecting';
   onRefresh: () => void;
-  onSendTest: () => void;
   onConfirmMatch?: (match: SecurityData) => void;
   onRejectMatch?: (match: SecurityData) => void;
 }
@@ -34,7 +33,6 @@ export default function RealTimeDataTable({
   lastUpdate,
   connectionType,
   onRefresh,
-  onSendTest,
   onConfirmMatch,
   onRejectMatch
 }: RealTimeDataTableProps) {
@@ -188,13 +186,6 @@ export default function RealTimeDataTable({
           </span>
           <div className="flex items-center gap-2">
             <button
-              onClick={onSendTest}
-              className="px-2 sm:px-3 py-1 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-xs sm:text-sm whitespace-nowrap"
-              disabled={!connected && connectionType === 'offline'}
-            >
-              Test Data
-            </button>
-            <button
               onClick={onRefresh}
               className="px-2 sm:px-3 py-1 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
             >
@@ -214,13 +205,6 @@ export default function RealTimeDataTable({
               ? "Waiting for real-time data from security nodes..."
               : "No data found in system"}
           </p>
-          <button
-            onClick={onSendTest}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-            disabled={connectionType === 'offline'}
-          >
-            Send Test Data
-          </button>
         </div>
       ) : (
         <div className="space-y-3 sm:space-y-4">

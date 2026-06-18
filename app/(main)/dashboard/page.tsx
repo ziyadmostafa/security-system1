@@ -227,7 +227,6 @@ export default function DashboardPage() {
     error, 
     lastUpdate, 
     connectionType, 
-    sendTestData, 
     refreshData,
     emitCriminalConfirmed,
     emitCriminalRejected
@@ -492,7 +491,6 @@ export default function DashboardPage() {
                 lastUpdate={lastUpdate}
                 connectionType={connectionType}
                 onRefresh={refreshData}
-                onSendTest={sendTestData}
                 onConfirmMatch={handleConfirmMatch}
                 onRejectMatch={handleRejectMatch}
               />
